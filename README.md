@@ -1,4 +1,4 @@
-# National Data Center (NDC) - Technical Knowledge Portal
+# Disaster Recovery Data Center - Technical Knowledge Portal
 **Bangladesh Computer Council (BCC)**  
 Official Portal: `https://ndc-dr.github.io/`
 

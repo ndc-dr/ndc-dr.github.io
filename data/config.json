@@ -1,13 +1,13 @@
 {
   "organization": "Bangladesh Computer Council (BCC)",
-  "facility": "National Data Center (NDC)",
-  "portalName": "NDC Technical Knowledge Portal",
-  "portalSubtitle": "Data Center Infrastructure, Operations, Engineering & Technical Documentation",
+  "facility": "Disaster Recovery Data Center",
+  "portalName": "DR-DC Technical Knowledge Portal",
+  "portalSubtitle": "Disaster Recovery Data Center Infrastructure, Operations, Engineering & Technical Documentation",
   "logo": "assets/images/bcc-logo.svg",
   "siteUrl": "https://ndc-dr.github.io/",
   "githubRepository": "https://github.com/ndc-dr/ndc-dr.github.io",
   "defaultVisibility": "public",
   "version": "1.0.0",
-  "contactEmail": "info.ndc@bcc.gov.bd",
+  "contactEmail": "ashik.ahmed@bcc.gov.bd",
   "disclaimer": "This portal is intended for technical knowledge sharing and engineering documentation reference. Access to specific Google Drive repository assets is governed by NDC organizational policies."
 }

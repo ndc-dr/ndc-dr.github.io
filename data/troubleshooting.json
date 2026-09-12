@@ -1,0 +1,130 @@
+[
+  {
+    "id": "TB-UPS-001",
+    "system": "Power System",
+    "equipment": "UPS System",
+    "symptom": "UPS Automatically Switched into Static Bypass Mode",
+    "possibleCauses": [
+      "Heavy inrush or downstream short-circuit overload",
+      "Internal inverter thyristor over-temperature",
+      "Inverter DC link voltage out of nominal window",
+      "Manual bypass button triggered during unauthorized inspection"
+    ],
+    "diagnosticSteps": [
+      "Check the LCD touch screen alarm log and record exact timestamp code.",
+      "Inspect PDU circuit meters to verify if downstream load exceeded 100% capacity.",
+      "Check ambient temperature in UPS battery and converter compartments.",
+      "Verify static bypass input utility frequency and voltage stability."
+    ],
+    "correctiveActions": [
+      "If caused by temporary load inrush, clear fault on downstream panel and re-engage inverter via control menu.",
+      "If internal inverter fault persists, leave in bypass, isolate inverter module, and invoke tier-2 emergency vendor support.",
+      "Verify ventilation fan operations inside the UPS cabinet."
+    ],
+    "relatedDocId": "DOC-ELEC-001",
+    "relatedSop": "DOC-ELEC-002"
+  },
+  {
+    "id": "TB-GEN-002",
+    "system": "Generator System",
+    "equipment": "Diesel Generator",
+    "symptom": "Generator Cranks but Fails to Start during Blackout",
+    "possibleCauses": [
+      "Starting battery bank voltage below 24VDC under load",
+      "Fuel supply line airlocked or fuel shut-off solenoid unenergized",
+      "Jacket water preheater failed, resulting in cold cylinder failure to combust",
+      "Emergency Stop pushbutton physically latched"
+    ],
+    "diagnosticSteps": [
+      "Measure starter battery terminal voltage during crank attempt (must stay > 20VDC).",
+      "Inspect engine fuel shut-off solenoid linkage and fuel day tank level gauge.",
+      "Verify emergency stop button status on local engine panel and remote NOC panel.",
+      "Check engine jacket water temperature gauge (should read > 40°C on standby)."
+    ],
+    "correctiveActions": [
+      "Switch to redundant secondary starter battery bank via selector switch.",
+      "Prime the diesel fuel lift pump manually and purge air from filtration manifold.",
+      "Release emergency stop latch and reset alarm state on Woodward synchronizer.",
+      "Follow EOP for manual generator parallel start."
+    ],
+    "relatedDocId": "DOC-ELEC-004",
+    "relatedSop": "DOC-ELEC-003"
+  },
+  {
+    "id": "TB-COOL-003",
+    "system": "Cooling System",
+    "equipment": "In-Row PAC Unit",
+    "symptom": "High Cold Aisle Temperature Alarm (> 27°C)",
+    "possibleCauses": [
+      "Chilled water modulating valve stuck in closed/partially closed state",
+      "Air filters clogged, severely choking intake CFM airflow",
+      "Cold aisle containment sliding door left propped open",
+      "Sudden high density compute server rack provisioning without cooling reallocation"
+    ],
+    "diagnosticSteps": [
+      "Verify supply chilled water differential pressure and temperature at unit header.",
+      "Check PAC actuator valve position display (0-100%).",
+      "Measure air temperature differential (Delta T) across cooling coil.",
+      "Ensure containment door seals and roof panels are tightly closed."
+    ],
+    "correctiveActions": [
+      "Manually override 3-way chilled water valve actuator to full open 100%.",
+      "Spin up standby redundant PAC unit in the affected server pod.",
+      "Replace clogged synthetic air filters immediately.",
+      "Close aisle containment doors."
+    ],
+    "relatedDocId": "DOC-MECH-002",
+    "relatedSop": "DOC-MECH-003"
+  },
+  {
+    "id": "TB-FIRE-004",
+    "system": "Fire Suppression System",
+    "equipment": "Aspirating Detection (VESDA)",
+    "symptom": "Aspirating Pipe Low Airflow Trouble Alarm",
+    "possibleCauses": [
+      "Aspiration sampling pipe cracked or disconnected above false ceiling",
+      "Sampling holes clogged with drywall dust or foreign debris",
+      "Aspirator motor RPM degradation",
+      "Airflow sensor calibration drift"
+    ],
+    "diagnosticSteps": [
+      "Check individual pipe flow percentage readings on LCD panel (Normal: 100%).",
+      "Trace sampling pipe physical run in the affected sector for loose unions.",
+      "Check whether maintenance work or drilling occurred in the zone.",
+      "Inspect filter cartridge condition in VESDA detector housing."
+    ],
+    "correctiveActions": [
+      "Re-seat dislodged PVC pipe couplings using approved solvent.",
+      "Blow out sampling pipe using dry nitrogen or filtered low-pressure compressed air.",
+      "Replace intake foam filter cartridge if past replacement date."
+    ],
+    "relatedDocId": "DOC-FIRE-002",
+    "relatedSop": "DOC-FIRE-001"
+  },
+  {
+    "id": "TB-ELEC-005",
+    "system": "Power System",
+    "equipment": "Cast Resin Transformer",
+    "symptom": "High Winding Temperature Alarm (> 120°C)",
+    "possibleCauses": [
+      "Enclosure cooling fans tripped or circuit breaker opened",
+      "Harmonic distortion from non-linear server power supply loads",
+      "High ambient temperature in substation basement",
+      "Phase current unbalance across the three windings"
+    ],
+    "diagnosticSteps": [
+      "Read RTD PT100 temperature indicators on front controller panel for Phase U, V, and W.",
+      "Measure ventilation fan air flow across bottom transformer coils.",
+      "Check incoming LV switchgear power quality meter for THD (Total Harmonic Distortion).",
+      "Inspect ambient exhaust fan in transformer room."
+    ],
+    "correctiveActions": [
+      "Force transformer cooling fans to continuous manual RUN mode.",
+      "Balance downstream phase loads across PDU A and PDU B busbars.",
+      "Verify substation exhaust louvers are operating at 100% capacity.",
+      "If temperature climbs toward 140°C, transfer load to redundant path and isolate."
+    ],
+    "relatedDocId": "DOC-ELEC-005",
+    "relatedSop": "DOC-ELEC-002"
+  }
+]

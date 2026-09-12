@@ -1,0 +1,44 @@
+[
+  {
+    "id": "elec",
+    "name": "Electrical Infrastructure",
+    "icon": "zap",
+    "description": "Medium & Low voltage distribution, transformers, UPS, DG sets, switchgear, STS, and power distribution.",
+    "subcategories": ["HT / MV Switchgear", "Power Transformers", "Diesel Generators", "UPS & Battery", "LV Switchgear", "PDU & Busway", "Earthing & Lightning"]
+  },
+  {
+    "id": "mech",
+    "name": "Mechanical & Cooling",
+    "icon": "thermometer-snowflake",
+    "description": "Chilled water plant, Precision Air Conditioning (PAC/CRAC), In-Row cooling, liquid cooling, and airflow management.",
+    "subcategories": ["Chillers & Pumps", "PAC / CRAC Units", "In-Row Cooling", "Liquid Cooling", "Piping & Valves", "Containment Systems"]
+  },
+  {
+    "id": "fire",
+    "name": "Fire Detection & Suppression",
+    "icon": "flame",
+    "description": "VESDA aspirating smoke detection, clean agent gaseous fire suppression (Novak/FM-200), and pre-action sprinklers.",
+    "subcategories": ["VESDA Detection", "Clean Agent Suppression", "Pre-Action Sprinklers", "Fire Panels & Annunciators"]
+  },
+  {
+    "id": "bms",
+    "name": "BMS & DCIM Systems",
+    "icon": "cpu",
+    "description": "Building Management Systems, DCIM telemetry, power meters, environmental sensors, and NOC integrations.",
+    "subcategories": ["BMS Architecture", "DCIM Software", "Power & Energy Monitoring", "Environmental Sensors"]
+  },
+  {
+    "id": "it-infra",
+    "name": "IT & Structured Cabling",
+    "icon": "server",
+    "description": "Racks, PDU configurations, MPO/MTP fiber optic backbone, patch panels, cable raceways, and SAN fabric.",
+    "subcategories": ["Racks & Enclosures", "Fiber Optic Cabling", "Copper Cabling", "Cable Raceways & Trays"]
+  },
+  {
+    "id": "ops-safety",
+    "name": "Operations, Standards & Safety",
+    "icon": "shield-check",
+    "description": "Standard procedures, emergency actions, Uptime/TIA standards, electrical safety, lockout-tagout (LOTO), and maintenance schedules.",
+    "subcategories": ["SOP / MOP / EOP", "Tier Classification", "Preventive Maintenance", "Occupational & Electrical Safety"]
+  }
+]

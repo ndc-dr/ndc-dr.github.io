@@ -1,0 +1,72 @@
+[
+  {
+    "term": "UPS",
+    "fullForm": "Uninterruptible Power Supply",
+    "definition": "An electrical apparatus providing emergency instant power to critical loads via energy storage systems when utility mains fail.",
+    "system": "Power System",
+    "relatedDoc": "DOC-ELEC-001"
+  },
+  {
+    "term": "PDU",
+    "fullForm": "Power Distribution Unit",
+    "definition": "A floor-mounted cabinet or rack strip designed to condition and distribute electric power to IT racks with branch metering.",
+    "system": "Power System",
+    "relatedDoc": "DOC-ELEC-001"
+  },
+  {
+    "term": "ATS",
+    "fullForm": "Automatic Transfer Switch",
+    "definition": "An intelligent self-acting electrical switch that alternates between two separate sources of electricity, usually Grid and Generator.",
+    "system": "Power System",
+    "relatedDoc": "DOC-ELEC-006"
+  },
+  {
+    "term": "PAC / CRAC",
+    "fullForm": "Precision Air Conditioner / Computer Room Air Conditioner",
+    "definition": "Heavy-duty HVAC devices engineered to maintain precise temperature, humidity, and airflow levels required by computing hardware.",
+    "system": "Cooling System",
+    "relatedDoc": "DOC-MECH-002"
+  },
+  {
+    "term": "VESDA",
+    "fullForm": "Very Early Warning Smoke Detection Apparatus",
+    "definition": "An aspirating laser-based smoke detection system that continuously samples air through pipe networks for early trace combustion particles.",
+    "system": "Fire Suppression System",
+    "relatedDoc": "DOC-FIRE-002"
+  },
+  {
+    "term": "DCIM",
+    "fullForm": "Data Center Infrastructure Management",
+    "definition": "A suite of software tools integrating IT and facility systems to measure energy, thermal profiles, asset utilization, and uptime.",
+    "system": "Monitoring & DCIM",
+    "relatedDoc": "DOC-BMS-001"
+  },
+  {
+    "term": "SOP",
+    "fullForm": "Standard Operating Procedure",
+    "definition": "A step-by-step instruction guide designed to assist technical personnel in carrying out routine operational and maintenance jobs smoothly.",
+    "system": "Operations & Safety",
+    "relatedDoc": "DOC-ELEC-002"
+  },
+  {
+    "term": "MOP",
+    "fullForm": "Method of Procedure",
+    "definition": "A strictly scheduled, step-by-step execution protocol for high-risk maintenance, commissioning, or live hardware cutover work.",
+    "system": "Operations & Safety",
+    "relatedDoc": "DOC-MECH-003"
+  },
+  {
+    "term": "EOP",
+    "fullForm": "Emergency Operating Procedure",
+    "definition": "A rapid emergency action guideline aimed at restoring mission-critical continuity during failures or environmental hazards.",
+    "system": "Operations & Safety",
+    "relatedDoc": "DOC-ELEC-003"
+  },
+  {
+    "term": "PUE",
+    "fullForm": "Power Usage Effectiveness",
+    "definition": "A standard efficiency metric defined as the ratio of total facility power consumed divided by the power delivered to IT computing equipment.",
+    "system": "Monitoring & DCIM",
+    "relatedDoc": "DOC-BMS-001"
+  }
+]

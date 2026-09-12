@@ -1,0 +1,44 @@
+[
+  {
+    "id": "TRN-01",
+    "title": "Data Center Critical Facility Engineering Fundamentals",
+    "category": "Operations",
+    "duration": "4 Hours",
+    "targetAudience": "Junior Facility Engineers, Operations Technicians",
+    "summary": "Core principles of high-availability data centers, tier ratings, electrical path single points of failure (SPOF), and cold aisle management.",
+    "presentationDriveUrl": "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74l4300sample18/view?usp=sharing",
+    "quizChecklist": [
+      "Explain the difference between Tier III Concurrent Maintainability and Tier IV Fault Tolerance.",
+      "What are the immediate hazards associated with opening a VRLA battery circuit under active DC discharge?",
+      "Why must cold aisle containment doors remain closed at all times?"
+    ]
+  },
+  {
+    "id": "TRN-02",
+    "title": "High Voltage Switchgear (11kV) Safe Switching & LOTO Protocol",
+    "category": "Electrical",
+    "duration": "6 Hours",
+    "targetAudience": "Electrical Engineers, Duty Shift Officers",
+    "summary": "Step-by-step training on safe switching procedures, permit-to-work systems, arc flash risk categories, and VCB rack-in/out protocols.",
+    "presentationDriveUrl": "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74l4300sample2/view?usp=sharing",
+    "quizChecklist": [
+      "List the five safety rules for dead working on high voltage electrical equipment.",
+      "Describe how mechanical interlocks prevent racking a closed circuit breaker.",
+      "When is Arc Flash PPE Category 4 mandatory?"
+    ]
+  },
+  {
+    "id": "TRN-03",
+    "title": "Emergency Operating Procedure: Blackout & Manual Gen Synchronization",
+    "category": "Emergency Response",
+    "duration": "3 Hours",
+    "targetAudience": "All NOC, SOC, and Critical Facility Staff",
+    "summary": "Hands-on simulation protocol for utility grid total collapse, manual generator bus paralleling, and critical UPS load protection.",
+    "presentationDriveUrl": "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74l4300sample3/view?usp=sharing",
+    "quizChecklist": [
+      "Within what time limit must standby generators accept critical building load following grid collapse?",
+      "What steps must be executed if ATS fail to transfer automatically?",
+      "Identify the safety protocols for refueling bulk day tanks during continuous DG runs."
+    ]
+  }
+]

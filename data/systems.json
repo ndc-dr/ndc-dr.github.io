@@ -1,0 +1,40 @@
+[
+  {
+    "id": "sys-power",
+    "name": "Power Infrastructure System",
+    "summary": "Dual-utility 33kV/11kV grid inputs, transformer step-down, synchronized generator bus, static transfer, and 2N UPS trains feeding server racks.",
+    "mermaid": "graph TD\n  Grid1[Utility Feeder A 33kV] --> HT1[HT Switchgear 11kV A]\n  Grid2[Utility Feeder B 33kV] --> HT2[HT Switchgear 11kV B]\n  HT1 --> XFR1[Transformer 1 2500kVA]\n  HT2 --> XFR2[Transformer 2 2500kVA]\n  DG1[Diesel Gen 1 2500kVA] --> Sync[Sync Panel]\n  DG2[Diesel Gen 2 2500kVA] --> Sync\n  XFR1 --> ATS1[ATS A]\n  XFR2 --> ATS2[ATS B]\n  Sync -.-> ATS1\n  Sync -.-> ATS2\n  ATS1 --> UPSA[UPS Train A 1500kVA]\n  ATS2 --> UPSB[UPS Train B 1500kVA]\n  UPSA --> PDUA[Rack PDU A-Side]\n  UPSB --> PDUB[Rack PDU B-Side]\n  PDUA --> Server[Critical Dual-Cord IT Server]\n  PDUB --> Server",
+    "stages": [
+      {"step": "1. Grid Supply", "detail": "Redundant 33kV power feeds stepped to 11kV at the intake substation."},
+      {"step": "2. HT Distribution", "detail": "Dual-bus 11kV vacuum switchgear with protective relaying."},
+      {"step": "3. Step-down Transformation", "detail": "Cast-resin 2500kVA dry transformers reducing voltage to 415V/240V."},
+      {"step": "4. Emergency Backup", "detail": "4x 2500kVA synchronized Cummins diesel gensets taking full load within 12 seconds."},
+      {"step": "5. Uninterruptible Conditioning", "detail": "Modular UPS trains running in 2N configuration guaranteeing clean sine wave."},
+      {"step": "6. Rack Delivery", "detail": "Intelligent A+B busway and rack PDUs feeding redundant enterprise dual-cord power supplies."}
+    ]
+  },
+  {
+    "id": "sys-cooling",
+    "name": "HVAC & Precision Cooling System",
+    "summary": "Water-cooled centrifugal chiller plant with plate heat exchanger economizer, secondary pumped chilled water loops, and In-Row PAC units with Cold-Aisle Containment.",
+    "mermaid": "graph TD\n  Chiller[Water-Cooled Chiller 450TR] --> PrimPump[Primary Pump Loop]\n  PrimPump --> SecPump[Secondary VFD Pumps]\n  SecPump --> Ring[Dual-Ring Chilled Water Header]\n  Ring --> PAC1[In-Row Cooler Pod 1]\n  Ring --> PAC2[In-Row Cooler Pod 2]\n  Ring --> PAC3[In-Row Cooler Pod 3]\n  PAC1 --> ColdAisle[Cold Aisle Containment 22°C]\n  ColdAisle --> Rack[Server Equipment]\n  Rack --> HotAisle[Hot Aisle Return 35°C]\n  HotAisle --> PAC1",
+    "stages": [
+      {"step": "1. Chilled Water Generation", "detail": "Centrifugal chillers maintain 7°C supply with 13°C return loops."},
+      {"step": "2. Pumping Distribution", "detail": "VFD-controlled secondary pumps adjust flow based on aisle differential pressure."},
+      {"step": "3. White Space Heat Exchange", "detail": "In-Row precision air units blow cold air horizontally directly in front of IT intakes."},
+      {"step": "4. Aisle Containment", "detail": "Physical roof and sliding doors isolate supply cold air from heated server exhaust air."}
+    ]
+  },
+  {
+    "id": "sys-fire",
+    "name": "Fire Detection & Suppression System",
+    "summary": "Multi-stage defense employing aspirating smoke detection (VESDA) for early warnings, cross-zoned smoke detectors, and FK-5-1-12 clean agent gaseous flooding.",
+    "mermaid": "graph TD\n  VESDA[Aspirating Smoke Detector] --> Alert1[Level 1: NOC Pre-Alarm Alert]\n  DetA[Smoke Detector Zone A] --> CrossCheck{Dual Zone Coincidence?}\n  DetB[Smoke Detector Zone B] --> CrossCheck\n  CrossCheck -- Yes --> Timer[30s Evacuation Countdown & Sirens]\n  Timer --> Actuate[Release FK-5-1-12 Clean Agent Gas]\n  Actuate --> RoomExtinguish[Total Flooding Extinguishment without water]\n  CrossCheck -- No --> Alert2[Visual Annunciator Warning]",
+    "stages": [
+      {"step": "1. Air Sampling", "detail": "Continuous active air drawing via VESDA pipe network detects particles at incipient combustion."},
+      {"step": "2. Dual Coincidence Verification", "detail": "Two independent optical/ionization detector loops must trigger to arm gas discharge."},
+      {"step": "3. Audio/Visual Egress Warning", "detail": "30-second warning sirens sound while HVAC dampers automatically snap shut."},
+      {"step": "4. Gas Release", "detail": "Clean agent discharges in under 10 seconds, eliminating oxygen-free combustion while remaining non-toxic to humans."}
+    ]
+  }
+]

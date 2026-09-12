@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Engineering Drawings & SLD | NDC Knowledge Base</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body data-page-id="drawings">
+
+  <header class="site-header">
+    <div class="header-container">
+      <div class="brand-wrapper">
+        <a href="../index.html" style="display:flex; align-items:center; gap:12px; text-decoration:none;">
+          <img src="../assets/images/bcc-logo.svg" alt="BCC Logo" class="brand-logo">
+          <div class="brand-text">
+            <span class="brand-title dynamic-facility-title">National Data Center (NDC)</span>
+            <span class="brand-subtitle dynamic-org-title">Bangladesh Computer Council</span>
+          </div>
+        </a>
+      </div>
+
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="knowledge.html" class="nav-link">Knowledge Base</a>
+        <a href="systems.html" class="nav-link">Systems</a>
+        <a href="documents.html" class="nav-link">Documents</a>
+        <a href="equipment.html" class="nav-link">Equipment</a>
+        <a href="procedures.html" class="nav-link">SOP / MOP / EOP</a>
+        <a href="troubleshooting.html" class="nav-link">Troubleshooting</a>
+        <a href="standards.html" class="nav-link">Standards</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="theme-toggle" class="theme-toggle-btn">☀️ Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-container">
+    <div class="breadcrumbs">
+      <a href="../index.html">Portal Home</a>
+      <span class="separator">/</span>
+      <span>Engineering Drawings</span>
+    </div>
+
+    <h1 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.5rem;">Single Line Diagrams & Schematics</h1>
+    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+      High-resolution CAD schematics, Single Line Diagrams (SLD), Piping and Instrumentation Diagrams (P&ID), and white-space architectural containment plans.
+    </p>
+
+    <div id="drawings-grid" class="dashboard-grid"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-bottom" style="border-top:none; padding-top:0;">
+      <div>© 2026 National Data Center (NDC), Bangladesh Computer Council.</div>
+      <div>Hosted on GitHub Pages</div>
+    </div>
+  </footer>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/navigation.js"></script>
+  <script src="../js/documents.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await Navigation.init('drawings');
+      const docs = await Utils.fetchJson('../data/documents.json') || [];
+      const drawings = docs.filter(d => d.type === 'Drawing');
+      const container = document.getElementById('drawings-grid');
+
+      container.innerHTML = drawings.map(d => DocumentsUI.renderCard(d)).join('');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NDC Technical Knowledge Portal | Bangladesh Computer Council</title>
+  <meta name="description" content="National Data Center (NDC) Digital Knowledge Base for Data Center Infrastructure, Operations, Maintenance, Mechanical, Electrical, Standards, and Safety Documentation.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body data-page-id="home">
+
+  <!-- Main Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="brand-wrapper">
+        <img src="assets/images/bcc-logo.svg" alt="BCC Logo" class="brand-logo">
+        <div class="brand-text">
+          <span class="brand-title dynamic-facility-title">National Data Center (NDC)</span>
+          <span class="brand-subtitle dynamic-org-title">Bangladesh Computer Council</span>
+        </div>
+      </div>
+
+      <nav class="main-nav">
+        <a href="index.html" class="nav-link" data-page="home">Home</a>
+        <a href="pages/knowledge.html" class="nav-link" data-page="knowledge">Knowledge Base</a>
+        <a href="pages/systems.html" class="nav-link" data-page="systems">Systems</a>
+        <a href="pages/documents.html" class="nav-link" data-page="documents">Documents</a>
+        <a href="pages/equipment.html" class="nav-link" data-page="equipment">Equipment</a>
+        <a href="pages/procedures.html" class="nav-link" data-page="procedures">SOP / MOP / EOP</a>
+        <a href="pages/troubleshooting.html" class="nav-link" data-page="troubleshooting">Troubleshooting</a>
+        <a href="pages/standards.html" class="nav-link" data-page="standards">Standards</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Theme">☀️ Light</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Body -->
+  <main class="app-container">
+    
+    <!-- Hero / Intro -->
+    <section style="margin-bottom: 2rem; padding: 1.5rem 0; border-bottom: 1px solid var(--border-color);">
+      <h1 style="font-size: 1.85rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.02em;">
+        Data Center Infrastructure & Technical Knowledge Portal
+      </h1>
+      <p style="color: var(--text-secondary); max-width: 900px; font-size: 0.95rem;">
+        Central digital repository for Tier III/IV facility engineering, electrical and mechanical distribution, emergency protocols, equipment specifications, maintenance procedures, and official Google Drive documentation.
+      </p>
+
+      <!-- Global Search Bar -->
+      <div class="search-container" style="margin-top: 1.5rem;">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="global-search" class="search-input" placeholder="Search manuals, SOPs, generators, transformers, chillers, standards..." autocomplete="off">
+        </div>
+        <div id="search-dropdown" class="search-dropdown-results"></div>
+      </div>
+    </section>
+
+    <!-- Calculated Metric Banner -->
+    <section class="stats-banner">
+      <div class="stat-box">
+        <div class="stat-value" id="stat-docs-count">0</div>
+        <div class="stat-label">Total Documents</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="stat-categories-count">0</div>
+        <div class="stat-label">System Domains</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="stat-equipment-count">0</div>
+        <div class="stat-label">Critical Equipment</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="stat-sops-count">0</div>
+        <div class="stat-label">SOPs / MOPs / EOPs</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="stat-standards-count">0</div>
+        <div class="stat-label">Compliance Codes</div>
+      </div>
+    </section>
+
+    <!-- Recently Viewed Section -->
+    <section style="margin-bottom: 2rem;">
+      <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem;">Recently Viewed by You</h2>
+      <div id="recently-viewed-container"></div>
+    </section>
+
+    <!-- Infrastructure Domains -->
+    <section style="margin-bottom: 2.5rem;">
+      <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">Facility Engineering Domains</h2>
+      <div id="categories-grid" class="dashboard-grid"></div>
+    </section>
+
+    <!-- Featured Technical Documents -->
+    <section style="margin-bottom: 2.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 700;">Featured Engineering Documents & SOPs</h2>
+        <a href="pages/documents.html" class="btn btn-secondary btn-sm">View Full Library →</a>
+      </div>
+      <div id="featured-docs-container" class="dashboard-grid"></div>
+    </section>
+
+  </main>
+
+  <!-- Document Preview Modal -->
+  <div id="document-modal" class="modal-overlay" onclick="if(event.target === this) DocumentsUI.closeModal();">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <div id="modal-category" style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;"></div>
+          <h3 id="modal-title" style="font-size: 1.1rem; color: var(--text-primary);">Document Preview</h3>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="DocumentsUI.closeModal()">✕ Close</button>
+      </div>
+      <div class="modal-body">
+        <p id="modal-desc" style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.75rem;"></p>
+        <div style="display:flex; gap: 8px;">
+          <a id="modal-external-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
+            📁 Open Full File in Google Drive
+          </a>
+        </div>
+        <iframe id="modal-preview-frame" class="preview-iframe" src=""></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div>
+        <div class="footer-heading dynamic-facility-title">National Data Center (NDC)</div>
+        <p style="margin-bottom: 0.75rem; line-height: 1.6;">
+          Bangladesh Computer Council (BCC), Information and Communication Technology Division, Government of the People's Republic of Bangladesh.
+        </p>
+        <p style="font-size: 0.75rem; color: var(--text-muted);">
+          Committed to 99.982% uptime availability, Tier III operational sustainability, and mission-critical government infrastructure reliability.
+        </p>
+      </div>
+      <div>
+        <div class="footer-heading">Navigation</div>
+        <ul class="footer-links">
+          <li><a href="pages/knowledge.html">Knowledge Base</a></li>
+          <li><a href="pages/systems.html">Systems Architecture</a></li>
+          <li><a href="pages/documents.html">Document Repository</a></li>
+          <li><a href="pages/equipment.html">Equipment Index</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Operations & Safety</div>
+        <ul class="footer-links">
+          <li><a href="pages/procedures.html">SOP / MOP / EOP</a></li>
+          <li><a href="pages/troubleshooting.html">Diagnostic Matrix</a></li>
+          <li><a href="pages/maintenance.html">Preventive Schedules</a></li>
+          <li><a href="pages/standards.html">Industry Compliance</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Resources</div>
+        <ul class="footer-links">
+          <li><a href="pages/drawings.html">Single Line Diagrams</a></li>
+          <li><a href="pages/training.html">Training Modules</a></li>
+          <li><a href="pages/glossary.html">Engineering Glossary</a></li>
+          <li><a href="https://github.com/ndc-dr/ndc-bcc.github.io" target="_blank">GitHub Repository</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 National Data Center (NDC), Bangladesh Computer Council. All rights reserved.</div>
+      <div>Static Knowledge System hosted on GitHub Pages | Stored in Google Drive</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/utils.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/documents.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

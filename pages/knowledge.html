@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Engineering Wiki & Knowledge Base | NDC Knowledge Base</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body data-page-id="knowledge">
+
+  <header class="site-header">
+    <div class="header-container">
+      <div class="brand-wrapper">
+        <a href="../index.html" style="display:flex; align-items:center; gap:12px; text-decoration:none;">
+          <img src="../assets/images/bcc-logo.svg" alt="BCC Logo" class="brand-logo">
+          <div class="brand-text">
+            <span class="brand-title dynamic-facility-title">National Data Center (NDC)</span>
+            <span class="brand-subtitle dynamic-org-title">Bangladesh Computer Council</span>
+          </div>
+        </a>
+      </div>
+
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="knowledge.html" class="nav-link active">Knowledge Base</a>
+        <a href="systems.html" class="nav-link">Systems</a>
+        <a href="documents.html" class="nav-link">Documents</a>
+        <a href="equipment.html" class="nav-link">Equipment</a>
+        <a href="procedures.html" class="nav-link">SOP / MOP / EOP</a>
+        <a href="troubleshooting.html" class="nav-link">Troubleshooting</a>
+        <a href="standards.html" class="nav-link">Standards</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="theme-toggle" class="theme-toggle-btn">☀️ Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-container layout-with-sidebar">
+    <!-- Technical Sidebar Hierarchy -->
+    <aside class="sidebar">
+      <div class="sidebar-title">Engineering Topics</div>
+      <ul class="sidebar-nav-list" id="sidebar-topics">
+        <li class="sidebar-nav-item"><a href="#redundancy" class="active">N+1 vs 2N Redundancy</a></li>
+        <li class="sidebar-nav-item"><a href="#sld-analysis">Single Line Diagram Logic</a></li>
+        <li class="sidebar-nav-item"><a href="#battery-health">VRLA & LiFePO4 Testing</a></li>
+        <li class="sidebar-nav-item"><a href="#clean-agent">Clean Agent Gas Mechanics</a></li>
+        <li class="sidebar-nav-item"><a href="#containment">Cold vs Hot Aisle Airflow</a></li>
+        <li class="sidebar-nav-item"><a href="#grounding">Equipotential Mesh Earthing</a></li>
+      </ul>
+    </aside>
+
+    <!-- Content Wiki Area -->
+    <article style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius); padding:2rem;">
+      <section id="redundancy" style="margin-bottom:3rem;">
+        <h2 style="font-size:1.5rem; color:var(--primary-light); margin-bottom:0.75rem;">Understanding N+1, 2N, and 2(N+1) Redundancy in NDC</h2>
+        <p style="color:var(--text-secondary); line-height:1.7; margin-bottom:1rem;">
+          In high-reliability mission-critical facilities, the foundation of Tier III Concurrent Maintainability and Tier IV Fault Tolerance is mechanical and electrical redundancy.
+        </p>
+        <div style="background:var(--bg-primary); padding:1rem; border-left:3px solid var(--accent); margin-bottom:1rem;">
+          <strong>Definition (N):</strong> The exact base capacity required to sustain the full critical data center server load.
+        </div>
+        <ul style="padding-left:1.5rem; color:var(--text-secondary); line-height:1.7; margin-bottom:1rem;">
+          <li><strong>N+1:</strong> Includes a single extra unit or module (e.g., 3 active chillers + 1 standby chiller). If one chiller trips, capacity remains 100% satisfied.</li>
+          <li><strong>2N:</strong> Two completely independent, isolated distribution trains from substation to IT servers. Failure or maintenance shutdown of an entire bus has zero disruption on operations.</li>
+          <li><strong>2(N+1):</strong> The highest availability class combining dual-bus fault tolerance with component modular redundancy within each independent train.</li>
+        </ul>
+        <a href="documents.html?category=Electrical%20Infrastructure" class="btn btn-secondary btn-sm">Browse Associated Electrical Documents →</a>
+      </section>
+
+      <section id="sld-analysis" style="margin-bottom:3rem; border-top:1px solid var(--border-color); padding-top:2rem;">
+        <h2 style="font-size:1.3rem; color:var(--primary-light); margin-bottom:0.75rem;">Medium Voltage Single Line Diagram (SLD) Philosophy</h2>
+        <p style="color:var(--text-secondary); line-height:1.7; margin-bottom:1rem;">
+          The single line diagram illustrates the path taken by electrical energy through transformers, switchboards, automatic transfer switches, and UPS modules. For safe switching, strict interlocking logic must be obeyed before operating vacuum circuit breakers.
+        </p>
+        <a href="drawings.html" class="btn btn-secondary btn-sm">Inspect Complete SLD Drawing Set →</a>
+      </section>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-bottom" style="border-top:none; padding-top:0;">
+      <div>© 2026 National Data Center (NDC), Bangladesh Computer Council.</div>
+      <div>Hosted on GitHub Pages</div>
+    </div>
+  </footer>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/navigation.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await Navigation.init('knowledge');
+    });
+  </script>
+</body>
+</html>

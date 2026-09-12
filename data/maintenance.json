@@ -1,0 +1,67 @@
+[
+  {
+    "equipment": "Modular UPS System",
+    "interval": "Monthly",
+    "tasks": [
+      "Record input/output voltages, current, frequency, and active load percentage.",
+      "Check LCD alarm log for transient spikes and bypass warnings.",
+      "Inspect battery terminal connections for signs of corrosion or leakage.",
+      "Perform infrared thermographic scan of AC/DC connection lugs and breakers."
+    ],
+    "acceptanceCriteria": "Warming < 10°C above ambient; no corrosion; load balance within 10% across phases.",
+    "requiredTools": ["Calibrated Fluke Multimeter", "FLIR Thermal Imager", "Insulated Torque Wrench", "Class 00 Insulated Gloves"],
+    "safetyPrecautions": "Strictly follow electrical Arc Flash PPE guidelines. Never disconnect DC battery strings while under inverter load."
+  },
+  {
+    "equipment": "Prime Diesel Generator",
+    "interval": "Weekly",
+    "tasks": [
+      "Check engine lube oil level, coolant level, and day-tank fuel oil level.",
+      "Check jacket water heater operation (engine block must feel warm).",
+      "Inspect starter lead-acid battery voltage and electrolyte specific gravity.",
+      "Perform 15-minute engine no-load test run and observe oil pressure buildup."
+    ],
+    "acceptanceCriteria": "Lube oil at full mark; coolant > 45°C; battery voltage >= 25.4VDC standby; oil pressure > 45 PSI within 5 seconds.",
+    "requiredTools": ["Refractometer / Hydrometer", "Digital DC Voltmeter", "Flashlight", "Hearing Protection"],
+    "safetyPrecautions": "Ensure exhaust area is clear of personnel. Do not open radiator pressure cap when engine is hot."
+  },
+  {
+    "equipment": "Water-Cooled Chiller Plant",
+    "interval": "Quarterly",
+    "tasks": [
+      "Analyze refrigerant pressure, oil level, and compressor vibration readings.",
+      "Record condenser and evaporator approach temperatures.",
+      "Inspect VSD cooling fan operation and clean internal air intake filters.",
+      "Test emergency shutoff interlocks and oil heater circuits."
+    ],
+    "acceptanceCriteria": "Condenser approach <= 1.5°C; oil color clean amber; vibration within ISO vibration velocity thresholds.",
+    "requiredTools": ["Vibration Analyzer", "Calibrated Pressure Gauges", "Digital Contact Thermometer"],
+    "safetyPrecautions": "Ensure refrigerant leak alarm panel is monitored. Verify mechanical room exhaust ventilation is fully functional."
+  },
+  {
+    "equipment": "Clean Agent Gas Fire Suppression",
+    "interval": "Half-Yearly",
+    "tasks": [
+      "Verify cylinder storage pressure on all high-pressure container gauges.",
+      "Conduct ultrasonic liquid level measurement to compute clean agent weight.",
+      "Inspect flexible discharge hoses for kinks, cuts, and aging cracks.",
+      "Check room door sweeps and ceiling penetration caulking for enclosure integrity."
+    ],
+    "acceptanceCriteria": "Pressure within green zone (at 21°C); agent weight loss not exceeding 5% of original stamped weight.",
+    "requiredTools": ["Ultrasonic Liquid Level Indicator", "Calibrated Gas Pressure Manometer", "Torque Wrench"],
+    "safetyPrecautions": "Fit mechanical lockout travel pins onto solenoid valves before touching cylinders."
+  },
+  {
+    "equipment": "11kV HT Vacuum Circuit Breaker",
+    "interval": "Yearly",
+    "tasks": [
+      "Conduct insulation resistance (Megger) test at 5kV on vacuum interrupters.",
+      "Perform contact resistance (Micro-ohmmeter) test on primary poles.",
+      "Check charging motor mechanism, limit switches, and mechanical latching.",
+      "Clean bushings with isopropyl alcohol and check earthing bus continuity."
+    ],
+    "acceptanceCriteria": "Insulation resistance > 1000 Mega-ohms; Contact resistance < 45 micro-ohms per pole.",
+    "requiredTools": ["5kV Digital Megger", "100A Digital Micro-Ohmmeter", "Contact Timing Analyzer", "Calibrated Torque Wrench"],
+    "safetyPrecautions": "Lock-Out Tag-Out (LOTO) certified isolation, verify zero voltage with HT tester, install protective portable ground leads."
+  }
+]

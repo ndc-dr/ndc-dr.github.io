@@ -1,0 +1,52 @@
+[
+  {
+    "id": "STD-TIA-942",
+    "code": "ANSI/TIA-942-B",
+    "title": "Telecommunications Infrastructure Standard for Data Centers",
+    "publisher": "Telecommunications Industry Association (TIA)",
+    "applicableSystem": "Overall Facility, Architectural, Electrical, Cabling",
+    "summary": "Specifies minimum requirements for data center site design, cabling architectures, redundancy tiers (Rated-1 through Rated-4), and safety distances.",
+    "referenceUrl": "https://tiaonline.org/standards/",
+    "ndcStatus": "Rated-3 / Rated-4 Concurrency Architecture Compliance"
+  },
+  {
+    "id": "STD-UPTIME",
+    "code": "Uptime Institute Tier Standard: Topology",
+    "title": "Data Center Site Infrastructure Tier Standard: Topology",
+    "publisher": "Uptime Institute",
+    "applicableSystem": "Electrical, Mechanical, Redundancy Architecture",
+    "summary": "Defines Tier I through Tier IV availability criteria. Mandates Concurrent Maintainability (Tier III) and Fault Tolerance (Tier IV) without impacting live loads.",
+    "referenceUrl": "https://uptimeinstitute.com/tiers",
+    "ndcStatus": "Tier III Design & Facility Certified"
+  },
+  {
+    "id": "STD-ASHRAE-TC99",
+    "code": "ASHRAE TC 9.9 (2023 Edition)",
+    "title": "Thermal Guidelines for Data Processing Environments",
+    "publisher": "ASHRAE",
+    "applicableSystem": "Mechanical & Cooling, Environmental Monitoring",
+    "summary": "Recommends dry-bulb temperature ranges (18°C to 27°C) and dew point ranges (5.5°C to 15°C) for server reliability and energy efficiency.",
+    "referenceUrl": "https://www.ashrae.org/technical-resources/bookstore/datacom-series",
+    "ndcStatus": "Strictly monitored in BMS cold aisles"
+  },
+  {
+    "id": "STD-NFPA-75",
+    "code": "NFPA 75 & NFPA 2001",
+    "title": "Standard for the Fire Protection of Information Technology Equipment & Clean Agent Systems",
+    "publisher": "National Fire Protection Association (NFPA)",
+    "applicableSystem": "Fire Detection & Suppression",
+    "summary": "Provides standards on clean agent concentration, containment boundaries, door fan testing, and early air detection in IT white space.",
+    "referenceUrl": "https://www.nfpa.org/",
+    "ndcStatus": "Mandatory standard for all suppression systems"
+  },
+  {
+    "id": "STD-BNBC",
+    "code": "BNBC (Chapter 10 & Electrical Safety)",
+    "title": "Bangladesh National Building Code (BNBC)",
+    "publisher": "Ministry of Housing and Public Works, Bangladesh",
+    "applicableSystem": "Structural, Lightning Protection, Substation & Earthing",
+    "summary": "National statutory building compliance, seismic loading, substation room clearance, and earth pit impedance thresholds under 1 Ohm.",
+    "referenceUrl": "http://www.bcc.gov.bd/",
+    "ndcStatus": "Statutory National Requirement"
+  }
+]

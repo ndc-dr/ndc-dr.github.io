@@ -14,7 +14,7 @@
     "maintenanceFrequency": "Monthly visual & thermal check; Quarterly full diagnostic",
     "commonFaults": "Static bypass thyristor fault, cooling fan dust clogging, battery impedance degradation, DC link capacitor aging.",
     "safetyPrecautions": "Always isolate external DC battery breakers and discharge capacitors before opening panels. Use Arc Flash Category 3 PPE.",
-    "relatedDocIds": ["DOC-ELEC-001", "DOC-OPS-001", "DOC-DRAW-001"]
+    "relatedDocIds": ["UPS5000-H-(400 kVA-600 kVA)-NTR User Manual", "DOC-OPS-001", "DOC-DRAW-001"]
   },
   {
     "id": "EQ-GEN-01",

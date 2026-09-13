@@ -4,7 +4,7 @@
     "title": "UPS5000-H-(400 kVA-600 kVA)-NTR User Manual",
     "category": "Electrical Infrastructure",
     "subcategory": "UPS & Battery",
-    "type": "Manual",
+    "type": "User Manual",
     "system": "Power System",
     "manufacturer": "HUAWEI",
     "model": "UPS5000-H-400K-NTR",
@@ -17,6 +17,26 @@
     "visibility": "public",
     "featured": true
   },
+
+  {
+    "id": "DOC-ELEC-001",
+    "title": "UPS5000-H-(400 kVA-600 kVA)-NTR User Manual",
+    "category": "Electrical Infrastructure",
+    "subcategory": "UPS & Battery",
+    "type": "User Manual",
+    "system": "Power System",
+    "manufacturer": "HUAWEI",
+    "model": "UPS5000-H-400K-NTR",
+    "description": "Comprehensive operation, static bypass management, modular battery handling, and maintenance manual for critical UPS train.",
+    "version": "Rev-3",
+    "date": "2026-02-10",
+    "tags": ["UPS", "Modular", "Static Bypass", "Electrical", "Maintenance"],
+    "driveUrl": "https://drive.google.com/file/d/1-_hBxVttq4DI_IP8lQ-zzlhkub3mu3hM/view?usp=sharing",
+    "driveFileId": "1-_hBxVttq4DI_IP8lQ-zzlhkub3mu3hM",
+    "visibility": "public",
+    "featured": true
+  },
+  
   {
     "id": "DOC-ELEC-002",
     "title": "SOP: 11kV HT Vacuum Circuit Breaker (VCB) Rack-In / Rack-Out Procedure",

@@ -2,6 +2,7 @@
   {
     "id": "UPS5000-H",
     "name": "Modular Uninterruptible Power Supply (UPS)",
+    "imageUrl": "../assets/images/equipment/UPS5000-H.png",
     "system": "Power System",
     "manufacturer": "HUAWEI",
     "model": "UPS5000-H-400K-NTR",

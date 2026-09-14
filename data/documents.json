@@ -112,6 +112,82 @@
     "visibility": "public",
     "featured": true
   },
+    
+  {
+    "id": "WEICHAI Genset Operation and Maintenance Manual",
+    "title": "WEICHAI Genset Operation and Maintenance Manual",
+    "category": "Electrical Infrastructure",
+    "subcategory": "Diesel Generators",
+    "type": "Manual",
+    "system": "Power System",
+    "manufacturer": "WEICHAI",
+    "model": "Weichai WPG2250C7 Diesel Generator",
+    "description": "This operating manual provides safety guidelines, installation instructions, parameter data, and detailed control panel configurations alongside troubleshooting and maintenance procedures for Weichai generator sets.",
+    "version": "Issue-1",
+    "date": "2025-11-27",
+    "tags": ["Generator", "Weichai", "Manual", "Operating Instructions", "Maintenance", "Troubleshooting", "Control Panel", "Safety Guidelines", "Installation", "Diesel Engine", "Alternator", "DSE7320", "DSE6020", "DSE6120", "Parallel Operation", "Fault Codes"],
+    "driveUrl": "https://drive.google.com/file/d/1L7zR-7TtiIRcj4Ki0mZlHnh7_HaXq8nl/view?usp=sharing",
+    "driveFileId": "1L7zR-7TtiIRcj4Ki0mZlHnh7_HaXq8nl",
+    "visibility": "public",
+    "featured": true
+  },
+      
+  {
+    "id": "Weichai WPG2250C7 Diesel Generator Set Technical Specifications",
+    "title": "Weichai WPG2250C7 Diesel Generator Set Technical Specifications",
+    "category": "Electrical Infrastructure",
+    "subcategory": "Diesel Generators",
+    "type": "Manual",
+    "system": "Power System",
+    "manufacturer": "WEICHAI",
+    "model": "Weichai WPG2250C7 Diesel Generator",
+    "description": "The document provides technical specifications for the Weichai WPG2250C7 Diesel Generator Set, detailing its components (Baudouin engine, Leroy-Somer generator), performance indexes, electrical systems, protective functions, and delivered tools.",
+    "version": "Issue-1",
+    "date": "2025-11-27",
+    "tags": ["Weichai", "Diesel Generator Set", "Technical Specifications", "WPG2250C7", "Baudouin Engine", "LEROY-SOMER", "AC Generator", "InteliGen-1000 Controller"],
+    "driveUrl": "https://drive.google.com/file/d/1gr98luAtcrRuNPTKprOM14F8v4Mlk5ti/view?usp=sharing",
+    "driveFileId": "1gr98luAtcrRuNPTKprOM14F8v4Mlk5ti",
+    "visibility": "public",
+    "featured": true
+  },
+      
+  {
+    "id": "Gear Type Oil Transfer Pump",
+    "title": "Gear Type Oil Transfer Pump",
+    "category": "Electrical Infrastructure",
+    "subcategory": "Diesel Generators",
+    "type": "Manual",
+    "system": "Power System",
+    "manufacturer": "Shanghai Colrey Pump & Valve Mfg. Co., Ltd",
+    "model": "KCB.2CYSeries",
+    "description": "This manual details the structure, characteristics, installation, and operation of the KCB-2CY series gear oil transfer pump, including troubleshooting methods, spare parts lists, and technical specification tables.",
+    "version": "Issue-1",
+    "date": "2025-11-27",
+    "tags": ["Gear Pump", "Oil Transfer", "KCB-2CY", "Manual", "Installation", "Troubleshooting", "Maintenance", "Specifications", "Spare Parts", "Colrey"],
+    "driveUrl": "https://drive.google.com/file/d/1lGPCbEss4sBDRVnA6w_iGtAzI34Cm-l6/view?usp=sharing",
+    "driveFileId": "1lGPCbEss4sBDRVnA6w_iGtAzI34Cm-l6",
+    "visibility": "public",
+    "featured": true
+  },
+      
+  {
+    "id": "4 inch Submersible Standard Petroleum and Ethanol Pump Installation, Operation & Service",
+    "title": "4 inch Submersible Standard Petroleum and Ethanol Pump Installation, Operation & Service",
+    "category": "Electrical Infrastructure",
+    "subcategory": "Diesel Generators",
+    "type": "Manual",
+    "system": "Power System",
+    "manufacturer": "ZHEJIANG JIASONG TECHNOLOGY CO., LTD",
+    "model": "RED-ROBE Submersible Turbine Pump",
+    "description": "This manual covers installation, operation, and service instructions for the Red-Robe 4 inch Submersible Petroleum and Ethanol Pump, detailing safety precautions, technical specifications, electrical wiring schematics, and replacement parts lists.",
+    "version": "Issue-1",
+    "date": "2025-11-27",
+    "tags": ["Submersible Pump", "Installation", "Operation & Service", "Petroleum", "Ethanol Pump", "Safety Precautions", "Fuel Compatibilities", "Specifications", "Wiring Schematic", "Parts List"],
+    "driveUrl": "https://drive.google.com/file/d/1GzRcuSbqXer2n1Q9ESxNMhnadcV91qGd/view?usp=sharing",
+    "driveFileId": "1GzRcuSbqXer2n1Q9ESxNMhnadcV91qGd",
+    "visibility": "public",
+    "featured": true
+  },
   
   {
     "id": "DOC-ELEC-002",

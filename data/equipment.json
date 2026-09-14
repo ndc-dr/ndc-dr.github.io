@@ -33,7 +33,7 @@
     "maintenanceFrequency": "Weekly no-load test; Monthly 50% load run; Annual resistive load-bank certification",
     "commonFaults": "Starter battery low charge, fuel oil contamination, jacket water pre-heater thermostat trip, fuel solenoid sticking.",
     "safetyPrecautions": "Hearing protection required inside acoustic enclosure. Ensure exhaust damper interlock is operational.",
-    "relatedDocIds": ["WEICHAI Genset Operation and Maintenance Manual", "Weichai WPG2250C7 Diesel Generator Set Technical Specifications", "Gear Type Oil Transfer Pump", "4 inch Submersible Standard Petroleum and Ethanol Pump Installation, Operation & Service"]
+    "relatedDocIds": ["WEICHAI Genset Operation and Maintenance Manual", "Weichai WPG2250C7 Diesel Generator Set Technical Specifications", "Gear Type Oil Transfer Pump", "Submersible Standard Petroleum and Ethanol Pump Installation, Operation & Service"]
   },
 
 

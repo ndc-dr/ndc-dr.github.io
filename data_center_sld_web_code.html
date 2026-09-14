@@ -1,12 +1,57 @@
-# Web-Ready Data Center Single Line Diagram (HTML5 & SVG Code)
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DR-DC Technical Knowledge Portal | Bangladesh Computer Council</title>
+  <meta name="description" content="Diaster Recovery facility of National Data Center (NDC) Digital Knowledge Base for Data Center Infrastructure, Operations, Maintenance, Mechanical, Electrical, Standards, and Safety Documentation.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body data-page-id="home">
 
-This document contains publication-ready HTML5 and SVG code for embedding the **Data Center Single Line Diagram (SLD)** into any web page or content management system (WordPress, React, Vue, HTML5, etc.).
+  <!-- Main Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="brand-wrapper">
+        <img src="assets/images/bcc-logo.svg" alt="BCC Logo" class="brand-logo">
+        <div class="brand-text">
+          <span class="brand-title dynamic-facility-title">Disaster Recovery Data Center</span>
+          <span class="brand-subtitle dynamic-org-title">Bangladesh Computer Council</span>
+        </div>
+      </div>
 
----
+      <nav class="main-nav">
+        <a href="index.html" class="nav-link" data-page="home">Home</a>
+        <a href="pages/knowledge.html" class="nav-link" data-page="knowledge">Knowledge Base</a>
+        <a href="pages/systems.html" class="nav-link" data-page="systems">Systems</a>
+        <a href="pages/documents.html" class="nav-link" data-page="documents">Documents</a>
+        <a href="pages/equipment.html" class="nav-link" data-page="equipment">Equipment</a>
+        <a href="pages/procedures.html" class="nav-link" data-page="procedures">SOP / MOP / EOP</a>
+        <a href="pages/troubleshooting.html" class="nav-link" data-page="troubleshooting">Troubleshooting</a>
+        <a href="pages/standards.html" class="nav-link" data-page="standards">Standards</a>
+      </nav>
 
-## 1. Embedded HTML5 + SVG Component (Copy & Paste to Website)
+      <div class="nav-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Theme">☀️ Light</button>
+      </div>
+    </div>
+  </header>
 
-```html
+  <!-- Page Body -->
+  <main class="app-container">
+    
+    <!-- Hero / Intro -->
+    <section style="margin-bottom: 2rem; padding: 1.5rem 0; border-bottom: 1px solid var(--border-color);">
+      <h1 style="font-size: 1.85rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.02em;">
+        Disaster Recovery Data Center (DR-DC, Jashore) Infrastructure & Technical Knowledge Portal
+      </h1>
+      <p style="color: var(--text-secondary); max-width: 900px; font-size: 0.95rem;">
+        Central digital repository for Tier III facility engineering, electrical and mechanical distribution, emergency protocols, equipment specifications, maintenance procedures, and official documentation.
+      </p>
+
+      # Web-Ready Data Center Single Line Diagram (HTML5 & SVG Code)
+
 <!-- Data Center Single Line Diagram Web Component -->
 <div class="sld-container" style="max-width: 1200px; margin: 0 auto; padding: 20px; font-family: 'Helvetica Neue', Arial, sans-serif; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
   
@@ -655,4 +700,60 @@ digraph DataCenter_SLD {
     LTSB1 -> HVAC [label=" ATS 100A/4P Cooling Supply"];
     LTSB2 -> AUX [label=" Auxiliary Power Feeds"];
 }
-```
+
+
+
+  <!-- Main Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div>
+        <div class="footer-heading dynamic-facility-title">Disaster Recovery Data Center</div>
+        <p style="margin-bottom: 0.75rem; line-height: 1.6;">
+          Bangladesh Computer Council (BCC)<br>Information and Communication Technology Division<br>Government of the People's Republic of Bangladesh.
+        </p>
+        <p style="font-size: 0.75rem; color: var(--text-muted);">
+          Committed to 99.982% uptime availability, Tier III operational sustainability, and mission-critical government infrastructure reliability.
+        </p>
+      </div>
+      <div>
+        <div class="footer-heading">Navigation</div>
+        <ul class="footer-links">
+          <li><a href="pages/knowledge.html">Knowledge Base</a></li>
+          <li><a href="pages/systems.html">Systems Architecture</a></li>
+          <li><a href="pages/documents.html">Document Repository</a></li>
+          <li><a href="pages/equipment.html">Equipment Index</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Operations & Safety</div>
+        <ul class="footer-links">
+          <li><a href="pages/procedures.html">SOP / MOP / EOP</a></li>
+          <li><a href="pages/troubleshooting.html">Diagnostic Matrix</a></li>
+          <li><a href="pages/maintenance.html">Preventive Schedules</a></li>
+          <li><a href="pages/standards.html">Industry Compliance</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Resources</div>
+        <ul class="footer-links">
+          <li><a href="pages/drawings.html">Single Line Diagrams</a></li>
+          <li><a href="pages/training.html">Training Modules</a></li>
+          <li><a href="pages/glossary.html">Engineering Glossary</a></li>
+          <li><a href="https://github.com/ndc-dr/ndc-bcc.github.io" target="_blank">GitHub Repository</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 National Data Center (NDC), Bangladesh Computer Council. All rights reserved.</div>
+      <div>Static Knowledge System hosted on GitHub Pages | Stored in Google Drive</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/utils.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/documents.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

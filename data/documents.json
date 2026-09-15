@@ -188,6 +188,67 @@
     "visibility": "public",
     "featured": true
   },
+
+  {
+    "id": "Product Specifications",
+    "title": "Cast Resin Dry-type Transformer Technical Parameter Table",
+    "category": "Electrical Infrastructure",
+    "subcategory": "Power Transformers",
+    "type": "Manual",
+    "system": "Power System",
+    "manufacturer": "Hainan Jinpan",
+    "model": "SCB10-2000",
+    "description": "",
+    "version": "Issue-1",
+    "date": "2025-01-16",
+    "tags": ["Product Specifications", "Transformer", "Power Transformer", "Step Down Transformer", "Tx", "Specifications"],
+    "driveUrl": "https://drive.google.com/file/d/1N6Cuk3u1p5xacm1AnoGi62ys26Y3l1GD/view?usp=sharing",
+    "driveFileId": "1N6Cuk3u1p5xacm1AnoGi62ys26Y3l1GD",
+    "visibility": "public",
+    "featured": true
+  },
+
+  {
+    "id": "Transformer detail design drawing-2000KVA",
+    "title": "Transformer detail design drawing-2000KVA",
+    "category": "Electrical Infrastructure",
+    "subcategory": "Power Transformers",
+    "type": "Manual",
+    "system": "Power System",
+    "manufacturer": "Hainan Jinpan",
+    "model": "SCB10-2000",
+    "description": "",
+    "version": "Issue-1",
+    "date": "2026-01-22",
+    "tags": ["Drawing", "Product Specifications", "Transformer", "Power Transformer", "Step Down Transformer", "Tx", "Specifications", "Wiring Schematic"],
+    "driveUrl": "https://drive.google.com/file/d/1lOd1OHKa2oVSaWcTfwWOn0ejnLg-DSWL/view?usp=sharing",
+    "driveFileId": "1lOd1OHKa2oVSaWcTfwWOn0ejnLg-DSWL",
+    "visibility": "public",
+    "featured": true
+  },
+
+  {
+    "id": "Transformer detail design drawing-1600KVA",
+    "title": "Transformer detail design drawing-1600KVA",
+    "category": "Electrical Infrastructure",
+    "subcategory": "Power Transformers",
+    "type": "Manual",
+    "system": "Power System",
+    "manufacturer": "Hainan Jinpan",
+    "model": "SCB10-1600",
+    "description": "",
+    "version": "Issue-1",
+    "date": "2026-01-22",
+    "tags": ["Drawing", "Product Specifications", "Transformer", "Power Transformer", "Step Down Transformer", "Tx", "Specifications", "Wiring Schematic"],
+    "driveUrl": "https://drive.google.com/file/d/10XJg-vRx9PxMPtgFcMFyN8hc39q53_n6/view?usp=sharing",
+    "driveFileId": "10XJg-vRx9PxMPtgFcMFyN8hc39q53_n6",
+    "visibility": "public",
+    "featured": true
+  },
+
+
+
+  
   
   {
     "id": "DOC-ELEC-002",

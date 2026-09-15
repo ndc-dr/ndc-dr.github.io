@@ -29,32 +29,52 @@
     "ratedVoltage": "415V 50Hz",
     "ratedCurrent": "2782 A",
     "redundancy": "N+1 Redundant Configuration (2 Active + 1 Standby)",
-    "location": "Generator Yard",
+    "location": "Generator Yard (3 Nos)",
     "maintenanceFrequency": "Weekly no-load test; Monthly 50% load run; Annual resistive load-bank certification",
     "commonFaults": "Starter battery low charge, fuel oil contamination, jacket water pre-heater thermostat trip, fuel solenoid sticking.",
     "safetyPrecautions": "Hearing protection required inside acoustic enclosure. Ensure exhaust damper interlock is operational.",
     "relatedDocIds": ["WEICHAI Genset Operation and Maintenance Manual", "Weichai WPG2250C7 Diesel Generator Set Technical Specifications", "Gear Type Oil Transfer Pump", "Submersible Standard Petroleum and Ethanol Pump Installation Operation and Service"]
   },
-
-
-  
   {
-    "id": "EQ-XFR-01",
+    "id": "SCB10-2000",
     "name": "Cast Resin Dry-Type Step-Down Transformer",
+    "imageUrl": "../assets/images/equipment/SCB10-2000.png",
     "system": "Power System",
-    "manufacturer": "Siemens",
-    "model": "GEAFOL 2500kVA",
+    "manufacturer": "Hainan Jinpan",
+    "model": "SCB10-2000/11/0.415",
     "function": "Steps down utility grid voltage from 11,000V (HT) to 415V/240V (LV) for data center critical distribution.",
-    "capacity": "2500 kVA",
+    "capacity": "2000 kVA",
     "ratedVoltage": "11 kV / 415 V",
-    "ratedCurrent": "131 A (HT) / 3478 A (LV)",
-    "redundancy": "2N Dedicated Transformers per Power Path",
-    "location": "Substation Enclosure Room 1 & 2",
+    "ratedCurrent": "105 A (HT) / 2782 A (LT)",
+    "redundancy": "Dedicated Transformers per Power Path",
+    "location": "HT Room",
     "maintenanceFrequency": "Quarterly thermal imaging; Bi-annual PT100 RTD sensor verification; Annual busbar torquing",
     "commonFaults": "Temperature controller trip due to dust accumulation on core ducts; Loose bus connections.",
     "safetyPrecautions": "Lock-Out Tag-Out (LOTO) on both primary 11kV breaker and secondary main LV incomer before cage entry.",
-    "relatedDocIds": ["DOC-ELEC-005", "DOC-DRAW-001"]
+    "relatedDocIds": ["Product Specifications", "Transformer detail design drawing-2000KVA"]
   },
+  {
+    "id": "SCB10-1600",
+    "name": "Cast Resin Dry-Type Step-Down Transformer",
+    "imageUrl": "../assets/images/equipment/SCB10-2000.png",
+    "system": "Power System",
+    "manufacturer": "Hainan Jinpan",
+    "model": "SCB10-1600/11/0.415",
+    "function": "Steps down utility grid voltage from 11,000V (HT) to 415V/240V (LV) for data center critical distribution.",
+    "capacity": "1600 kVA",
+    "ratedVoltage": "11 kV / 415 V",
+    "ratedCurrent": "84 A (HT) / 2226 A (LT)",
+    "redundancy": "Dedicated Transformers per Power Path",
+    "location": "HT Room",
+    "maintenanceFrequency": "Quarterly thermal imaging; Bi-annual PT100 RTD sensor verification; Annual busbar torquing",
+    "commonFaults": "Temperature controller trip due to dust accumulation on core ducts; Loose bus connections.",
+    "safetyPrecautions": "Lock-Out Tag-Out (LOTO) on both primary 11kV breaker and secondary main LV incomer before cage entry.",
+    "relatedDocIds": ["Product Specifications", "Transformer detail design drawing-1600KVA"]
+  },
+
+
+  
+  
   {
     "id": "EQ-VCB-01",
     "name": "11kV High Tension (HT) Vacuum Circuit Breaker",

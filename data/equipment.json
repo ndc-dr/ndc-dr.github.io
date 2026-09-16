@@ -87,7 +87,7 @@
     "maintenanceFrequency": "Quarterly trip unit check; Annual vacuum bottle contact wear assessment",
     "commonFaults": "Spring charge motor mechanical fatigue, auxiliary contact oxidation, interlock misalignment.",
     "safetyPrecautions": "Do not rack breaker unless trip indicator confirms open. Grounding switch must be engaged before compartment entry.",
-    "relatedDocIds": ["ABB_VD4"]
+    "relatedDocIds": ["ABB-VD4"]
   },
   {
     "id": "F-VR8",

@@ -89,7 +89,24 @@
     "safetyPrecautions": "Do not rack breaker unless trip indicator confirms open. Grounding switch must be engaged before compartment entry.",
     "relatedDocIds": ["ABB_VD4"]
   },
-
+  {
+    "id": "F-VR8",
+    "name": "Single Phase Step Voltage Regulator - AVR",
+    "imageUrl": "../assets/images/equipment/F-VR8.png",
+    "system": "Power System",
+    "manufacturer": "FARADY ELECTRIC CO.,LTD",
+    "model": "VR8",
+    "function": "The VR-8 Single Phase Step Voltage Regulator is a medium-voltage, tap-changing autotransformer designed to automatically regulate distribution line voltages.",
+    "capacity": "120 kVA",
+    "ratedVoltage": "11 kV (+/- 10%, 32 Steps)",
+    "ratedCurrent": "",
+    "redundancy": "AVR Bypass System",
+    "location": "HT Substation Room (Basement Level)",
+    "maintenanceFrequency": "Monthly visual inspection, quarterly cleaning, six-monthly terminal tightening, six-monthly electrical parameter checking, annual calibration, annual insulation testing, annual functional testing, preventive maintenance as per manufacturer recommendation",
+    "commonFaults": "Overvoltage, undervoltage, output voltage fluctuation, hunting/oscillation, overheating, abnormal noise, input voltage failure, control circuit failure, sensing circuit failure, loose terminals, damaged brushes/contacts, worn components, blown fuse, communication/control failure",
+    "safetyPrecautions": "Isolate power before maintenance, apply LOTO, verify absence of voltage, discharge stored energy, use proper PPE, use insulated tools, ensure proper earthing, do not bypass protection, avoid loose connections, maintain adequate ventilation, keep enclosure closed during operation, check for overheating, follow manufacturer instructions, perform testing by qualified personnel",
+    "relatedDocIds": ["AVR Product Specifications", "SINGLE PHASE STEP VOTLAGE REGULATOR BROCHURE"]
+  },
 
 
 

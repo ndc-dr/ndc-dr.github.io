@@ -245,7 +245,25 @@
     "visibility": "public",
     "featured": true
   },
-
+  
+  {
+    "id": "ABB VD4 - Medium Voltage Vacuum Circuit Breaker",
+    "title": "ABB VD4 - Medium Voltage Vacuum Circuit Breaker",
+    "category": "Electrical Infrastructure",
+    "subcategory": "HT / MV Switchgear",
+    "type": "Manual",
+    "system": "Power System",
+    "manufacturer": "ABB",
+    "model": "ABB VD4 12kV 630A 16kA",
+    "description": "The ABB VD4 12.06.16 p135 vacuum circuit breaker is a medium-voltage vacuum circuit breaker rated for 12 kV, 630 A, and a 16 kA short-circuit breaking current",
+    "version": "Issue-1",
+    "date": "2026-01-22",
+    "tags": ["ABB", "VD4", "Vacuum Circuit Breaker", "VCB", "Medium Voltage", "Switchgear", "UniGear", "PowerCube"],
+    "driveUrl": "https://drive.google.com/file/d/157H5aF1_DV6M0oLTFD5u3lkhWAMLQvV2/view?usp=sharing",
+    "driveFileId": "157H5aF1_DV6M0oLTFD5u3lkhWAMLQvV2",
+    "visibility": "public",
+    "featured": true
+  },
 
 
   

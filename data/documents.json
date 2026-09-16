@@ -264,8 +264,49 @@
     "visibility": "public",
     "featured": true
   },
+  {
+    "id": "AVR Product Specifications",
+    "title": "AVR Product Specifications",
+    "category": "Electrical Infrastructure",
+    "subcategory": "HT / MV Switchgear",
+    "type": "Manual",
+    "system": "Power System",
+    "manufacturer": "FARADY",
+    "model": "FARADY VR-8",
+    "description": "The VR-8 Single Phase Step Voltage Regulator is a medium-voltage, tap-changing autotransformer designed to automatically regulate distribution line voltages.",
+    "version": "Issue-1",
+    "date": "2025-01-22",
+    "tags": ["Single Phase Step Voltage Regulator", "Farady Electric", "VR8 Series", "ANSI/IEEE C57.15", "SEL-2431", "Voltlogic-230"],
+    "driveUrl": "https://drive.google.com/file/d/1ZSfXmKFhu8qAeEajwanzyK-MZ1GLkDMD/view?usp=sharing",
+    "driveFileId": "1ZSfXmKFhu8qAeEajwanzyK-MZ1GLkDMD",
+    "visibility": "public",
+    "featured": true
+  },
+
+  {
+    "id": "SINGLE PHASE STEP VOTLAGE REGULATOR BROCHURE",
+    "title": "SINGLE PHASE STEP VOTLAGE REGULATOR BROCHURE",
+    "category": "Electrical Infrastructure",
+    "subcategory": "HT / MV Switchgear",
+    "type": "Manual",
+    "system": "Power System",
+    "manufacturer": "FARADY",
+    "model": "FARADY VR-8",
+    "description": "The VR-8 Single Phase Step Voltage Regulator is a medium-voltage, tap-changing autotransformer designed to automatically regulate distribution line voltages.",
+    "version": "Issue-1",
+    "date": "2025-01-22",
+    "tags": ["Single Phase Step Voltage Regulator", "Farady Electric", "VR8 Series", "ANSI/IEEE C57.15", "SEL-2431", "Voltlogic-230"],
+    "driveUrl": "https://drive.google.com/file/d/10rqdTsoWjkn-BCA1I3oJMjkYXdj4ZZv5/view?usp=sharing",
+    "driveFileId": "10rqdTsoWjkn-BCA1I3oJMjkYXdj4ZZv5",
+    "visibility": "public",
+    "featured": true
+  },
 
 
+
+
+
+  
   
   
   {

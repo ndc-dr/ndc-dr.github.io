@@ -74,6 +74,7 @@
   {
     "id": "ABB-VD4",
     "name": "11kV Medium voltage vacuum circuit breakers",
+    "imageUrl": "../assets/images/equipment/ABB-VD4.png",
     "system": "Power System",
     "manufacturer": "ABB",
     "model": "VD4",

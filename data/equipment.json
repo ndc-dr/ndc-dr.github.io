@@ -71,27 +71,28 @@
     "safetyPrecautions": "Lock-Out Tag-Out (LOTO) on both primary 11kV breaker and secondary main LV incomer before cage entry.",
     "relatedDocIds": ["Product Specifications", "Transformer detail design drawing-1600KVA"]
   },
-
-
-  
-  
   {
-    "id": "EQ-VCB-01",
-    "name": "11kV High Tension (HT) Vacuum Circuit Breaker",
+    "id": "ABB-VD4",
+    "name": "11kV Medium voltage vacuum circuit breakers",
     "system": "Power System",
     "manufacturer": "ABB",
-    "model": "UniGear ZS1 / VD4",
-    "function": "High-voltage feeder protection, line isolation, and utility grid incoming connection control.",
+    "model": "VD4",
+    "function": "High-voltage feeder protection, line isolation, utility grid incoming connection control & Interlocking for AVR bypass.",
     "capacity": "630A Continuous / 25kA Short-Circuit",
-    "ratedVoltage": "11,000 V (11 kV)",
+    "ratedVoltage": "12,000 V (12 kV)",
     "ratedCurrent": "630 A",
     "redundancy": "Dual Incoming Supply Bus Coupler Scheme",
-    "location": "HT Substation Room (Basement Level)",
+    "location": "HT Substation Room (Basement Level), 6 Nos",
     "maintenanceFrequency": "Quarterly trip unit check; Annual vacuum bottle contact wear assessment",
     "commonFaults": "Spring charge motor mechanical fatigue, auxiliary contact oxidation, interlock misalignment.",
     "safetyPrecautions": "Do not rack breaker unless trip indicator confirms open. Grounding switch must be engaged before compartment entry.",
-    "relatedDocIds": ["DOC-ELEC-002", "DOC-DRAW-001"]
+    "relatedDocIds": ["ABB_VD4"]
   },
+
+
+
+
+  
   {
     "id": "EQ-ATS-01",
     "name": "Automatic Transfer Switch (ATS) 3200A",

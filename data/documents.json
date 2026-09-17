@@ -302,7 +302,24 @@
     "featured": true
   },
 
-
+  {
+    "id": "POWERDUCT Pro CATALOG",
+    "title": "POWERDUCT Pro CATALOG",
+    "category": "Electrical Infrastructure",
+    "subcategory": "HT / MV Switchgear",
+    "type": "Manual",
+    "system": "Power System",
+    "manufacturer": "Power Plug Busduct Sdn. Bhd.",
+    "model": "Powerduct Pro Series",
+    "description": "Powerduct Pro Series is a premium, high-power Busbar Trunking System (BBT) designed for heavy-duty electrical distribution. It is heavily utilized in mission-critical environments like data centers, industrial manufacturing plants, and large commercial high-rises to replace bulky cable setups with a more space-saving, modular architecture.",
+    "version": "Issue-1",
+    "date": "2025-01-22",
+    "tags": ["Powerduct Pro Series", "BBT", "Busduct Trunking System", "Extruded Aluminium Housing", "Cooling Fins", "Aluminium Conductor", "Epoxy Insulation", "Thermal Indicator", "Ground Resistance", "Voltage Drop", "Impedance", "Ingress Protection", "Plug-in Unit", "Feeder Section", "Elbows and Tees", "Offsets", "Reducers", "Tap Boxes", "Expansion Fitting", "Flanged End", "Joint Stack"],
+    "driveUrl": "https://drive.google.com/file/d/10qk8I1_SVDKUaellYJ6GKsrThvRCixT4/view?usp=sharing",
+    "driveFileId": "10qk8I1_SVDKUaellYJ6GKsrThvRCixT4",
+    "visibility": "public",
+    "featured": true
+  },
 
 
 

@@ -107,7 +107,24 @@
     "safetyPrecautions": "Isolate power before maintenance, apply LOTO, verify absence of voltage, discharge stored energy, use proper PPE, use insulated tools, ensure proper earthing, do not bypass protection, avoid loose connections, maintain adequate ventilation, keep enclosure closed during operation, check for overheating, follow manufacturer instructions, perform testing by qualified personnel",
     "relatedDocIds": ["AVR Product Specifications", "SINGLE PHASE STEP VOTLAGE REGULATOR BROCHURE"]
   },
-
+  {
+    "id": "BBT-PDP",
+    "name": "Powerduct Pro Series",
+    "imageUrl": "../assets/images/equipment/BBT-PDP.png",
+    "system": "Power System",
+    "manufacturer": "Power Plug Busduct Sdn. Bhd.",
+    "model": "3P3W + 100% Neutral + 50% Internal Ground",
+    "function": "Powerduct Pro Series is a high-performance busbar trunking system engineered by Power Plug Busduct Sdn. Bhd. for heavy-duty, scalable power distribution in commercial, industrial, and mission-critical data center environments.",
+    "capacity": "3200A, 2500A, 1600A",
+    "ratedVoltage": "N/A",
+    "ratedCurrent": "3200A, 2500A, 1600A",
+    "redundancy": "N/A",
+    "location": "DG Room, DG Con. Room, HT & LT Rooms, Power Rooms",
+    "maintenanceFrequency": "Daily/weekly visual observation, monthly visual inspection, quarterly inspection of joints and tap-off units, six-monthly thermal inspection, annual infrared thermography, annual insulation and continuity testing as required, inspection after any overload or short-circuit event, inspection after water ingress or mechanical damage, maintenance as per manufacturer installation manual",
+    "commonFaults": "Loose or improperly installed joints, joint overheating, abnormal temperature rise, phase-to-phase fault, phase-to-earth fault, insulation deterioration, moisture or water ingress, damaged joint cover/gasket, loose tap-off connection, tap-off breaker fault, contact oxidation/contamination, aluminium conductor overheating, enclosure damage, inadequate earthing/bonding, excessive load, voltage drop, thermal expansion-related movement",
+    "safetyPrecautions": "Isolate supply before intrusive maintenance, apply LOTO, verify absence of voltage, use appropriate PPE, use insulated tools, ensure proper earthing and bonding, never remove energized plug-in units unless specifically permitted by the approved procedure, check plug-in interlocks, maintain correct joint torque, do not modify busbar or enclosure, prevent water ingress, maintain required IP protection, keep ventilation/cooling fins unobstructed, inspect for overheating before intervention, use manufacturer-approved components, follow IEC/EN 61439-6 requirements and manufacturer instructions, maintenance by qualified electrical personnel",
+    "relatedDocIds": ["POWERDUCT Pro CATALOG"]
+  },
 
 
   

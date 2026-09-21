@@ -483,7 +483,42 @@
     "visibility": "public",
     "featured": true
   },
-
+  {
+    "id": "NMW Smart Busbar 2.1 Datasheet",
+    "title": "NMW Smart Busbar 2.1 Datasheet",
+    "category": "Electrical Infrastructure",
+    "subcategory": "LV Switchgear",
+    "type": "Manual",
+    "system": "Power System",
+    "manufacturer": "Huawei",
+    "model": "NMW 2.1",
+    "description": "This document is a technical datasheet for the Huawei New Main Way (NMW) Smart Busbar Solution. Designed for data center power distribution, it details modular features, reliable temperature and electrical monitoring, applications, and technical specifications for components like General Input Units and Power Distribution Units.",
+    "version": "Issue-N",
+    "date": "2026-08-26",
+    "tags": ["Huawei", "NMW Smart Busbar", "Data Center Power Distribution", "Technical Datasheet", "General Input Unit", "Power Distribution Unit", "Electrical Specifications", "Modular Busbar"],
+    "driveUrl": "https://drive.google.com/file/d/1Sxg3BMmFF6NnL1_-cxlTm4gPbeGTYWOs/view?usp=sharing",
+    "driveFileId": "1Sxg3BMmFF6NnL1_-cxlTm4gPbeGTYWOs",
+    "visibility": "public",
+    "featured": true
+  },
+  {
+    "id": "NMW 2.1 Smart Busbar User Manual",
+    "title": "NMW 2.1 Smart Busbar User Manual",
+    "category": "Electrical Infrastructure",
+    "subcategory": "LV Switchgear",
+    "type": "Manual",
+    "system": "Power System",
+    "manufacturer": "Huawei",
+    "model": "NMW 2.1",
+    "description": "This document is a user manual for the Huawei New Main Way (NMW) Smart Busbar Solution. Designed for data center power distribution, it details modular features, reliable temperature and electrical monitoring, applications, and technical specifications for components like General Input Units and Power Distribution Units.",
+    "version": "Issue-6",
+    "date": "2025-03-31",
+    "tags": ["Huawei", "NMW Smart Busbar", "Data Center Power Distribution", "Technical Datasheet", "General Input Unit", "Power Distribution Unit", "Electrical Specifications", "Modular Busbar", "User Manual"],
+    "driveUrl": "https://drive.google.com/file/d/1XrFsohRs1TeKWGqdkC1zVj88hFxXlopB/view?usp=sharing",
+    "driveFileId": "1XrFsohRs1TeKWGqdkC1zVj88hFxXlopB",
+    "visibility": "public",
+    "featured": true
+  },
 
 
   

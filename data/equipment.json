@@ -145,6 +145,29 @@
     "relatedDocIds": ["Huawei SmartLi 3.0 ST Datasheet", "SmartLi 3.0 Quick Guide (Short-Term Backup Power)", "SmartLi 3.0 Quick Guide (Long-Term Backup Power)", "SmartLi 3.0 User Manual (Short-Term Backup Power)", "SmartLi 3.0 Modbus Protocol", "SmartLi Alarm Reference", "SmartLi Maintenance Guide", "SmartLi Monitoring Module User Manual", "SmartLi Safety Information"]
   },
 
+  {
+    "id": "NMW-2.1",
+    "name": "NMW 2.1 Smart Busbar",
+    "imageUrl": "../assets/images/equipment/NMW-2.1.png",
+    "system": "Power System",
+    "manufacturer": "HUAWEI DIGITAL POWER TECHNOLOGIES CO., LTD.",
+    "model": "NMW-2.1",
+    "function": "Huawei NMW Smart Busbar 2.1 is an intelligent power distribution trunking system designed for modern data centers and IT cabinets.",
+    "capacity": "263 KW",
+    "ratedVoltage": "380/400/415 Vac",
+    "ratedCurrent": "125 A (Per PDU)",
+    "redundancy": "N+1",
+    "location": "Data Hall",
+    "maintenanceFrequency": "Daily/weekly visual observation, monthly visual inspection, quarterly joint and tap-off inspection, six-monthly thermal inspection, annual infrared thermography, annual insulation and continuity testing as required, inspection after short-circuit or overload events, inspection after water ingress or mechanical damage, maintenance as per manufacturer recommendations",
+    "commonFaults": "Loose joint connection, joint overheating, tap-off unit overheating, phase-to-phase fault, phase-to-earth fault, insulation deterioration, moisture ingress, damaged enclosure, loose terminals, contact oxidation, conductor overheating, earth continuity fault, excessive loading, abnormal temperature rise, voltage drop, communication or monitoring fault",
+    "safetyPrecautions": "Isolate power before maintenance, apply LOTO, verify absence of voltage, use appropriate PPE, use insulated tools, ensure proper earthing and bonding, maintain correct joint torque, inspect joints for overheating, do not modify the BBT, do not bypass protection, prevent water ingress, maintain required IP protection, keep ventilation paths clear, use approved tap-off units and accessories, follow manufacturer installation instructions, maintenance by qualified electrical personnel",
+    "relatedDocIds": ["NMW Smart Busbar 2.1 Datasheet", "NMW Smart Busbar 2.1 Datasheet"]
+  },
+
+
+
+
+  
   
   {
     "id": "EQ-ATS-01",

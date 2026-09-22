@@ -163,7 +163,24 @@
     "safetyPrecautions": "Isolate power before maintenance, apply LOTO, verify absence of voltage, use appropriate PPE, use insulated tools, ensure proper earthing and bonding, maintain correct joint torque, inspect joints for overheating, do not modify the BBT, do not bypass protection, prevent water ingress, maintain required IP protection, keep ventilation paths clear, use approved tap-off units and accessories, follow manufacturer installation instructions, maintenance by qualified electrical personnel",
     "relatedDocIds": ["NMW Smart Busbar 2.1 Datasheet", "NMW 2.1 Smart Busbar User Manual"]
   },
-
+  {
+    "id": "FC-5000",
+    "name": "FusionCol5000 In-row Air Cooled Smart Cooling Product",
+    "imageUrl": "../assets/images/equipment/FC-5000.png",
+    "system": "Cooling System",
+    "manufacturer": "HUAWEI DIGITAL POWER TECHNOLOGIES CO., LTD.",
+    "model": "FusionCol5000-A065H4",
+    "function": "The Huawei FusionCol5000-A065 is a 65 kW smart data center cooling product designed for in-row deployment between server cabinets. It provides efficient, precise climate control at the row level to prevent hotspots in modern data centers.",
+    "capacity": "65 KW",
+    "ratedVoltage": "380–415 V AC",
+    "ratedCurrent": "46 A",
+    "redundancy": "N+1",
+    "location": "Data Hall",
+    "maintenanceFrequency": "Daily/continuous alarm and operating-parameter monitoring, monthly air-filter inspection, monthly condensate-pan and liquid-level-detector inspection, monthly compressor and refrigerant-pipe inspection, monthly indoor-fan inspection, quarterly alarm/log review, quarterly humidifier and electric-heater functional testing, annual T/H sensor calibration, annual evaporator cleaning and fin inspection, monthly outdoor condenser inspection, semi-annual outdoor-fan and electrical-control inspection, maintenance after abnormal alarm or cooling failure, maintenance according to Huawei service procedures",
+    "commonFaults": "High discharge temperature, high discharge pressure, low suction pressure, insufficient refrigerant, refrigerant leakage, refrigerant-pipe blockage, compressor failure, compressor-drive fault, indoor-fan failure, abnormal fan noise/vibration, condenser blockage, dirty evaporator, dirty air filter, condensate overflow, condensate-pump failure, liquid-level-detector fault, drain-pipe blockage, humidifier fault, electric-heater fault, T/H sensor deviation, communication fault, power-supply or breaker fault, water leakage, abnormal temperature/humidity, control-system alarm",
+    "safetyPrecautions": "Maintenance by qualified personnel only, isolate all power supplies before maintenance, apply LOTO, verify absence of voltage, keep upstream/downstream breakers secured against accidental energization, use appropriate PPE, use insulated tools, beware of stored electrical energy, wait the specified discharge time before working on drives, never touch energized electrical components, avoid contact with hot electric-heater surfaces, use proper refrigerant-handling procedures, recover refrigerant before opening the refrigeration circuit, perform leak testing after refrigeration work, prevent water from entering electrical-control sections, keep air intake and exhaust unobstructed, do not operate diagnostic mode without authorization, remove temporary troubleshooting jumpers after use, follow Huawei maintenance procedures and alarm instructions",
+    "relatedDocIds": ["FusionCol5000-A065 In-row Air Cooled Smart Cooling Product User Manual", "FusionCol5000-A065 In-Row Air Cooled Smart Cooling Product Quick Guide", "FusionCol5000-A Teamwork and Monitoring Communications Cable Installation Quick Guide"]
+  },
 
 
 

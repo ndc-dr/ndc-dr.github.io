@@ -665,6 +665,31 @@
     "featured": true
   },
 
+  {
+    "id": "VRF DBV-6Pro",
+    "title": "VRF DBV-6Pro",
+    "category": "Mechanical & Cooling",
+    "subcategory": "PAC / CRAC Units",
+    "type": "Manual",
+    "system": "Cooling System",
+    "manufacturer": "DUNHAM-BUSH",
+    "model": "DBV-EA160AG3",
+    "description": "This document is a technical product catalog for the Dunham-Bush DBV-6Pro Full DC Inverter VRF System, featuring DBV-HTVC (cooling & heating) and DBV-CTVC (cooling-only) outdoor unit series. It details technical specifications, system features, SmartLink communication technology, EnvironBox protection, HyperSensor diagnostics, EnergyWise control, silent operation modes, and long piping capabilities.",
+    "version": "Issue-N",
+    "date": "2026-05-25",
+    "tags": ["Dunham-Bush", "DBV-6Pro", "VRF System", "DBV-HTVC", "DBV-CTVC", "Full DC Inverter", "Outdoor Unit Specifications", "HVAC Catalog"],
+    "driveUrl": "https://drive.google.com/file/d/1hXYOTi-p16ck7QwwMchGI1SMfOZaMb7H/view?usp=sharing",
+    "driveFileId": "1hXYOTi-p16ck7QwwMchGI1SMfOZaMb7H",
+    "visibility": "public",
+    "featured": true
+  },
+
+
+
+
+
+  
+
 
 
   

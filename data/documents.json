@@ -519,9 +519,66 @@
     "visibility": "public",
     "featured": true
   },
+  {
+    "id": "FusionCol5000-A065 In-row Air Cooled Smart Cooling Product User Manual",
+    "title": "FusionCol5000-A065 In-row Air Cooled Smart Cooling Product User Manual",
+    "category": "Mechanical & Cooling",
+    "subcategory": "In-Row Cooling",
+    "type": "Manual",
+    "system": "Cooling System",
+    "manufacturer": "Huawei",
+    "model": "FusionCol5000-A065H4",
+    "description": "This user manual provides detailed instructions for the Huawei FusionCol5000-A065 in-row air-cooled smart cooling product. It covers safety guidelines, product specifications, component descriptions, system installation, wiring, power-on commissioning, parameters, maintenance, component replacement, and troubleshooting for managing data center cooling systems effectively.",
+    "version": "Issue-12",
+    "date": "2026-07-30",
+    "tags": ["FusionCol5000-A065", "Smart Cooling", "In-row Air Cooled", "Huawei Digital Power", "User Manual", "Data Center Cooling", "System Installation", "Power-On Commissioning", "System Maintenance", "Troubleshooting"],
+    "driveUrl": "https://drive.google.com/file/d/1aRT5x0y5J6rguEeYPanYOR6Jj1iL1Kh1/view?usp=sharing",
+    "driveFileId": "1aRT5x0y5J6rguEeYPanYOR6Jj1iL1Kh1",
+    "visibility": "public",
+    "featured": true
+  },
+  {
+    "id": "FusionCol5000-A065 In-Row Air Cooled Smart Cooling Product Quick Guide",
+    "title": "FusionCol5000-A065 In-Row Air Cooled Smart Cooling Product Quick Guide",
+    "category": "Mechanical & Cooling",
+    "subcategory": "In-Row Cooling",
+    "type": "Manual",
+    "system": "Cooling System",
+    "manufacturer": "Huawei",
+    "model": "FusionCol5000-A065H4",
+    "description": "This user manual provides detailed instructions for the Huawei FusionCol5000-A065 in-row air-cooled smart cooling product. It covers safety guidelines, product specifications, component descriptions, system installation, wiring, power-on commissioning, parameters, maintenance, component replacement, and troubleshooting for managing data center cooling systems effectively.",
+    "version": "Issue-4",
+    "date": "2026-07-30",
+    "tags": ["FusionCol5000-A065", "Smart Cooling", "In-row Air Cooled", "Huawei Digital Power", "User Manual", "Data Center Cooling", "System Installation", "Power-On Commissioning", "System Maintenance", "Troubleshooting"],
+    "driveUrl": "https://drive.google.com/file/d/1cshxHGJ2yMYTU4SQ6cjFGdAfWyfoXIaD/view?usp=sharing",
+    "driveFileId": "1cshxHGJ2yMYTU4SQ6cjFGdAfWyfoXIaD",
+    "visibility": "public",
+    "featured": true
+  },
+  {
+    "id": "FusionCol5000-A Teamwork and Monitoring Communications Cable Installation Quick Guide",
+    "title": "FusionCol5000-A Teamwork and Monitoring Communications Cable Installation Quick Guide",
+    "category": "Mechanical & Cooling",
+    "subcategory": "In-Row Cooling",
+    "type": "Manual",
+    "system": "Cooling System",
+    "manufacturer": "Huawei",
+    "model": "FusionCol5000-A065H4",
+    "description": "This quick guide provides instructions for installing teamwork and monitoring communications cables for the FusionCol5000-A system. It covers safety guidelines, cable routing, wiring diagrams for various networking scenarios, and initial parameter configuration for power-on commissioning.",
+    "version": "Issue-2",
+    "date": "2026-02-24",
+    "tags": ["FusionCol5000-A065", "Smart Cooling", "In-row Air Cooled", "Huawei Digital Power", "User Manual", "Team Work", "Monitoring", "Data Center Cooling", "System Installation", "Power-On Commissioning", "System Maintenance", "Troubleshooting"],
+    "driveUrl": "https://drive.google.com/file/d/1H41_wpm9CgTPv7KzH7FlEsuvIOH3Jqdl/view?usp=sharing",
+    "driveFileId": "1H41_wpm9CgTPv7KzH7FlEsuvIOH3Jqdl",
+    "visibility": "public",
+    "featured": true
+  },
 
 
-  
+
+
+
+
   
   
   {

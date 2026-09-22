@@ -199,7 +199,24 @@
     "safetyPrecautions": "Qualified personnel only, isolate power before maintenance, apply LOTO, verify absence of voltage, use insulated gloves and safety footwear, remove watches and metal jewelry, do not work on energized circuits unless specifically required for authorized testing, disconnect power before filter/fan/component maintenance, beware of lethal voltages inside the unit, use proper refrigerant-handling procedures, check for refrigerant leakage before servicing the refrigeration circuit, do not bypass protection devices, use approved replacement parts, keep air passages unobstructed, prevent water from entering electrical sections, remove troubleshooting jumpers after testing, restore all protective covers before energization, follow Huawei safety instructions and maintenance procedures",
     "relatedDocIds": ["NetCol8000-A060 User Manual", "NetCol8000-A060 Quick Guide", "NetCol8000-A060 Maintenance Guide", "NetCol8000-A060 Modbus Protocol", "NetCol8000-A060 Alarm Reference"]
   },
-
+  {
+    "id": "DBV-6P",
+    "name": "DBV-6 Pro Full DC Inverter VRF System",
+    "imageUrl": "../assets/images/equipment/DBV-6P.png",
+    "system": "Cooling System",
+    "manufacturer": "DUNHAM-BUSH",
+    "model": "DBV-EA160AG3",
+    "function": "The Dunham-Bush DBV-6 Pro is a next-generation full DC inverter Variable Refrigerant Flow (VRF) system engineered for high-efficiency commercial and residential heating and cooling applications.",
+    "capacity": "16 KW (Cooling)",
+    "ratedVoltage": "220-240 VAC",
+    "ratedCurrent": "15 A",
+    "redundancy": "N+1",
+    "location": "HT, LT, NOC, Office & Batttery Room",
+    "maintenanceFrequency": "Daily/continuous alarm and operating-parameter monitoring, monthly filter inspection and cleaning, monthly indoor-unit inspection, monthly condensate-drain inspection, quarterly indoor-fan and heat-exchanger inspection, quarterly refrigerant-pipe and insulation inspection, six-monthly outdoor-coil cleaning, six-monthly electrical-terminal inspection, annual compressor and inverter-system inspection, annual refrigerant leak and charge verification, annual sensor and communication-system testing, maintenance after major fault or refrigerant leak, maintenance according to Dunham-Bush service recommendations",
+    "commonFaults": "Refrigerant leakage, insufficient refrigerant, excessive refrigerant pressure, low refrigerant pressure, compressor inverter fault, compressor overheating, outdoor-fan failure, indoor-fan failure, heat-exchanger blockage, dirty air filter, condenser coil contamination, expansion-valve fault, temperature-sensor fault, pressure-sensor fault, communication fault, communication wiring error, drain-pump failure, condensate overflow, abnormal vibration, abnormal noise, power-supply fault, phase-loss fault, phase-sequence fault, inverter PCB fault, indoor-unit PCB fault, abnormal discharge temperature, insufficient cooling/heating, system overload",
+    "safetyPrecautions": "Qualified HVAC personnel only, isolate electrical power before maintenance, apply LOTO, verify absence of voltage, use appropriate electrical and refrigerant-handling PPE, use insulated tools, beware of high DC voltage in inverter circuits, allow inverter capacitors to discharge before opening electrical compartments, never touch energized PCB or inverter components, do not bypass protection devices, use correct refrigerant and specified charging procedure, recover refrigerant before opening the refrigeration circuit, perform leak testing after refrigerant work, avoid releasing refrigerant into the atmosphere, maintain proper earthing, protect communication wiring from damage, keep outdoor coils and airflow paths unobstructed, keep condensate drains clear, do not operate with damaged electrical wiring, restore all covers and protective barriers before energization, follow manufacturer service procedures",
+    "relatedDocIds": ["VRF DBV-6Pro"]
+  },
 
 
   

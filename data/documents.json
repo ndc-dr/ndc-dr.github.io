@@ -511,14 +511,34 @@
     "manufacturer": "Huawei",
     "model": "NMW 2.1",
     "description": "This document is a user manual for the Huawei New Main Way (NMW) Smart Busbar Solution. Designed for data center power distribution, it details modular features, reliable temperature and electrical monitoring, applications, and technical specifications for components like General Input Units and Power Distribution Units.",
-    "version": "Issue-6",
-    "date": "2025-03-31",
+    "version": "Issue-8",
+    "date": "2026-05-07",
     "tags": ["Huawei", "NMW Smart Busbar", "Data Center Power Distribution", "Technical Datasheet", "General Input Unit", "Power Distribution Unit", "Electrical Specifications", "Modular Busbar", "User Manual"],
-    "driveUrl": "https://drive.google.com/file/d/1XrFsohRs1TeKWGqdkC1zVj88hFxXlopB/view?usp=sharing",
-    "driveFileId": "1XrFsohRs1TeKWGqdkC1zVj88hFxXlopB",
+    "driveUrl": "https://drive.google.com/file/d/1onWUtCJrhjAkabO9o8uS-LiLfddfsU5c/view?usp=sharing",
+    "driveFileId": "1onWUtCJrhjAkabO9o8uS-LiLfddfsU5c",
     "visibility": "public",
     "featured": true
   },
+  {
+    "id": "NMW 2.1 Smart Busbar Quick Guide",
+    "title": "NMW 2.1 Smart Busbar Quick Guide",
+    "category": "Electrical Infrastructure",
+    "subcategory": "LV Switchgear",
+    "type": "Manual",
+    "system": "Power System",
+    "manufacturer": "Huawei",
+    "model": "NMW 2.1",
+    "description": "This document is a Quick Guide for the Huawei New Main Way (NMW) Smart Busbar Solution. Designed for data center power distribution, it details graphical figures of electrical connections, monitoring, applications, and technical specifications for components like General Input Units and Power Distribution Units.",
+    "version": "Issue-1",
+    "date": "2026-06-05",
+    "tags": ["Huawei", "NMW Smart Busbar", "Data Center Power Distribution", "Technical Datasheet", "General Input Unit", "Power Distribution Unit", "Electrical Specifications", "Modular Busbar", "User Manual"],
+    "driveUrl": "https://drive.google.com/file/d/1QlidFmuLtX7kVN3lF1AEqKC8S4NM2MJD/view?usp=sharing",
+    "driveFileId": "1QlidFmuLtX7kVN3lF1AEqKC8S4NM2MJD",
+    "visibility": "public",
+    "featured": true
+  },
+
+  
   {
     "id": "FusionCol5000-A065 In-row Air Cooled Smart Cooling Product User Manual",
     "title": "FusionCol5000-A065 In-row Air Cooled Smart Cooling Product User Manual",

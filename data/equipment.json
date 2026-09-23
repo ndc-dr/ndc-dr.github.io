@@ -218,61 +218,31 @@
     "relatedDocIds": ["VRF DBV-6Pro"]
   },
 
+  {
+    "id": "FM-2000.6",
+    "name": "FusionModule 2000 6.0",
+    "imageUrl": "../assets/images/equipment/FM-2000.6.png",
+    "system": "Containment",
+    "manufacturer": "HUAWEI",
+    "model": "FusionModule 2000 6.0",
+    "function": "The Huawei FusionModule2000 6.0 is a next-generation smart modular data center solution designed primarily for small- and medium-sized enterprise data centers. It features a highly integrated, modular design that combines power supply, cooling, server racks, cabling, and management into a unified system.",
+    "capacity": "250 KW IT Load (25 IT Racks)",
+    "ratedVoltage": "380–415 3P VAC",
+    "ratedCurrent": "N/A",
+    "redundancy": "N+1 Power Redundancy",
+    "location": "Data Hall",
+    "maintenanceFrequency": "Daily alarm monitoring, monthly visual inspection, quarterly functional inspection, six-monthly cleaning and inspection, annual electrical and grounding inspection, annual door/lock and sealing inspection, maintenance after abnormal events",
+    "commonFaults": "Door lock failure, access-control fault, sensor failure, temperature/humidity alarm, water-leak alarm, smoke/fire alarm, lighting failure, PDU fault, power-supply fault, communication failure, grounding fault, cable-management issues, cooling airflow obstruction",
+    "safetyPrecautions": "Authorized personnel only, isolate power before electrical maintenance, apply LOTO, verify absence of voltage, use appropriate PPE, maintain proper grounding, keep doors and access routes unobstructed, do not bypass fire or security systems, prevent water ingress, maintain clear airflow paths, use approved replacement components, restore all covers and protections before energization",
+    "relatedDocIds": ["FusionModule2000 6.0 Product Description", "FusionModule2000 6.0 Installation Guide", "FusionModule2000 6.0 Commissioning Guide", "FusionModule2000 6.0 Maintenance Guide", "FusionModule2000 6.0 Cable Routing Diagram", "FusionModule2000 6.0 DCMS Wiring Diagram", "FusionModule2000 6.0 Electric Sliding Door Quick Guide", "FusionModule2000 6.0 DCSM Cable List"]
+  },
 
   
   
   
-  {
-    "id": "EQ-ATS-01",
-    "name": "Automatic Transfer Switch (ATS) 3200A",
-    "system": "Power System",
-    "manufacturer": "Socomec",
-    "model": "ATyS p M 3200A 4P",
-    "function": "Autonomous high-speed changeover between primary national grid supply and synchronized generator bus.",
-    "capacity": "3200 A",
-    "ratedVoltage": "415 V",
-    "ratedCurrent": "3200 A",
-    "redundancy": "Dual Redundant Switch Paths",
-    "location": "Main Low Voltage (MLV) Room",
-    "maintenanceFrequency": "Quarterly mechanical transfer exercise under scheduled changeover window",
-    "commonFaults": "Auxiliary contact bounce, neutral switch contact pitting, control board DC power supply ripple.",
-    "safetyPrecautions": "Both sources (Mains & DG) carry lethal energy. Double-source isolation verification required.",
-    "relatedDocIds": ["DOC-ELEC-006", "DOC-ELEC-003"]
-  },
-  {
-    "id": "EQ-CHILL-01",
-    "name": "Water-Cooled Centrifugal Chiller",
-    "system": "Cooling System",
-    "manufacturer": "York / Johnson Controls",
-    "model": "YK MaxE 450 TR",
-    "function": "Generates 7°C chilled water for the server hall CRAH and in-row precision cooling units.",
-    "capacity": "450 Refrigeration Tons (1580 kWth)",
-    "ratedVoltage": "400 V / 3 Phase",
-    "ratedCurrent": "720 A",
-    "redundancy": "N+1 Redundant Array with fast-restart capacitor backup",
-    "location": "Central Chiller Plant Building",
-    "maintenanceFrequency": "Daily thermodynamic log; Monthly oil filter inspection; Bi-annual tube brushing",
-    "commonFaults": "Condenser tube scaling causing high head pressure, oil return solenoid clogging, VSD cooling fan trip.",
-    "safetyPrecautions": "Monitor refrigerant R-134a leak sensors before entering chiller plant pit.",
-    "relatedDocIds": ["DOC-MECH-001", "DOC-DRAW-002"]
-  },
-  {
-    "id": "EQ-PAC-01",
-    "name": "In-Row Precision Air Conditioner (PAC)",
-    "system": "Cooling System",
-    "manufacturer": "Vertiv / Liebert",
-    "model": "Liebert CRV 45kW CW",
-    "function": "Provides localized high-density thermal management within cold aisle containment racks.",
-    "capacity": "45 kW Sensible Cooling",
-    "ratedVoltage": "400 V / 3 Phase",
-    "ratedCurrent": "22 A",
-    "redundancy": "N+2 per server pod aisle",
-    "location": "Server Hall Rows A through F",
-    "maintenanceFrequency": "Monthly synthetic air filter replacement and condensate drain flush",
-    "commonFaults": "Condensate pump float switch stuck high, differential pressure sensor line plugged with dust.",
-    "safetyPrecautions": "Rotating EC fan blades require isolation switch locked before intake grill removal.",
-    "relatedDocIds": ["DOC-MECH-002", "DOC-OPS-002"]
-  },
+
+
+
   {
     "id": "EQ-VESDA-01",
     "name": "Aspirating Smoke Detection System (VESDA)",

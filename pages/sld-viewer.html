@@ -2,51 +2,40 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Electrical SLD Master Viewer | National Data Center (NDC)</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/responsive.css">
 
   <style>
+    /* Full-viewport canvas environment */
     .sld-viewport-wrapper {
       position: relative;
       width: 100%;
-      height: calc(100vh - var(--header-height) - 120px);
-      min-height: 560px;
+      height: calc(100vh - var(--header-height) - 130px);
+      min-height: 580px;
       background-color: #050811;
       border: 1px solid var(--border-color);
       border-radius: var(--radius);
       overflow: hidden;
-      user-select: none;
-      -webkit-user-select: none;
-      cursor: grab;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
     }
 
-    .sld-viewport-wrapper:active {
-      cursor: grabbing;
-    }
-
-    /* Hardware-accelerated CSS GPU matrix transform layer */
-    #sldTransformLayer {
-      position: absolute;
-      top: 0;
-      left: 0;
-      transform-origin: 0 0;
-      will-change: transform;
-      pointer-events: none;
-    }
-
-    #sldImage {
+    /* Embedded Drive Native Engine */
+    #driveFrame {
+      width: 100%;
+      height: 100%;
+      border: none;
       display: block;
-      max-width: none;
-      max-height: none;
+      background: #0b0f19;
     }
 
+    /* Floating control bar */
     .viewer-hud {
       position: absolute;
       top: 14px;
       left: 14px;
-      z-index: 50;
+      z-index: 20;
       background: rgba(15, 23, 42, 0.92);
       backdrop-filter: blur(8px);
       border: 1px solid var(--border-color);
@@ -54,7 +43,7 @@
       padding: 6px 10px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
     }
 
@@ -62,15 +51,14 @@
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       color: var(--text-primary);
-      width: 32px;
-      height: 32px;
+      padding: 4px 10px;
       border-radius: var(--radius);
-      font-size: 1.1rem;
-      font-weight: 700;
+      font-size: 0.8rem;
+      font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
+      gap: 6px;
       transition: all 0.15s ease;
     }
 
@@ -80,19 +68,12 @@
       border-color: var(--primary-light);
     }
 
-    .zoom-readout {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      min-width: 50px;
-      text-align: center;
-    }
-
+    /* System Quick Bookmarks */
     .system-bookmarks {
       position: absolute;
       bottom: 14px;
       left: 14px;
-      z-index: 50;
+      z-index: 20;
       background: rgba(15, 23, 42, 0.92);
       backdrop-filter: blur(8px);
       border: 1px solid var(--border-color);
@@ -109,42 +90,16 @@
       border: 1px solid var(--border-color);
       color: var(--text-secondary);
       font-size: 0.72rem;
-      padding: 4px 8px;
+      padding: 3px 8px;
       border-radius: var(--radius);
       cursor: pointer;
-      transition: all 0.15s ease;
+      text-decoration: none;
     }
 
     .bookmark-chip:hover {
       color: var(--primary-light);
       border-color: var(--primary-light);
       background: var(--bg-hover);
-    }
-
-    #viewer-loader {
-      position: absolute;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.95);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      color: var(--text-primary);
-      gap: 12px;
-    }
-
-    .spinner {
-      width: 38px;
-      height: 38px;
-      border: 3px solid var(--border-color);
-      border-top-color: var(--primary-light);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
     }
   </style>
 </head>
@@ -179,6 +134,7 @@
   </header>
 
   <main class="app-container" style="padding-bottom: 0.75rem;">
+    <!-- Breadcrumb -->
     <div class="breadcrumbs">
       <a href="../index.html">Portal Home</a>
       <span class="separator">/</span>
@@ -187,55 +143,57 @@
       <span>SLD Full Phase — Single Line Diagram</span>
     </div>
 
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem;">
+    <!-- Title and Action Bar -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem; flex-wrap:wrap; gap:10px;">
       <div>
         <h1 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 2px;">
           Electrical Single Line Diagram (SLD) — Master View
         </h1>
         <p style="color: var(--text-secondary); font-size: 0.78rem;">
-          Native: 36,261 × 15,396 px &nbsp;|&nbsp; Dual 33kV Intake → 11kV HT Substation → 2500kVA Transformers → 2N UPS Trains
+          Native: 36,261 × 15,396 px &nbsp;|&nbsp; File Size: 4,027 KB &nbsp;|&nbsp; High-Precision Vector & Raster CAD
         </p>
       </div>
-      <div>
+      <div style="display:flex; gap:8px;">
         <a href="https://drive.google.com/uc?export=download&id=1qE30hXDbKxoD5YzvtYdhTd6aCtNLQ_n6" target="_blank" class="btn btn-secondary btn-sm">
-          💾 Download Original via Drive
+          💾 Download Original (4 MB)
         </a>
+        <button id="btn-fullscreen" class="btn btn-primary btn-sm">
+          ⛶ Fullscreen
+        </button>
       </div>
     </div>
 
     <!-- Viewport Container -->
     <div class="sld-viewport-wrapper" id="viewport">
       
-      <!-- Top HUD Control Bar -->
+      <!-- Top HUD Floating Status -->
       <div class="viewer-hud">
-        <button id="btn-zoom-in" class="viewer-btn" title="Zoom In">+</button>
-        <button id="btn-zoom-out" class="viewer-btn" title="Zoom Out">−</button>
-        <button id="btn-reset" class="viewer-btn" title="Fit to Screen">⟲</button>
-        <button id="btn-fullscreen" class="viewer-btn" title="Toggle Fullscreen">⛶</button>
-        <div style="height: 18px; width: 1px; background: var(--border-color); margin: 0 4px;"></div>
-        <span class="zoom-readout" id="zoom-readout">100%</span>
+        <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">
+          ⚡ Hardware Zoom & Pan Engine Active
+        </span>
+        <div style="height:16px; width:1px; background:var(--border-color);"></div>
+        <button class="viewer-btn" onclick="document.getElementById('driveFrame').src = document.getElementById('driveFrame').src;">
+          ⟲ Reload
+        </button>
       </div>
 
-      <!-- Quick Jump Bookmarks -->
+      <!-- Quick Section Jump Reference -->
       <div class="system-bookmarks">
-        <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">NAV:</span>
-        <button class="bookmark-chip" onclick="jumpTo(0.08, 0.45, 2.0)">⚡ 33kV Intake</button>
-        <button class="bookmark-chip" onclick="jumpTo(0.30, 0.45, 2.2)">🔌 11kV HT Breakers</button>
-        <button class="bookmark-chip" onclick="jumpTo(0.52, 0.45, 2.5)">🔄 2500kVA Transformers</button>
-        <button class="bookmark-chip" onclick="jumpTo(0.74, 0.50, 2.5)">🔋 2N UPS Trains</button>
-        <button class="bookmark-chip" onclick="jumpTo(0.92, 0.55, 3.0)">🖥️ Server Floor PDUs</button>
+        <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">LEGEND:</span>
+        <span class="bookmark-chip">⚡ Sector A: 33kV Utility Feeder</span>
+        <span class="bookmark-chip">🔌 Sector B: 11kV VCB Switchgear</span>
+        <span class="bookmark-chip">🔄 Sector C: 2500kVA Transformers</span>
+        <span class="bookmark-chip">🔋 Sector D: 2N UPS Distribution</span>
+        <span class="bookmark-chip">🖥️ Sector E: Rack PDU Feeds</span>
       </div>
 
-      <!-- Loading State -->
-      <div id="viewer-loader">
-        <div class="spinner"></div>
-        <div id="loader-status" style="font-size: 0.85rem;">Streaming High-Resolution SLD...</div>
-      </div>
-
-      <!-- Moving layer -->
-      <div id="sldTransformLayer">
-        <img id="sldImage" alt="Single Line Diagram Full Phase">
-      </div>
+      <!-- Google Drive Embedded Preview (Native viewer handles 36,261px zoom perfectly) -->
+      <iframe 
+        id="driveFrame"
+        src="https://drive.google.com/file/d/1qE30hXDbKxoD5YzvtYdhTd6aCtNLQ_n6/preview" 
+        allow="autoplay; fullscreen"
+        loading="lazy">
+      </iframe>
     </div>
   </main>
 
@@ -249,202 +207,23 @@
   <script src="../js/utils.js"></script>
   <script src="../js/navigation.js"></script>
   <script>
-    const viewport = document.getElementById('viewport');
-    const layer = document.getElementById('sldTransformLayer');
-    const img = document.getElementById('sldImage');
-    const zoomText = document.getElementById('zoom-readout');
-    const loader = document.getElementById('viewer-loader');
-
-    // Multi-source fallback list
-    const FILE_ID = '1qE30hXDbKxoD5YzvtYdhTd6aCtNLQ_n6';
-    const CANDIDATE_URLS = [
-      `https://drive.google.com/thumbnail?id=${FILE_ID}&sz=w4000`,
-      `https://lh3.googleusercontent.com/d/${FILE_ID}`,
-      `../assets/images/SLD%20Full%20Phase.png`,
-      `../assets/images/SLD Full Phase.png`
-    ];
-    let candidateIndex = 0;
-
-    let scale = 1;
-    let fitScale = 1;
-    let minScale = 0.01;
-    let maxScale = 5.0;
-    let panX = 0;
-    let panY = 0;
-    let isDragging = false;
-    let startX = 0;
-    let startY = 0;
-
     document.addEventListener('DOMContentLoaded', async () => {
       await Navigation.init('drawings');
-      tryNextImageSource();
-      bindControls();
-    });
 
-    function tryNextImageSource() {
-      if (candidateIndex >= CANDIDATE_URLS.length) {
-        document.getElementById('loader-status').innerHTML = `
-          <span style="color:var(--danger); font-weight:700;">Unable to Stream Image</span><br>
-          <span style="font-size:0.75rem; color:var(--text-muted); max-width:400px; text-align:center; display:inline-block; margin-top:6px;">
-            1. Ensure the Google Drive file is set to: <strong>"Anyone with the link can view"</strong>.<br>
-            2. Or use the <strong>Download Original via Drive</strong> button above.
-          </span>
-        `;
-        return;
-      }
+      // Fullscreen toggle logic
+      const viewport = document.getElementById('viewport');
+      const fsBtn = document.getElementById('btn-fullscreen');
 
-      const nextUrl = CANDIDATE_URLS[candidateIndex++];
-      img.onload = onImageLoaded;
-      img.onerror = () => {
-        console.warn(`[SLD Viewer] Failed loading source: ${nextUrl}, trying next...`);
-        tryNextImageSource();
-      };
-      img.src = nextUrl;
-    }
-
-    function onImageLoaded() {
-      loader.style.display = 'none';
-      fitToScreen();
-    }
-
-    function fitToScreen() {
-      const vWidth = viewport.clientWidth;
-      const vHeight = viewport.clientHeight;
-      const iWidth = img.naturalWidth || 36261;
-      const iHeight = img.naturalHeight || 15396;
-
-      const scaleX = vWidth / iWidth;
-      const scaleY = vHeight / iHeight;
-      fitScale = Math.min(scaleX, scaleY) * 0.98;
-      scale = fitScale;
-      minScale = fitScale * 0.7;
-
-      panX = (vWidth - iWidth * scale) / 2;
-      panY = (vHeight - iHeight * scale) / 2;
-
-      applyTransform();
-    }
-
-    function applyTransform() {
-      layer.style.transform = `translate3d(${panX}px, ${panY}px, 0px) scale(${scale})`;
-      const percent = Math.round((scale / fitScale) * 100);
-      zoomText.textContent = `${percent}%`;
-    }
-
-    function zoomAtPoint(clientX, clientY, factor) {
-      const rect = viewport.getBoundingClientRect();
-      const mouseX = clientX - rect.left;
-      const mouseY = clientY - rect.top;
-
-      const targetScale = Math.min(Math.max(scale * factor, minScale), maxScale);
-      
-      panX = mouseX - (mouseX - panX) * (targetScale / scale);
-      panY = mouseY - (mouseY - panY) * (targetScale / scale);
-      scale = targetScale;
-
-      applyTransform();
-    }
-
-    function jumpTo(normX, normY, zoomFactor) {
-      const vWidth = viewport.clientWidth;
-      const vHeight = viewport.clientHeight;
-      const iWidth = img.naturalWidth || 36261;
-      const iHeight = img.naturalHeight || 15396;
-
-      scale = fitScale * zoomFactor;
-      panX = vWidth / 2 - (normX * iWidth * scale);
-      panY = vHeight / 2 - (normY * iHeight * scale);
-
-      applyTransform();
-    }
-
-    function bindControls() {
-      viewport.addEventListener('mousedown', (e) => {
-        if (e.button !== 0) return;
-        isDragging = true;
-        startX = e.clientX - panX;
-        startY = e.clientY - panY;
-      });
-
-      window.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        panX = e.clientX - startX;
-        panY = e.clientY - startY;
-        applyTransform();
-      });
-
-      window.addEventListener('mouseup', () => { isDragging = false; });
-
-      viewport.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        const factor = e.deltaY < 0 ? 1.2 : 0.833;
-        zoomAtPoint(e.clientX, e.clientY, factor);
-      }, { passive: false });
-
-      viewport.addEventListener('dblclick', (e) => {
-        zoomAtPoint(e.clientX, e.clientY, 1.8);
-      });
-
-      document.getElementById('btn-zoom-in').addEventListener('click', () => {
-        zoomAtPoint(viewport.clientWidth / 2, viewport.clientHeight / 2, 1.3);
-      });
-
-      document.getElementById('btn-zoom-out').addEventListener('click', () => {
-        zoomAtPoint(viewport.clientWidth / 2, viewport.clientHeight / 2, 0.77);
-      });
-
-      document.getElementById('btn-reset').addEventListener('click', fitToScreen);
-
-      document.getElementById('btn-fullscreen').addEventListener('click', () => {
+      fsBtn.addEventListener('click', () => {
         if (!document.fullscreenElement) {
-          viewport.requestFullscreen().catch(() => {});
+          viewport.requestFullscreen().catch(err => {
+            console.warn('Fullscreen error:', err);
+          });
         } else {
           document.exitFullscreen();
         }
       });
-
-      // Mobile Touch Handling
-      let initialDist = 0;
-      let initialScale = 1;
-
-      viewport.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 1) {
-          isDragging = true;
-          startX = e.touches[0].clientX - panX;
-          startY = e.touches[0].clientY - panY;
-        } else if (e.touches.length === 2) {
-          isDragging = false;
-          initialDist = Math.hypot(
-            e.touches[0].clientX - e.touches[1].clientX,
-            e.touches[0].clientY - e.touches[1].clientY
-          );
-          initialScale = scale;
-        }
-      }, { passive: true });
-
-      viewport.addEventListener('touchmove', (e) => {
-        if (isDragging && e.touches.length === 1) {
-          panX = e.touches[0].clientX - startX;
-          panY = e.touches[0].clientY - startY;
-          applyTransform();
-        } else if (e.touches.length === 2 && initialDist > 0) {
-          const currentDist = Math.hypot(
-            e.touches[0].clientX - e.touches[1].clientX,
-            e.touches[0].clientY - e.touches[1].clientY
-          );
-          const factor = currentDist / initialDist;
-          scale = Math.min(Math.max(initialScale * factor, minScale), maxScale);
-          applyTransform();
-        }
-      }, { passive: true });
-
-      viewport.addEventListener('touchend', () => {
-        isDragging = false;
-        initialDist = 0;
-      });
-
-      window.addEventListener('resize', fitToScreen);
-    }
+    });
   </script>
 </body>
 </html>

@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="../css/responsive.css">
 
   <style>
-    /* Full-viewport canvas environment */
     .sld-viewport-wrapper {
       position: relative;
       width: 100%;
@@ -27,7 +26,7 @@
       cursor: grabbing;
     }
 
-    /* Transform layer hardware-accelerated by GPU */
+    /* Hardware-accelerated CSS GPU matrix transform layer */
     #sldTransformLayer {
       position: absolute;
       top: 0;
@@ -41,10 +40,8 @@
       display: block;
       max-width: none;
       max-height: none;
-      image-rendering: auto;
     }
 
-    /* Floating control bar */
     .viewer-hud {
       position: absolute;
       top: 14px;
@@ -91,7 +88,6 @@
       text-align: center;
     }
 
-    /* Quick jump bookmarks */
     .system-bookmarks {
       position: absolute;
       bottom: 14px;
@@ -125,7 +121,6 @@
       background: var(--bg-hover);
     }
 
-    /* Loading / Error states */
     #viewer-loader {
       position: absolute;
       inset: 0;
@@ -202,8 +197,8 @@
         </p>
       </div>
       <div>
-        <a id="download-link" href="../assets/images/SLD%20Full%20Phase.png" target="_blank" download="SLD Full Phase.png" class="btn btn-secondary btn-sm">
-          💾 Download Image
+        <a href="https://drive.google.com/uc?export=download&id=1qE30hXDbKxoD5YzvtYdhTd6aCtNLQ_n6" target="_blank" class="btn btn-secondary btn-sm">
+          💾 Download Original via Drive
         </a>
       </div>
     </div>
@@ -221,7 +216,7 @@
         <span class="zoom-readout" id="zoom-readout">100%</span>
       </div>
 
-      <!-- Jump Bookmarks -->
+      <!-- Quick Jump Bookmarks -->
       <div class="system-bookmarks">
         <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">NAV:</span>
         <button class="bookmark-chip" onclick="jumpTo(0.08, 0.45, 2.0)">⚡ 33kV Intake</button>
@@ -234,13 +229,12 @@
       <!-- Loading State -->
       <div id="viewer-loader">
         <div class="spinner"></div>
-        <div id="loader-status" style="font-size: 0.85rem;">Loading Single Line Diagram...</div>
+        <div id="loader-status" style="font-size: 0.85rem;">Streaming High-Resolution SLD...</div>
       </div>
 
       <!-- Moving layer -->
       <div id="sldTransformLayer">
-        <!-- Exact relative path to your file in the repository -->
-        <img id="sldImage" src="../assets/images/SLD%20Full%20Phase.png" alt="Single Line Diagram Full Phase">
+        <img id="sldImage" alt="Single Line Diagram Full Phase">
       </div>
     </div>
   </main>
@@ -255,12 +249,21 @@
   <script src="../js/utils.js"></script>
   <script src="../js/navigation.js"></script>
   <script>
-    // Geometry state
     const viewport = document.getElementById('viewport');
     const layer = document.getElementById('sldTransformLayer');
     const img = document.getElementById('sldImage');
     const zoomText = document.getElementById('zoom-readout');
     const loader = document.getElementById('viewer-loader');
+
+    // Multi-source fallback list
+    const FILE_ID = '1qE30hXDbKxoD5YzvtYdhTd6aCtNLQ_n6';
+    const CANDIDATE_URLS = [
+      `https://drive.google.com/thumbnail?id=${FILE_ID}&sz=w4000`,
+      `https://lh3.googleusercontent.com/d/${FILE_ID}`,
+      `../assets/images/SLD%20Full%20Phase.png`,
+      `../assets/images/SLD Full Phase.png`
+    ];
+    let candidateIndex = 0;
 
     let scale = 1;
     let fitScale = 1;
@@ -274,37 +277,34 @@
 
     document.addEventListener('DOMContentLoaded', async () => {
       await Navigation.init('drawings');
-
-      // Detect if image is already cached or wait for load
-      if (img.complete && img.naturalWidth !== 0) {
-        onImageLoaded();
-      } else {
-        img.onload = onImageLoaded;
-        img.onerror = onImageError;
-      }
-
+      tryNextImageSource();
       bindControls();
     });
+
+    function tryNextImageSource() {
+      if (candidateIndex >= CANDIDATE_URLS.length) {
+        document.getElementById('loader-status').innerHTML = `
+          <span style="color:var(--danger); font-weight:700;">Unable to Stream Image</span><br>
+          <span style="font-size:0.75rem; color:var(--text-muted); max-width:400px; text-align:center; display:inline-block; margin-top:6px;">
+            1. Ensure the Google Drive file is set to: <strong>"Anyone with the link can view"</strong>.<br>
+            2. Or use the <strong>Download Original via Drive</strong> button above.
+          </span>
+        `;
+        return;
+      }
+
+      const nextUrl = CANDIDATE_URLS[candidateIndex++];
+      img.onload = onImageLoaded;
+      img.onerror = () => {
+        console.warn(`[SLD Viewer] Failed loading source: ${nextUrl}, trying next...`);
+        tryNextImageSource();
+      };
+      img.src = nextUrl;
+    }
 
     function onImageLoaded() {
       loader.style.display = 'none';
       fitToScreen();
-    }
-
-    function onImageError() {
-      // Fallback: Check if file was saved without URL encoding or lowercase
-      const currentSrc = img.getAttribute('src');
-      if (currentSrc.includes('%20')) {
-        img.src = '../assets/images/SLD Full Phase.png';
-      } else {
-        document.getElementById('loader-status').innerHTML = `
-          <span style="color:var(--danger); font-weight:700;">File Not Found</span><br>
-          <span style="font-size:0.75rem; color:var(--text-muted);">
-            Could not find <code>assets/images/SLD Full Phase.png</code>.<br>
-            Please check GitHub to confirm the exact case and spelling of the filename.
-          </span>
-        `;
-      }
     }
 
     function fitToScreen() {
@@ -338,7 +338,6 @@
 
       const targetScale = Math.min(Math.max(scale * factor, minScale), maxScale);
       
-      // Zoom centered directly on the cursor coordinate
       panX = mouseX - (mouseX - panX) * (targetScale / scale);
       panY = mouseY - (mouseY - panY) * (targetScale / scale);
       scale = targetScale;
@@ -360,9 +359,8 @@
     }
 
     function bindControls() {
-      // Mouse dragging
       viewport.addEventListener('mousedown', (e) => {
-        if (e.button !== 0) return; // Left click only
+        if (e.button !== 0) return;
         isDragging = true;
         startX = e.clientX - panX;
         startY = e.clientY - panY;
@@ -377,19 +375,16 @@
 
       window.addEventListener('mouseup', () => { isDragging = false; });
 
-      // Wheel Zoom
       viewport.addEventListener('wheel', (e) => {
         e.preventDefault();
         const factor = e.deltaY < 0 ? 1.2 : 0.833;
         zoomAtPoint(e.clientX, e.clientY, factor);
       }, { passive: false });
 
-      // Double-click zoom
       viewport.addEventListener('dblclick', (e) => {
         zoomAtPoint(e.clientX, e.clientY, 1.8);
       });
 
-      // HUD buttons
       document.getElementById('btn-zoom-in').addEventListener('click', () => {
         zoomAtPoint(viewport.clientWidth / 2, viewport.clientHeight / 2, 1.3);
       });
@@ -408,7 +403,7 @@
         }
       });
 
-      // Touch screen support (Mobile & Tablet)
+      // Mobile Touch Handling
       let initialDist = 0;
       let initialScale = 1;
 

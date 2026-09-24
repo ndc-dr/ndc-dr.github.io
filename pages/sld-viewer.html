@@ -1,229 +1,508 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Electrical SLD Master Viewer | National Data Center (NDC)</title>
-  <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="../css/responsive.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Single Line Diagram — Data Center Electrical Layout</title>
+<style>
+  :root{
+    --bg:#0b0f14;
+    --panel:#131a22;
+    --panel-2:#1b242e;
+    --line:#2a3441;
+    --text:#e6edf3;
+    --muted:#8b98a5;
+    --accent:#4da3ff;
+    --toolbar-h:52px;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;}
+  body{
+    background:var(--bg);color:var(--text);
+    font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    overflow:hidden;
+  }
 
-  <style>
-    /* Full-viewport canvas environment */
-    .sld-viewport-wrapper {
-      position: relative;
-      width: 100%;
-      height: calc(100vh - var(--header-height) - 130px);
-      min-height: 580px;
-      background-color: #050811;
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
-    }
+  /* ---------- layout ---------- */
+  #stage{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    height:100dvh;
+    background:var(--bg);
+  }
+  #stage:fullscreen{height:100vh;width:100vw;}
 
-    /* Embedded Drive Native Engine */
-    #driveFrame {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
-      background: #0b0f19;
-    }
+  /* ---------- toolbar ---------- */
+  .toolbar{
+    display:flex;align-items:center;gap:6px;
+    height:var(--toolbar-h);flex:0 0 auto;
+    padding:0 10px;
+    background:linear-gradient(180deg,#161e27,#111820);
+    border-bottom:1px solid var(--line);
+    overflow-x:auto;overflow-y:hidden;white-space:nowrap;
+    scrollbar-width:thin;
+  }
+  .toolbar::-webkit-scrollbar{height:5px;}
+  .toolbar::-webkit-scrollbar-thumb{background:#2a3441;border-radius:3px;}
 
-    /* Floating control bar */
-    .viewer-hud {
-      position: absolute;
-      top: 14px;
-      left: 14px;
-      z-index: 20;
-      background: rgba(15, 23, 42, 0.92);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      padding: 6px 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
-    }
+  .brand{display:flex;align-items:center;gap:9px;font-weight:600;letter-spacing:.2px;flex:0 0 auto;}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);}
+  .brand .badge{
+    font-weight:500;font-size:11px;color:var(--muted);
+    background:#0e141b;border:1px solid var(--line);
+    padding:2px 7px;border-radius:20px;
+  }
 
-    .viewer-btn {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      color: var(--text-primary);
-      padding: 4px 10px;
-      border-radius: var(--radius);
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.15s ease;
-    }
+  .group{display:flex;align-items:center;gap:5px;padding-left:8px;margin-left:8px;border-left:1px solid var(--line);}
+  .group:first-of-type{border-left:0;margin-left:auto;padding-left:0;}
 
-    .viewer-btn:hover {
-      background: var(--primary);
-      color: #fff;
-      border-color: var(--primary-light);
-    }
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    height:34px;min-width:34px;padding:0 10px;
+    border:1px solid var(--line);background:var(--panel-2);color:var(--text);
+    border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;
+    font-family:inherit;transition:background .15s,border-color .15s,color .15s;
+    user-select:none;
+  }
+  .btn:hover{background:#243040;border-color:#3a4a5e;}
+  .btn:active{transform:translateY(1px);}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px;}
+  .btn.active{background:#1d3a5c;border-color:var(--accent);color:#cfe6ff;}
+  .btn.zoomlevel{min-width:72px;font-variant-numeric:tabular-nums;font-size:12px;color:var(--muted);}
 
-    /* System Quick Bookmarks */
-    .system-bookmarks {
-      position: absolute;
-      bottom: 14px;
-      left: 14px;
-      z-index: 20;
-      background: rgba(15, 23, 42, 0.92);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      padding: 6px 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
+  /* ---------- viewer ---------- */
+  #viewer{
+    flex:1 1 auto;
+    min-height:0;
+    position:relative;
+    background:
+      radial-gradient(circle at 50% 40%,#141c26 0%,#0b0f14 70%);
+  }
+  #viewer canvas{outline:none;}
 
-    .bookmark-chip {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      color: var(--text-secondary);
-      font-size: 0.72rem;
-      padding: 3px 8px;
-      border-radius: var(--radius);
-      cursor: pointer;
-      text-decoration: none;
-    }
+  /* ---------- HUD ---------- */
+  .hud{
+    position:absolute;left:12px;bottom:12px;z-index:20;
+    display:flex;gap:8px;align-items:center;
+    pointer-events:none;
+  }
+  .hud .chip{
+    background:rgba(11,15,20,.82);
+    border:1px solid var(--line);
+    color:var(--muted);
+    font-size:12px;font-variant-numeric:tabular-nums;
+    padding:5px 10px;border-radius:7px;
+    backdrop-filter:blur(6px);
+  }
+  .hud .chip b{color:var(--text);font-weight:600;}
 
-    .bookmark-chip:hover {
-      color: var(--primary-light);
-      border-color: var(--primary-light);
-      background: var(--bg-hover);
-    }
-  </style>
+  /* ---------- overlay / error ---------- */
+  .overlay{
+    position:absolute;inset:0;z-index:60;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:16px;background:rgba(11,15,20,.94);
+    transition:opacity .35s ease,visibility .35s ease;
+  }
+  .overlay.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+  .spinner{
+    width:38px;height:38px;border-radius:50%;
+    border:3px solid #24303e;border-top-color:var(--accent);
+    animation:spin .85s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .overlay p{color:var(--muted);margin:0;}
+
+  .errbox{
+    max-width:640px;padding:26px 30px;
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    text-align:left;
+  }
+  .errbox h2{margin:0 0 10px;font-size:17px;color:#ff8a8a;}
+  .errbox p{color:var(--muted);margin:8px 0;line-height:1.55;}
+  .errbox code{
+    background:#0e141b;border:1px solid var(--line);
+    padding:1px 6px;border-radius:5px;font-size:12.5px;color:#9fd0ff;
+  }
+  .errbox pre{
+    background:#0e141b;border:1px solid var(--line);border-radius:8px;
+    padding:12px 14px;overflow-x:auto;font-size:12.5px;color:#9fd0ff;margin:12px 0;
+  }
+
+  /* ---------- toast ---------- */
+  .toast{
+    position:absolute;left:50%;bottom:26px;transform:translate(-50%,14px);
+    background:#1d3a5c;border:1px solid var(--accent);color:#dbeaff;
+    padding:9px 18px;border-radius:9px;font-size:13px;font-weight:500;
+    opacity:0;pointer-events:none;transition:.28s ease;z-index:80;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0);}
+
+  /* ---------- OpenSeadragon navigator tweaks ---------- */
+  .navigator{border-radius:8px;overflow:hidden;box-shadow:0 6px 22px rgba(0,0,0,.55);}
+
+  @media (max-width:760px){
+    .brand span:not(.dot){display:none;}
+    .btn{padding:0 8px;font-size:12px;}
+    .hud{left:8px;bottom:8px;}
+  }
+</style>
 </head>
-<body data-page-id="drawings">
+<body>
 
-  <header class="site-header">
-    <div class="header-container">
-      <div class="brand-wrapper">
-        <a href="../index.html" style="display:flex; align-items:center; gap:12px; text-decoration:none;">
-          <img src="../assets/images/bcc-logo.svg" alt="BCC Logo" class="brand-logo">
-          <div class="brand-text">
-            <span class="brand-title dynamic-facility-title">National Data Center (NDC)</span>
-            <span class="brand-subtitle dynamic-org-title">Bangladesh Computer Council</span>
-          </div>
-        </a>
-      </div>
+<div id="stage">
 
-      <nav class="main-nav">
-        <a href="../index.html" class="nav-link">Home</a>
-        <a href="knowledge.html" class="nav-link">Knowledge Base</a>
-        <a href="systems.html" class="nav-link">Systems</a>
-        <a href="documents.html" class="nav-link">Documents</a>
-        <a href="equipment.html" class="nav-link">Equipment</a>
-        <a href="procedures.html" class="nav-link">SOP / MOP / EOP</a>
-        <a href="drawings.html" class="nav-link active">Drawings & SLD</a>
-      </nav>
+  <header class="toolbar">
+    <div class="brand">
+      <span class="dot"></span>
+      <span>Single Line Diagram</span>
+      <span class="badge">36261 × 15396</span>
+    </div>
 
-      <div class="nav-actions">
-        <button id="theme-toggle" class="theme-toggle-btn">☀️ Light</button>
-      </div>
+    <div class="group">
+      <button class="btn" data-action="zoom-out" title="Zoom out (−)" aria-label="Zoom out">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M8 11h6"/>
+        </svg>
+      </button>
+      <button class="btn zoomlevel" data-action="reset" title="Reset view (0)">100%</button>
+      <button class="btn" data-action="zoom-in" title="Zoom in (+)" aria-label="Zoom in">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M8 11h6"/><path d="M11 8v6"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="group">
+      <button class="btn" data-action="fit"        title="Fit whole diagram (0)">Fit</button>
+      <button class="btn" data-action="fit-width"  title="Fit width (1)">Width</button>
+      <button class="btn" data-action="fit-height" title="Fit height (2)">Height</button>
+    </div>
+
+    <div class="group">
+      <button class="btn active" data-action="navigator" title="Toggle minimap (M)">Map</button>
+      <button class="btn" data-action="link" title="Copy link to this view (L)">Link</button>
+      <button class="btn" data-action="fullscreen" title="Fullscreen (F)" aria-label="Fullscreen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>
+        </svg>
+      </button>
     </div>
   </header>
 
-  <main class="app-container" style="padding-bottom: 0.75rem;">
-    <!-- Breadcrumb -->
-    <div class="breadcrumbs">
-      <a href="../index.html">Portal Home</a>
-      <span class="separator">/</span>
-      <a href="drawings.html">Drawings</a>
-      <span class="separator">/</span>
-      <span>SLD Full Phase — Single Line Diagram</span>
-    </div>
+  <div id="viewer"></div>
 
-    <!-- Title and Action Bar -->
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem; flex-wrap:wrap; gap:10px;">
-      <div>
-        <h1 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 2px;">
-          Electrical Single Line Diagram (SLD) — Master View
-        </h1>
-        <p style="color: var(--text-secondary); font-size: 0.78rem;">
-          Native: 36,261 × 15,396 px &nbsp;|&nbsp; File Size: 4,027 KB &nbsp;|&nbsp; High-Precision Vector & Raster CAD
-        </p>
-      </div>
-      <div style="display:flex; gap:8px;">
-        <a href="https://drive.google.com/uc?export=download&id=1qE30hXDbKxoD5YzvtYdhTd6aCtNLQ_n6" target="_blank" class="btn btn-secondary btn-sm">
-          💾 Download Original (4 MB)
-        </a>
-        <button id="btn-fullscreen" class="btn btn-primary btn-sm">
-          ⛶ Fullscreen
-        </button>
-      </div>
-    </div>
+  <div class="hud">
+    <div class="chip">Zoom <b id="hud-zoom">–</b></div>
+    <div class="chip" id="hud-pos">X — &nbsp; Y —</div>
+  </div>
 
-    <!-- Viewport Container -->
-    <div class="sld-viewport-wrapper" id="viewport">
-      
-      <!-- Top HUD Floating Status -->
-      <div class="viewer-hud">
-        <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">
-          ⚡ Hardware Zoom & Pan Engine Active
-        </span>
-        <div style="height:16px; width:1px; background:var(--border-color);"></div>
-        <button class="viewer-btn" onclick="document.getElementById('driveFrame').src = document.getElementById('driveFrame').src;">
-          ⟲ Reload
-        </button>
-      </div>
+  <div class="overlay" id="overlay">
+    <div class="spinner"></div>
+    <p>Loading diagram…</p>
+  </div>
 
-      <!-- Quick Section Jump Reference -->
-      <div class="system-bookmarks">
-        <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">LEGEND:</span>
-        <span class="bookmark-chip">⚡ Sector A: 33kV Utility Feeder</span>
-        <span class="bookmark-chip">🔌 Sector B: 11kV VCB Switchgear</span>
-        <span class="bookmark-chip">🔄 Sector C: 2500kVA Transformers</span>
-        <span class="bookmark-chip">🔋 Sector D: 2N UPS Distribution</span>
-        <span class="bookmark-chip">🖥️ Sector E: Rack PDU Feeds</span>
-      </div>
+  <div class="toast" id="toast"></div>
+</div>
 
-      <!-- Google Drive Embedded Preview (Native viewer handles 36,261px zoom perfectly) -->
-      <iframe 
-        id="driveFrame"
-        src="https://drive.google.com/file/d/1qE30hXDbKxoD5YzvtYdhTd6aCtNLQ_n6/preview" 
-        allow="autoplay; fullscreen"
-        loading="lazy">
-      </iframe>
-    </div>
-  </main>
+<script src="https://cdn.jsdelivr.net/npm/openseadragon@4.1.0/build/openseadragon/openseadragon.min.js"></script>
+<script>
+(function () {
+  'use strict';
 
-  <footer class="site-footer">
-    <div class="footer-bottom" style="border-top:none; padding-top:0;">
-      <div>© 2026 National Data Center (NDC), Bangladesh Computer Council.</div>
-      <div>NDC Electrical Engineering Division</div>
-    </div>
-  </footer>
+  /* =========================================================
+     CONFIG — adjust these two paths if your layout differs
+     ========================================================= */
+  const DZI_URL   = '../assets/images/sld.dzi';           // Deep Zoom descriptor
+  const FALLBACK  = '../assets/images/SLD%20Full%20Phase.png'; // original PNG (note %20 for spaces)
+  const FALLBACK_W = 36261;
+  const FALLBACK_H = 15396;
+  /* ========================================================= */
 
-  <script src="../js/utils.js"></script>
-  <script src="../js/navigation.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      await Navigation.init('drawings');
+  const $ = (id) => document.getElementById(id);
+  const viewerEl = $('viewer');
+  const overlay  = $('overlay');
+  const hudZoom  = $('hud-zoom');
+  const hudPos   = $('hud-pos');
+  const toastEl  = $('toast');
+  const zoomBtn  = document.querySelector('[data-action="reset"]');
+  const stage    = $('stage');
 
-      // Fullscreen toggle logic
-      const viewport = document.getElementById('viewport');
-      const fsBtn = document.getElementById('btn-fullscreen');
+  /* ---------------- OpenSeadragon ---------------- */
+  const viewer = OpenSeadragon({
+    id: 'viewer',
+    prefixUrl: 'https://cdn.jsdelivr.net/npm/openseadragon@4.1.0/build/openseadragon/images/',
+    tileSources: DZI_URL,
 
-      fsBtn.addEventListener('click', () => {
-        if (!document.fullscreenElement) {
-          viewport.requestFullscreen().catch(err => {
-            console.warn('Fullscreen error:', err);
-          });
-        } else {
-          document.exitFullscreen();
-        }
-      });
+    // We build our own toolbar
+    showNavigationControl: false,
+
+    // Minimap
+    showNavigator: true,
+    navigatorPosition: 'BOTTOM_RIGHT',
+    navigatorSizeRatio: 0.15,
+    navigatorBorderColor: '#2a3441',
+    navigatorBackground: '#0b0f14',
+    navigatorDisplayRegionColor: '#4da3ff',
+
+    // Zoom limits
+    minZoomImageRatio: 0.06,   // can zoom out to 6% of "fit"
+    maxZoomPixelRatio: 1.6,    // can zoom slightly past 1:1
+    visibilityRatio: 0.35,
+    constrainDuringPan: false,
+
+    // Feel
+    animationTime: 0.7,
+    springStiffness: 9,
+    blendTime: 0.12,
+    immediateRender: true,
+    imageLoaderLimit: 10,
+    timeout: 180000,
+
+    gestureSettingsMouse: {
+      clickToZoom: false,
+      dblClickToZoom: true,
+      scrollToZoom: true,
+      flickEnabled: true,
+      pinchToZoom: true
+    },
+    gestureSettingsTouch: {
+      pinchToZoom: true,
+      flickEnabled: true,
+      dblClickToZoom: true
+    }
+  });
+
+  /* ---------------- helpers ---------------- */
+  function imgSize() {
+    const item = viewer.world.getItemAt(0);
+    return item ? item.getContentSize()
+                : new OpenSeadragon.Point(FALLBACK_W, FALLBACK_H);
+  }
+
+  /** screen pixels per image pixel (1 === 100% / 1:1) */
+  function screenScale() {
+    const b = viewer.viewport.getBounds();
+    const w = imgSize().x;
+    const cw = viewerEl.clientWidth || 1;
+    return cw / (b.width * w);
+  }
+
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => toastEl.classList.remove('show'), 1800);
+  }
+
+  function updateHud() {
+    const s = screenScale();
+    const pct = s * 100;
+    const txt = pct >= 100 ? pct.toFixed(0) + '%'
+              : pct >= 10  ? pct.toFixed(1) + '%'
+              :              pct.toFixed(2) + '%';
+    hudZoom.textContent = txt;
+    zoomBtn.textContent = txt;
+  }
+
+  /* ---------------- fit helpers ---------------- */
+  function fitWidth() {
+    const size = imgSize();
+    const r = viewerEl.getBoundingClientRect();
+    const aspect = r.width / r.height;
+    const w = size.x;
+    const h = Math.min(w / aspect, size.y);
+    const y = (size.y - h) / 2;
+    const rect = viewer.viewport.imageToViewportRectangle(
+      new OpenSeadragon.Rect(0, y, w, h)
+    );
+    viewer.viewport.fitBounds(rect, true);
+  }
+
+  function fitHeight() {
+    const size = imgSize();
+    const r = viewerEl.getBoundingClientRect();
+    const aspect = r.width / r.height;
+    const h = size.y;
+    const w = Math.min(h * aspect, size.x);
+    const x = (size.x - w) / 2;
+    const rect = viewer.viewport.imageToViewportRectangle(
+      new OpenSeadragon.Rect(x, 0, w, h)
+    );
+    viewer.viewport.fitBounds(rect, true);
+  }
+
+  function goHome() {
+    viewer.viewport.goHome(true);
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+
+  /* ---------------- actions ---------------- */
+  const actions = {
+    'zoom-in':   () => viewer.viewport.zoomBy(1.5),
+    'zoom-out':  () => viewer.viewport.zoomBy(1 / 1.5),
+    'reset':     goHome,
+    'fit':       goHome,
+    'fit-width': fitWidth,
+    'fit-height':fitHeight,
+    'navigator': toggleNavigator,
+    'fullscreen':toggleFullscreen,
+    'link':      copyLink
+  };
+
+  document.querySelectorAll('[data-action]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const fn = actions[btn.dataset.action];
+      if (fn) fn();
     });
-  </script>
+  });
+
+  function toggleNavigator() {
+    if (!viewer.navigator) return;
+    const el = viewer.navigator.element;
+    const hidden = el.style.display === 'none';
+    el.style.display = hidden ? '' : 'none';
+    document.querySelector('[data-action="navigator"]')
+            .classList.toggle('active', hidden);
+  }
+
+  function toggleFullscreen() {
+    const d = document;
+    if (!d.fullscreenElement && !d.webkitFullscreenElement) {
+      (stage.requestFullscreen || stage.webkitRequestFullscreen).call(stage);
+    } else {
+      (d.exitFullscreen || d.webkitExitFullscreen).call(d);
+    }
+  }
+
+  document.addEventListener('fullscreenchange', () => {
+    setTimeout(() => viewer.forceRedraw(), 120);
+  });
+
+  /* ---------------- deep link ---------------- */
+  function currentHash() {
+    const vp = viewer.viewport;
+    const c = vp.viewportToImageCoordinates(vp.getCenter());
+    return '#x=' + c.x.toFixed(1) +
+           '&y=' + c.y.toFixed(1) +
+           '&z=' + screenScale().toFixed(5);
+  }
+
+  async function copyLink() {
+    const hash = currentHash();
+    const url = location.origin + location.pathname + location.search + hash;
+    history.replaceState(null, '', hash);
+    try {
+      await navigator.clipboard.writeText(url);
+      toast('Link copied to clipboard');
+    } catch (e) {
+      window.prompt('Copy this link:', url);
+    }
+  }
+
+  function restoreFromHash() {
+    const m = location.hash.match(/^#x=([-\d.]+)&y=([-\d.]+)&z=([\d.]+)$/);
+    if (!m) return;
+    const x = parseFloat(m[1]), y = parseFloat(m[2]), s = parseFloat(m[3]);
+    if (!isFinite(x) || !isFinite(y) || !isFinite(s) || s <= 0) return;
+
+    const vp = viewer.viewport;
+    const size = imgSize();
+    const cw = viewerEl.clientWidth || 1;
+    const zoom = s * size.x / cw;
+
+    vp.zoomTo(zoom, undefined, true);
+    vp.panTo(vp.imageToViewportCoordinates(x, y), true);
+  }
+
+  // Keep URL in sync (debounced) so the address bar is always shareable
+  let hashTimer = null;
+  function scheduleHashUpdate() {
+    clearTimeout(hashTimer);
+    hashTimer = setTimeout(() => {
+      history.replaceState(null, '', currentHash());
+    }, 500);
+  }
+
+  /* ---------------- events ---------------- */
+  viewer.addHandler('open', () => {
+    overlay.classList.add('hidden');
+    restoreFromHash();
+    updateHud();
+  });
+
+  viewer.addHandler('open-failed', (e) => {
+    overlay.innerHTML =
+      '<div class="errbox">' +
+        '<h2>Could not load the diagram</h2>' +
+        '<p>' + (e && e.message ? String(e.message) : 'Unknown error') + '</p>' +
+        '<p>Tiles were expected at <code>' + DZI_URL + '</code>.</p>' +
+        '<p>Generate them once, locally, with <b>libvips</b>:</p>' +
+        '<pre>vips dzsave "SLD Full Phase.png" sld \\\n' +
+        '  --tile-size=512 --overlap=1 --suffix=".jpg[Q=85]"</pre>' +
+        '<p>Then commit <code>sld.dzi</code> and the <code>sld_files/</code> folder ' +
+        'into <code>assets/images/</code>.</p>' +
+        '<p><a href="' + FALLBACK + '" style="color:#4da3ff">Open the original PNG instead →</a></p>' +
+      '</div>';
+  });
+
+  ['animation', 'animation-finish', 'resize', 'open', 'zoom']
+    .forEach(ev => viewer.addHandler(ev, updateHud));
+
+  viewer.addHandler('animation-finish', scheduleHashUpdate);
+
+  // Cursor position in image pixels
+  let rafPending = false;
+  viewerEl.addEventListener('mousemove', (e) => {
+    if (rafPending) return;
+    rafPending = true;
+    requestAnimationFrame(() => {
+      rafPending = false;
+      const r = viewerEl.getBoundingClientRect();
+      const px = new OpenSeadragon.Point(e.clientX - r.left, e.clientY - r.top);
+      const vpPt = viewer.viewport.pointFromPixel(px);
+      if (!vpPt) return;
+      const p = viewer.viewport.viewportToImageCoordinates(vpPt);
+      hudPos.innerHTML = 'X <b>' + Math.round(p.x).toLocaleString() +
+                         '</b> &nbsp; Y <b>' + Math.round(p.y).toLocaleString() + '</b>';
+    });
+  });
+
+  viewerEl.addEventListener('mouseleave', () => {
+    hudPos.textContent = 'X — \u00a0 Y —';
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const k = e.key;
+    if (k === '+' || k === '=')      { viewer.viewport.zoomBy(1.5);  e.preventDefault(); }
+    else if (k === '-' || k === '_') { viewer.viewport.zoomBy(1/1.5);e.preventDefault(); }
+    else if (k === '0')              { goHome(); }
+    else if (k === '1')              { fitWidth(); }
+    else if (k === '2')              { fitHeight(); }
+    else if (k === 'f' || k === 'F') { toggleFullscreen(); }
+    else if (k === 'm' || k === 'M') { toggleNavigator(); }
+    else if (k === 'l' || k === 'L') { copyLink(); }
+    else if (k === 'ArrowLeft')      { viewer.viewport.panBy(new OpenSeadragon.Point(-0.12, 0)); e.preventDefault(); }
+    else if (k === 'ArrowRight')     { viewer.viewport.panBy(new OpenSeadragon.Point( 0.12, 0)); e.preventDefault(); }
+    else if (k === 'ArrowUp')        { viewer.viewport.panBy(new OpenSeadragon.Point(0, -0.12)); e.preventDefault(); }
+    else if (k === 'ArrowDown')      { viewer.viewport.panBy(new OpenSeadragon.Point(0,  0.12)); e.preventDefault(); }
+  });
+
+  // Safety net: if 'open' never fires (bad path), reveal a hint after 25s
+  setTimeout(() => {
+    if (!overlay.classList.contains('hidden') && !overlay.querySelector('.errbox')) {
+      overlay.querySelector('p').textContent =
+        'Still loading… make sure sld.dzi and sld_files/ are uploaded.';
+    }
+  }, 25000);
+
+})();
+</script>
 </body>
 </html>

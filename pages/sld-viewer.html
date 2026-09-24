@@ -1,167 +1,495 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Data center single line diagram</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Single Line Diagram — Data Center Electrical Layout</title>
 <style>
-:root{--desk:#cfd4dc;--panel:rgba(255,255,255,.94);--ink:#1b2733;--mut:#5b6878;--line:#b4bcc8;--btn:#f1f3f6;--acc:#0a62c9}
-*{box-sizing:border-box}
-[hidden]{display:none!important}
-html,body{height:100%;margin:0;overflow:hidden;background:var(--desk);color:var(--ink);font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-#stage{position:fixed;inset:0;overflow:hidden;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
-#stage.drag{cursor:grabbing}
-#img{position:absolute;left:0;top:0;max-width:none;transform-origin:0 0;background:#fff;-webkit-user-drag:none}
-#img.px{image-rendering:pixelated}
-.bar{position:fixed;z-index:5;background:var(--panel);border:1px solid var(--line);border-radius:8px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-#top{top:max(10px,env(safe-area-inset-top));left:10px;right:10px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:6px 8px}
-h1{margin:0 auto 0 4px;font-size:15px;font-weight:600}
-h1 small{color:var(--mut);font-weight:400;margin-left:8px;font-size:13px}
-button{font:inherit;color:var(--ink);background:var(--btn);border:1px solid var(--line);border-radius:6px;min-width:34px;height:34px;padding:0 10px;cursor:pointer}
-button:hover{background:#e3e8ee}
-button:active{background:#d5dce6}
-button.on{border-color:var(--acc);color:var(--acc)}
-button:focus-visible,input:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-input[type=range]{width:min(26vw,200px);accent-color:var(--acc);margin:0 4px}
-output{min-width:54px;text-align:center;color:var(--mut);font-variant-numeric:tabular-nums}
-.sep{width:1px;height:22px;background:var(--line);margin:0 2px}
-#map{right:10px;bottom:max(10px,env(safe-area-inset-bottom));border:0;outline:1px solid var(--line);overflow:hidden;background:#fff;touch-action:none;cursor:crosshair}
-#mimg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;-webkit-user-drag:none}
-#view{position:absolute;border:2px solid var(--acc);background:rgba(10,98,201,.15);pointer-events:none}
-#hint{position:fixed;left:10px;bottom:max(10px,env(safe-area-inset-bottom));color:var(--mut);font-size:12px;background:var(--panel);border:1px solid var(--line);padding:5px 9px;border-radius:6px;pointer-events:none}
-#msg{position:fixed;inset:0;z-index:4;display:grid;place-items:center;text-align:center;padding:20px;white-space:pre-line;color:var(--mut);pointer-events:none}
-@media (hover:none){#hint{display:none}}
+  :root{
+    --bg:#0b0f14; --panel:#131a22; --panel-2:#1b242e; --line:#2a3441;
+    --text:#e6edf3; --muted:#8b98a5; --accent:#4da3ff; --toolbar-h:52px;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;}
+  body{
+    background:var(--bg);color:var(--text);
+    font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    overflow:hidden;
+  }
+  #stage{position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;}
+  #stage:fullscreen{height:100vh;width:100vw;}
+
+  .toolbar{
+    display:flex;align-items:center;gap:6px;height:var(--toolbar-h);flex:0 0 auto;
+    padding:0 10px;background:linear-gradient(180deg,#161e27,#111820);
+    border-bottom:1px solid var(--line);overflow-x:auto;white-space:nowrap;
+    scrollbar-width:thin;
+  }
+  .toolbar::-webkit-scrollbar{height:5px;}
+  .toolbar::-webkit-scrollbar-thumb{background:#2a3441;border-radius:3px;}
+
+  .brand{display:flex;align-items:center;gap:9px;font-weight:600;flex:0 0 auto;}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);
+    box-shadow:0 0 10px var(--accent);}
+  .brand .badge{font-weight:500;font-size:11px;color:var(--muted);
+    background:#0e141b;border:1px solid var(--line);padding:2px 7px;border-radius:20px;}
+
+  .group{display:flex;align-items:center;gap:5px;padding-left:8px;margin-left:8px;
+    border-left:1px solid var(--line);}
+  .group:first-of-type{border-left:0;margin-left:auto;padding-left:0;}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    height:34px;min-width:34px;padding:0 10px;
+    border:1px solid var(--line);background:var(--panel-2);color:var(--text);
+    border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;font-family:inherit;
+    transition:background .15s,border-color .15s,color .15s;user-select:none;}
+  .btn:hover{background:#243040;border-color:#3a4a5e;}
+  .btn:active{transform:translateY(1px);}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px;}
+  .btn.active{background:#1d3a5c;border-color:var(--accent);color:#cfe6ff;}
+  .btn.zoomlevel{min-width:72px;font-variant-numeric:tabular-nums;font-size:12px;color:var(--muted);}
+
+  #viewer{flex:1 1 auto;min-height:0;position:relative;
+    background:radial-gradient(circle at 50% 40%,#141c26 0%,#0b0f14 70%);}
+  #viewer canvas{outline:none;}
+
+  .hud{position:absolute;left:12px;bottom:12px;z-index:20;display:flex;gap:8px;pointer-events:none;}
+  .hud .chip{background:rgba(11,15,20,.82);border:1px solid var(--line);color:var(--muted);
+    font-size:12px;font-variant-numeric:tabular-nums;padding:5px 10px;border-radius:7px;
+    backdrop-filter:blur(6px);}
+  .hud .chip b{color:var(--text);font-weight:600;}
+
+  .overlay{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:16px;background:rgba(11,15,20,.94);
+    transition:opacity .35s ease,visibility .35s ease;padding:20px;overflow:auto;}
+  .overlay.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+  .spinner{width:38px;height:38px;border-radius:50%;border:3px solid #24303e;
+    border-top-color:var(--accent);animation:spin .85s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .overlay p{color:var(--muted);margin:0;}
+
+  .errbox{max-width:720px;padding:24px 28px;background:var(--panel);
+    border:1px solid var(--line);border-radius:14px;text-align:left;color:var(--muted);}
+  .errbox h2{margin:0 0 12px;font-size:17px;color:#ff8a8a;}
+  .errbox h3{margin:18px 0 8px;font-size:13px;color:var(--text);
+    text-transform:uppercase;letter-spacing:.5px;font-weight:600;}
+  .errbox p{margin:8px 0;line-height:1.55;}
+  .errbox code{background:#0e141b;border:1px solid var(--line);padding:1px 6px;
+    border-radius:5px;font-size:12.5px;color:#9fd0ff;}
+  .errbox pre{background:#0e141b;border:1px solid var(--line);border-radius:8px;
+    padding:12px 14px;overflow-x:auto;font-size:12.5px;color:#9fd0ff;
+    margin:8px 0;line-height:1.5;}
+  .errbox a{color:var(--accent);}
+  .errbox ul{margin:6px 0 6px 20px;padding:0;}
+  .errbox li{margin:3px 0;}
+  .errbox .attempted{font-size:12px;background:#0e141b;border:1px solid var(--line);
+    border-radius:6px;padding:8px 12px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+  .errbox .attempted div{color:#ff9d9d;}
+
+  .toast{position:absolute;left:50%;bottom:26px;transform:translate(-50%,14px);
+    background:#1d3a5c;border:1px solid var(--accent);color:#dbeaff;
+    padding:9px 18px;border-radius:9px;font-size:13px;font-weight:500;
+    opacity:0;pointer-events:none;transition:.28s ease;z-index:80;}
+  .toast.show{opacity:1;transform:translate(-50%,0);}
+
+  .navigator{border-radius:8px;overflow:hidden;box-shadow:0 6px 22px rgba(0,0,0,.55);}
+
+  @media (max-width:760px){
+    .brand span:not(.dot){display:none;}
+    .btn{padding:0 8px;font-size:12px;}
+    .hud{left:8px;bottom:8px;}
+  }
 </style>
 </head>
 <body>
-<div id="stage"><img id="img" alt="Single line diagram of the data center electrical layout" draggable="false" decoding="async"></div>
-<div id="msg">Loading diagram…</div>
-<div id="top" class="bar">
-  <h1>Data center single line diagram<small>Full phase</small></h1>
-  <button id="out" aria-label="Zoom out" title="Zoom out (−)">−</button>
-  <input id="zr" type="range" min="0" max="1000" value="0" aria-label="Zoom level">
-  <button id="in" aria-label="Zoom in" title="Zoom in (+)">+</button>
-  <output id="pct">–</output>
-  <span class="sep"></span>
-  <button id="fit" title="Fit whole diagram (0)">Fit</button>
-  <button id="one" title="Actual pixels (1)">100%</button>
-  <button id="mapb" class="on" title="Show or hide overview map (M)">Map</button>
-  <button id="full" title="Full screen (F)">Full screen</button>
+
+<div id="stage">
+
+  <header class="toolbar">
+    <div class="brand">
+      <span class="dot"></span>
+      <span>Single Line Diagram</span>
+      <span class="badge">36261 × 15396</span>
+    </div>
+
+    <div class="group">
+      <button class="btn" data-action="zoom-out" title="Zoom out (−)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M8 11h6"/>
+        </svg>
+      </button>
+      <button class="btn zoomlevel" data-action="reset" title="Reset view (0)">100%</button>
+      <button class="btn" data-action="zoom-in" title="Zoom in (+)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+          <path d="M8 11h6"/><path d="M11 8v6"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="group">
+      <button class="btn" data-action="fit"        title="Fit whole diagram (0)">Fit</button>
+      <button class="btn" data-action="fit-width"  title="Fit width (1)">Width</button>
+      <button class="btn" data-action="fit-height" title="Fit height (2)">Height</button>
+    </div>
+
+    <div class="group">
+      <button class="btn active" data-action="navigator" title="Toggle minimap (M)">Map</button>
+      <button class="btn" data-action="link" title="Copy link to this view (L)">Link</button>
+      <button class="btn" data-action="fullscreen" title="Fullscreen (F)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div id="viewer"></div>
+
+  <div class="hud">
+    <div class="chip">Zoom <b id="hud-zoom">–</b></div>
+    <div class="chip" id="hud-pos">X — &nbsp; Y —</div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="spinner"></div>
+    <p>Loading diagram…</p>
+  </div>
+
+  <div class="toast" id="toast"></div>
 </div>
-<div id="map" class="bar" hidden><img id="mimg" alt=""><div id="view"></div></div>
-<div id="hint">Drag to pan. Scroll or pinch to zoom. Double-click to zoom in. Keys: + − 0 1 M F and arrows.</div>
+
+<script src="https://cdn.jsdelivr.net/npm/openseadragon@4.1.0/build/openseadragon/openseadragon.min.js"></script>
 <script>
-(()=>{
-const SRC="../assets/images/SLD Full Phase.png"; // path relative to this HTML file
-const MAXS=4;                                    // max zoom = 400% of native pixels
-const $=id=>document.getElementById(id);
-const stage=$('stage'),img=$('img'),mimg=$('mimg'),map=$('map'),view=$('view'),bar=$('top'),msg=$('msg'),zr=$('zr'),pct=$('pct'),full=$('full');
-let iw=0,ih=0,vw=0,vh=0,T=0,s=1,x=0,y=0,MW=220;
+(function () {
+  'use strict';
 
-const fitS=()=>Math.min((vw-32)/iw,(vh-T-16)/ih);
-const lo=()=>fitS()*.5;
-const C=()=>[vw/2,T+(vh-T)/2];
-function measure(){vw=stage.clientWidth;vh=stage.clientHeight;T=bar.getBoundingClientRect().bottom+8;}
+  /* =========================================================
+     CONFIG — paths tried in order until one loads.
+     Adjust/extend if your repo layout differs.
+     ========================================================= */
+  const DZI_CANDIDATES = [
+    '../assets/images/sld.dzi',
+    '../assets/images/sld/sld.dzi',
+    '../assets/images/SLD.dzi',
+    'assets/images/sld.dzi',
+    './assets/images/sld.dzi',
+    './sld.dzi',
+    'sld.dzi'
+  ];
+  const FALLBACK_PNG = '../assets/images/SLD%20Full%20Phase.png';
+  const FALLBACK_W = 36261;
+  const FALLBACK_H = 15396;
+  /* ========================================================= */
 
-function clamp(){
-  const w=iw*s,h=ih*s,ah=vh-T;
-  x=w<=vw-32?(vw-w)/2:Math.min(16,Math.max(vw-w-16,x));
-  y=h<=ah-16?T+(ah-h)/2:Math.min(T,Math.max(vh-h-16,y));
-}
-function apply(){
-  clamp();
-  img.style.transform=`translate(${x}px,${y}px) scale(${s})`;
-  img.classList.toggle('px',s>=2);
-  pct.textContent=(s<.1?(s*100).toFixed(1):Math.round(s*100))+'%';
-  const l=lo();zr.value=1000*Math.log(s/l)/Math.log(MAXS/l);
-  const f=MW/iw,L=Math.max(0,-x/s),U=Math.max(0,-y/s),R=Math.min(iw,(vw-x)/s),B=Math.min(ih,(vh-y)/s);
-  view.style.cssText=`left:${L*f}px;top:${U*f}px;width:${Math.max(3,(R-L)*f)}px;height:${Math.max(3,(B-U)*f)}px`;
-}
-function zoomAt(n,cx,cy){
-  n=Math.min(MAXS,Math.max(lo(),n));const k=n/s;
-  x=cx-(cx-x)*k;y=cy-(cy-y)*k;s=n;apply();
-}
-function fit(){s=fitS();x=(vw-iw*s)/2;y=T+(vh-T-ih*s)/2;apply();}
+  const $ = (id) => document.getElementById(id);
+  const viewerEl = $('viewer');
+  const overlay  = $('overlay');
+  const hudZoom  = $('hud-zoom');
+  const hudPos   = $('hud-pos');
+  const toastEl  = $('toast');
+  const zoomBtn  = document.querySelector('[data-action="reset"]');
+  const stage    = $('stage');
 
-// Mouse wheel / trackpad pinch: zoom around the cursor
-stage.addEventListener('wheel',e=>{
-  e.preventDefault();
-  const d=e.deltaMode===1?e.deltaY*16:e.deltaY;
-  zoomAt(s*Math.exp(-d*(e.ctrlKey?.01:.0018)),e.clientX,e.clientY);
-},{passive:false});
-stage.addEventListener('dblclick',e=>zoomAt(e.shiftKey?s/2:s*2,e.clientX,e.clientY));
+  let viewer = null;
+  let currentIdx = 0;
+  const attempted = [];
 
-// Drag to pan, two-finger pinch to zoom
-const P=new Map();let pinch=null;
-stage.addEventListener('pointerdown',e=>{stage.setPointerCapture(e.pointerId);P.set(e.pointerId,{x:e.clientX,y:e.clientY});pinch=null;stage.classList.add('drag');});
-stage.addEventListener('pointermove',e=>{
-  const p=P.get(e.pointerId);if(!p)return;
-  const dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;
-  if(P.size===1){x+=dx;y+=dy;apply();}
-  else if(P.size===2){
-    const[a,b]=[...P.values()],d=Math.hypot(a.x-b.x,a.y-b.y),cx=(a.x+b.x)/2,cy=(a.y+b.y)/2;
-    if(pinch){x+=cx-pinch.cx;y+=cy-pinch.cy;zoomAt(s*d/pinch.d,cx,cy);}
-    pinch={d,cx,cy};
+  /* ---------- boot: try each DZI path ---------- */
+  function boot() {
+    if (currentIdx >= DZI_CANDIDATES.length) {
+      showError();
+      return;
+    }
+    const url = DZI_CANDIDATES[currentIdx];
+    attempted.push(url);
+    buildViewer(url);
   }
-});
-const up=e=>{P.delete(e.pointerId);pinch=null;if(!P.size)stage.classList.remove('drag');};
-stage.addEventListener('pointerup',up);stage.addEventListener('pointercancel',up);
-addEventListener('gesturestart',e=>e.preventDefault());
 
-// Overview map: click or drag to jump
-const go=e=>{
-  const r=map.getBoundingClientRect(),[cx,cy]=C();
-  x=cx-(e.clientX-r.left)/r.width*iw*s;y=cy-(e.clientY-r.top)/r.height*ih*s;apply();
-};
-map.addEventListener('pointerdown',e=>{map.setPointerCapture(e.pointerId);go(e);});
-map.addEventListener('pointermove',e=>{if(e.buttons)go(e);});
+  function buildViewer(tileSourceUrl) {
+    if (viewer) {
+      viewer.destroy();
+      viewer = null;
+    }
 
-// Toolbar
-$('in').onclick=()=>zoomAt(s*1.5,...C());
-$('out').onclick=()=>zoomAt(s/1.5,...C());
-$('fit').onclick=fit;
-$('one').onclick=()=>zoomAt(1,...C());
-zr.oninput=()=>{const l=lo();zoomAt(l*Math.pow(MAXS/l,zr.value/1000),...C());};
-$('mapb').onclick=e=>{map.hidden=!map.hidden;e.currentTarget.classList.toggle('on',!map.hidden);};
-if(!document.documentElement.requestFullscreen)full.hidden=true;
-full.onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen?.();
+    viewer = OpenSeadragon({
+      id: 'viewer',
+      prefixUrl: 'https://cdn.jsdelivr.net/npm/openseadragon@4.1.0/build/openseadragon/images/',
+      tileSources: tileSourceUrl,
 
-// Keyboard
-addEventListener('keydown',e=>{
-  if(e.ctrlKey||e.metaKey||e.altKey||!iw)return;
-  const k=e.key,st=e.shiftKey?400:100;
-  if(e.target===zr&&k.startsWith('Arrow'))return;
-  if(k==='+'||k==='=')$('in').click();
-  else if(k==='-'||k==='_')$('out').click();
-  else if(k==='0')fit();
-  else if(k==='1')$('one').click();
-  else if(k==='m'||k==='M')$('mapb').click();
-  else if(k==='f'||k==='F')full.click();
-  else if(k==='ArrowLeft'){x+=st;apply();}
-  else if(k==='ArrowRight'){x-=st;apply();}
-  else if(k==='ArrowUp'){y+=st;apply();}
-  else if(k==='ArrowDown'){y-=st;apply();}
-  else return;
-  e.preventDefault();
-});
+      showNavigationControl: false,
+      showNavigator: true,
+      navigatorPosition: 'BOTTOM_RIGHT',
+      navigatorSizeRatio: 0.15,
+      navigatorBorderColor: '#2a3441',
+      navigatorBackground: '#0b0f14',
+      navigatorDisplayRegionColor: '#4da3ff',
 
-addEventListener('resize',()=>{
-  if(!iw)return;
-  const wasFit=Math.abs(s/fitS()-1)<.01;
-  measure();wasFit?fit():apply();
-});
+      minZoomImageRatio: 0.06,
+      maxZoomPixelRatio: 1.6,
+      visibilityRatio: 0.35,
+      constrainDuringPan: false,
 
-// Load
-img.onload=()=>{
-  iw=img.naturalWidth;ih=img.naturalHeight;
-  MW=innerWidth<700?140:220;
-  map.style.width=MW+'px';map.style.height=(MW*ih/iw)+'px';
-  map.hidden=innerWidth<700;$('mapb').classList.toggle('on',!map.hidden);
-  msg.hidden=true;measure();fit();
-};
-img.onerror=()=>{msg.textContent="Couldn’t load the diagram from:\n"+img.src+"\n\nCheck the file name (case-sensitive on GitHub Pages) and that the image is committed to the repo.";};
-measure();
-img.src=mimg.src=encodeURI(SRC);
+      animationTime: 0.7,
+      springStiffness: 9,
+      blendTime: 0.12,
+      immediateRender: true,
+      imageLoaderLimit: 10,
+      timeout: 180000,
+
+      gestureSettingsMouse: {
+        clickToZoom: false, dblClickToZoom: true, scrollToZoom: true,
+        flickEnabled: true, pinchToZoom: true
+      },
+      gestureSettingsTouch: { pinchToZoom: true, flickEnabled: true, dblClickToZoom: true }
+    });
+
+    viewer.addHandler('open', () => {
+      overlay.classList.add('hidden');
+      restoreFromHash();
+      updateHud();
+    });
+
+    viewer.addHandler('open-failed', () => {
+      currentIdx++;
+      // brief pause so the network tab isn't spammed
+      setTimeout(boot, 80);
+    });
+
+    ['animation','animation-finish','resize','open','zoom']
+      .forEach(ev => viewer.addHandler(ev, updateHud));
+    viewer.addHandler('animation-finish', scheduleHashUpdate);
+  }
+
+  /* ---------- helpers ---------- */
+  function imgSize() {
+    if (!viewer) return new OpenSeadragon.Point(FALLBACK_W, FALLBACK_H);
+    const item = viewer.world.getItemAt(0);
+    return item ? item.getContentSize()
+                : new OpenSeadragon.Point(FALLBACK_W, FALLBACK_H);
+  }
+  function screenScale() {
+    if (!viewer) return 1;
+    const b = viewer.viewport.getBounds();
+    const w = imgSize().x;
+    const cw = viewerEl.clientWidth || 1;
+    return cw / (b.width * w);
+  }
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => toastEl.classList.remove('show'), 1800);
+  }
+  function updateHud() {
+    if (!viewer) return;
+    const s = screenScale();
+    const pct = s * 100;
+    const txt = pct >= 100 ? pct.toFixed(0) + '%'
+              : pct >= 10  ? pct.toFixed(1) + '%'
+              :              pct.toFixed(2) + '%';
+    hudZoom.textContent = txt;
+    zoomBtn.textContent = txt;
+  }
+
+  function fitWidth() {
+    if (!viewer) return;
+    const size = imgSize();
+    const r = viewerEl.getBoundingClientRect();
+    const aspect = r.width / r.height;
+    const w = size.x;
+    const h = Math.min(w / aspect, size.y);
+    const y = (size.y - h) / 2;
+    const rect = viewer.viewport.imageToViewportRectangle(
+      new OpenSeadragon.Rect(0, y, w, h));
+    viewer.viewport.fitBounds(rect, true);
+  }
+  function fitHeight() {
+    if (!viewer) return;
+    const size = imgSize();
+    const r = viewerEl.getBoundingClientRect();
+    const aspect = r.width / r.height;
+    const h = size.y;
+    const w = Math.min(h * aspect, size.x);
+    const x = (size.x - w) / 2;
+    const rect = viewer.viewport.imageToViewportRectangle(
+      new OpenSeadragon.Rect(x, 0, w, h));
+    viewer.viewport.fitBounds(rect, true);
+  }
+  function goHome() {
+    if (!viewer) return;
+    viewer.viewport.goHome(true);
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+
+  /* ---------- actions ---------- */
+  const actions = {
+    'zoom-in':   () => viewer && viewer.viewport.zoomBy(1.5),
+    'zoom-out':  () => viewer && viewer.viewport.zoomBy(1 / 1.5),
+    'reset':     goHome,
+    'fit':       goHome,
+    'fit-width': fitWidth,
+    'fit-height':fitHeight,
+    'navigator': toggleNavigator,
+    'fullscreen':toggleFullscreen,
+    'link':      copyLink
+  };
+  document.querySelectorAll('[data-action]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const fn = actions[btn.dataset.action];
+      if (fn) fn();
+    });
+  });
+
+  function toggleNavigator() {
+    if (!viewer || !viewer.navigator) return;
+    const el = viewer.navigator.element;
+    const hidden = el.style.display === 'none';
+    el.style.display = hidden ? '' : 'none';
+    document.querySelector('[data-action="navigator"]')
+            .classList.toggle('active', hidden);
+  }
+  function toggleFullscreen() {
+    const d = document;
+    if (!d.fullscreenElement && !d.webkitFullscreenElement) {
+      (stage.requestFullscreen || stage.webkitRequestFullscreen).call(stage);
+    } else {
+      (d.exitFullscreen || d.webkitExitFullscreen).call(d);
+    }
+  }
+  document.addEventListener('fullscreenchange', () => {
+    setTimeout(() => viewer && viewer.forceRedraw(), 120);
+  });
+
+  function currentHash() {
+    if (!viewer) return '';
+    const vp = viewer.viewport;
+    const c = vp.viewportToImageCoordinates(vp.getCenter());
+    return '#x=' + c.x.toFixed(1) + '&y=' + c.y.toFixed(1) +
+           '&z=' + screenScale().toFixed(5);
+  }
+  async function copyLink() {
+    if (!viewer) return;
+    const hash = currentHash();
+    const url = location.origin + location.pathname + location.search + hash;
+    history.replaceState(null, '', hash);
+    try {
+      await navigator.clipboard.writeText(url);
+      toast('Link copied to clipboard');
+    } catch (e) {
+      window.prompt('Copy this link:', url);
+    }
+  }
+  function restoreFromHash() {
+    if (!viewer) return;
+    const m = location.hash.match(/^#x=([-\d.]+)&y=([-\d.]+)&z=([\d.]+)$/);
+    if (!m) return;
+    const x = parseFloat(m[1]), y = parseFloat(m[2]), s = parseFloat(m[3]);
+    if (!isFinite(x) || !isFinite(y) || !isFinite(s) || s <= 0) return;
+    const vp = viewer.viewport;
+    const size = imgSize();
+    const cw = viewerEl.clientWidth || 1;
+    const zoom = s * size.x / cw;
+    vp.zoomTo(zoom, undefined, true);
+    vp.panTo(vp.imageToViewportCoordinates(x, y), true);
+  }
+  let hashTimer = null;
+  function scheduleHashUpdate() {
+    clearTimeout(hashTimer);
+    hashTimer = setTimeout(() => {
+      if (viewer) history.replaceState(null, '', currentHash());
+    }, 500);
+  }
+
+  /* ---------- mouse position readout ---------- */
+  let rafPending = false;
+  viewerEl.addEventListener('mousemove', (e) => {
+    if (!viewer || rafPending) return;
+    rafPending = true;
+    requestAnimationFrame(() => {
+      rafPending = false;
+      const r = viewerEl.getBoundingClientRect();
+      const px = new OpenSeadragon.Point(e.clientX - r.left, e.clientY - r.top);
+      const vpPt = viewer.viewport.pointFromPixel(px);
+      if (!vpPt) return;
+      const p = viewer.viewport.viewportToImageCoordinates(vpPt);
+      hudPos.innerHTML = 'X <b>' + Math.round(p.x).toLocaleString() +
+                         '</b> &nbsp; Y <b>' + Math.round(p.y).toLocaleString() + '</b>';
+    });
+  });
+  viewerEl.addEventListener('mouseleave', () => {
+    hudPos.textContent = 'X — \u00a0 Y —';
+  });
+
+  /* ---------- keyboard ---------- */
+  document.addEventListener('keydown', (e) => {
+    if (!viewer) return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const k = e.key;
+    if (k === '+' || k === '=')      { viewer.viewport.zoomBy(1.5);  e.preventDefault(); }
+    else if (k === '-' || k === '_') { viewer.viewport.zoomBy(1/1.5);e.preventDefault(); }
+    else if (k === '0')              { goHome(); }
+    else if (k === '1')              { fitWidth(); }
+    else if (k === '2')              { fitHeight(); }
+    else if (k === 'f' || k === 'F') { toggleFullscreen(); }
+    else if (k === 'm' || k === 'M') { toggleNavigator(); }
+    else if (k === 'l' || k === 'L') { copyLink(); }
+    else if (k === 'ArrowLeft')      { viewer.viewport.panBy(new OpenSeadragon.Point(-0.12, 0)); e.preventDefault(); }
+    else if (k === 'ArrowRight')     { viewer.viewport.panBy(new OpenSeadragon.Point( 0.12, 0)); e.preventDefault(); }
+    else if (k === 'ArrowUp')        { viewer.viewport.panBy(new OpenSeadragon.Point(0, -0.12)); e.preventDefault(); }
+    else if (k === 'ArrowDown')      { viewer.viewport.panBy(new OpenSeadragon.Point(0,  0.12)); e.preventDefault(); }
+  });
+
+  /* ---------- error UI ---------- */
+  function showError() {
+    const tried = attempted.map(u => '<div>✗ ' + u + '</div>').join('');
+    overlay.innerHTML = `
+      <div class="errbox">
+        <h2>Diagram tiles not found</h2>
+        <p>OpenSeadragon looked for a Deep Zoom descriptor (<code>.dzi</code>) at the following
+           locations and got 404 on all of them:</p>
+        <div class="attempted">${tried}</div>
+
+        <h3>Fix it in one command</h3>
+        <p>From the folder that contains <code>SLD Full Phase.png</code>:</p>
+        <pre>docker run --rm -v "$PWD":/data -w /data ubuntu:24.04 bash -c \\
+  "apt-get update -qq && apt-get install -y -qq libvips-tools && \\
+   vips dzsave 'SLD Full Phase.png' sld \\
+     --tile-size=512 --overlap=1 --suffix='.jpg[Q=82]'"</pre>
+        <p>(Or <code>vips dzsave …</code> if you already have libvips, or
+           <code>pyvips</code> if you prefer Python.)</p>
+
+        <h3>Commit the result</h3>
+        <pre>git add assets/images/sld.dzi assets/images/sld_files/
+git commit -m "Add SLD Deep Zoom tiles"
+git push</pre>
+
+        <p>Your final layout should be:</p>
+        <pre>assets/images/
+  ├── SLD Full Phase.png
+  ├── sld.dzi
+  └── sld_files/    ← thousands of tiles</pre>
+
+        <h3>Why tiling is required</h3>
+        <p>36261 × 15396 ≈ 558 megapixels. Chrome and Safari cap canvas memory below that,
+           so they simply refuse to render the raw PNG. A Deep Zoom pyramid lets the browser
+           pull only the tiles visible at the current zoom level.</p>
+      </div>`;
+  }
+
+  boot();
+
+  // Safety net
+  setTimeout(() => {
+    if (!overlay.classList.contains('hidden') && !overlay.querySelector('.errbox')) {
+      const p = overlay.querySelector('p');
+      if (p) p.textContent = 'Still loading… large tile pyramids can take a moment.';
+    }
+  }, 25000);
+
 })();
 </script>
 </body>

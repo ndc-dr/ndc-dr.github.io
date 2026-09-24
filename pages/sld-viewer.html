@@ -3,42 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Master Electrical SLD Viewer | NDC-DR BCC</title>
+  <title>Electrical SLD Master Viewer | National Data Center (NDC)</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/responsive.css">
 
   <style>
     /* Full-viewport canvas environment */
-    .sld-workspace {
+    .sld-viewport-wrapper {
       position: relative;
       width: 100%;
-      height: calc(100vh - var(--header-height) - 110px);
-      min-height: 580px;
-      background-color: #070b14;
+      height: calc(100vh - var(--header-height) - 120px);
+      min-height: 560px;
+      background-color: #050811;
       border: 1px solid var(--border-color);
       border-radius: var(--radius);
       overflow: hidden;
       user-select: none;
-    }
-
-    #sldCanvas {
-      width: 100%;
-      height: 100%;
-      display: block;
+      -webkit-user-select: none;
       cursor: grab;
     }
 
-    #sldCanvas:active {
+    .sld-viewport-wrapper:active {
       cursor: grabbing;
     }
 
+    /* Transform layer hardware-accelerated by GPU */
+    #sldTransformLayer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: 0 0;
+      will-change: transform;
+      pointer-events: none;
+    }
+
+    #sldImage {
+      display: block;
+      max-width: none;
+      max-height: none;
+      image-rendering: auto;
+    }
+
     /* Floating control bar */
-    .sld-hud-controls {
+    .viewer-hud {
       position: absolute;
       top: 14px;
       left: 14px;
-      z-index: 30;
-      background: rgba(15, 23, 42, 0.9);
+      z-index: 50;
+      background: rgba(15, 23, 42, 0.92);
       backdrop-filter: blur(8px);
       border: 1px solid var(--border-color);
       border-radius: var(--radius);
@@ -46,77 +58,46 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
     }
 
-    .hud-btn {
+    .viewer-btn {
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       color: var(--text-primary);
       width: 32px;
       height: 32px;
       border-radius: var(--radius);
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: 700;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       transition: all 0.15s ease;
     }
 
-    .hud-btn:hover {
+    .viewer-btn:hover {
       background: var(--primary);
-      border-color: var(--primary-light);
       color: #fff;
+      border-color: var(--primary-light);
     }
 
     .zoom-readout {
       font-family: var(--font-mono);
       font-size: 0.75rem;
       color: var(--text-muted);
-      padding: 0 6px;
-      min-width: 52px;
+      min-width: 50px;
       text-align: center;
     }
 
-    /* Mini-Map Radar Navigation */
-    .radar-wrapper {
-      position: absolute;
-      bottom: 14px;
-      right: 14px;
-      width: 220px;
-      height: 93px; /* Matches 36261 x 15396 (~2.35:1 aspect ratio) */
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      overflow: hidden;
-      z-index: 30;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    }
-
-    #radarCanvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    #radarViewport {
-      position: absolute;
-      border: 2px solid #38bdf8;
-      background: rgba(56, 189, 248, 0.18);
-      pointer-events: none;
-      top: 0;
-      left: 0;
-    }
-
-    /* Jump-to bookmarks */
+    /* Quick jump bookmarks */
     .system-bookmarks {
       position: absolute;
       bottom: 14px;
       left: 14px;
-      z-index: 30;
-      background: rgba(15, 23, 42, 0.9);
+      z-index: 50;
+      background: rgba(15, 23, 42, 0.92);
       backdrop-filter: blur(8px);
       border: 1px solid var(--border-color);
       border-radius: var(--radius);
@@ -127,37 +108,38 @@
       flex-wrap: wrap;
     }
 
-    .chip-btn {
+    .bookmark-chip {
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       color: var(--text-secondary);
       font-size: 0.72rem;
-      padding: 3px 8px;
+      padding: 4px 8px;
       border-radius: var(--radius);
       cursor: pointer;
+      transition: all 0.15s ease;
     }
 
-    .chip-btn:hover {
-      background: var(--bg-hover);
+    .bookmark-chip:hover {
       color: var(--primary-light);
       border-color: var(--primary-light);
+      background: var(--bg-hover);
     }
 
-    /* Progress Overlay */
-    #loadingCover {
+    /* Loading / Error states */
+    #viewer-loader {
       position: absolute;
       inset: 0;
       background: rgba(15, 23, 42, 0.95);
-      z-index: 50;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      z-index: 100;
       color: var(--text-primary);
+      gap: 12px;
     }
 
-    .loader-ring {
+    .spinner {
       width: 38px;
       height: 38px;
       border: 3px solid var(--border-color);
@@ -179,7 +161,7 @@
         <a href="../index.html" style="display:flex; align-items:center; gap:12px; text-decoration:none;">
           <img src="../assets/images/bcc-logo.svg" alt="BCC Logo" class="brand-logo">
           <div class="brand-text">
-            <span class="brand-title dynamic-facility-title">Disaster Recovery Data Center</span>
+            <span class="brand-title dynamic-facility-title">National Data Center (NDC)</span>
             <span class="brand-subtitle dynamic-org-title">Bangladesh Computer Council</span>
           </div>
         </a>
@@ -207,7 +189,7 @@
       <span class="separator">/</span>
       <a href="drawings.html">Drawings</a>
       <span class="separator">/</span>
-      <span>Single Line Diagram (SLD) Full Phase</span>
+      <span>SLD Full Phase — Single Line Diagram</span>
     </div>
 
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem;">
@@ -216,53 +198,50 @@
           Electrical Single Line Diagram (SLD) — Master View
         </h1>
         <p style="color: var(--text-secondary); font-size: 0.78rem;">
-          Native Resolution: 36,261 × 15,396 px &nbsp;|&nbsp; File Size: 4,027 KB &nbsp;|&nbsp; Dual 33kV Intake to PDU Busbars
+          Native: 36,261 × 15,396 px &nbsp;|&nbsp; Dual 33kV Intake → 11kV HT Substation → 2500kVA Transformers → 2N UPS Trains
         </p>
       </div>
       <div>
-        <a href="https://drive.google.com/uc?export=download&id=1qE30hXDbKxoD5YzvtYdhTd6aCtNLQ_n6" target="_blank" download class="btn btn-secondary btn-sm">
-          💾 Download PNG (4 MB)
+        <a id="download-link" href="../assets/images/SLD%20Full%20Phase.png" target="_blank" download="SLD Full Phase.png" class="btn btn-secondary btn-sm">
+          💾 Download Image
         </a>
       </div>
     </div>
 
-    <!-- Canvas Workspace Container -->
-    <div class="sld-workspace" id="workspace">
-
-      <!-- Loading overlay -->
-      <div id="loadingCover">
-        <div class="loader-ring"></div>
-        <div id="loadingText" style="font-size: 0.85rem;">Decoding SLD Schematic (4 MB)...</div>
-      </div>
-
-      <!-- Floating Tool HUD -->
-      <div class="sld-hud-controls">
-        <button class="hud-btn" id="btnZoomIn" title="Zoom In">+</button>
-        <button class="hud-btn" id="btnZoomOut" title="Zoom Out">−</button>
-        <button class="hud-btn" id="btnReset" title="Fit to Screen">⟲</button>
-        <button class="hud-btn" id="btnFullscreen" title="Toggle Fullscreen">⛶</button>
+    <!-- Viewport Container -->
+    <div class="sld-viewport-wrapper" id="viewport">
+      
+      <!-- Top HUD Control Bar -->
+      <div class="viewer-hud">
+        <button id="btn-zoom-in" class="viewer-btn" title="Zoom In">+</button>
+        <button id="btn-zoom-out" class="viewer-btn" title="Zoom Out">−</button>
+        <button id="btn-reset" class="viewer-btn" title="Fit to Screen">⟲</button>
+        <button id="btn-fullscreen" class="viewer-btn" title="Toggle Fullscreen">⛶</button>
         <div style="height: 18px; width: 1px; background: var(--border-color); margin: 0 4px;"></div>
-        <span class="zoom-readout" id="zoomReadout">100%</span>
+        <span class="zoom-readout" id="zoom-readout">100%</span>
       </div>
 
-      <!-- Engineering Navigation Bookmarks -->
+      <!-- Jump Bookmarks -->
       <div class="system-bookmarks">
         <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">NAV:</span>
-        <button class="chip-btn" onclick="focusNormalizedRegion(0.08, 0.45, 1.8)">⚡ 33kV Feeder Intake</button>
-        <button class="chip-btn" onclick="focusNormalizedRegion(0.28, 0.45, 2.2)">🔌 HT 11kV VCB Breakers</button>
-        <button class="chip-btn" onclick="focusNormalizedRegion(0.50, 0.45, 2.2)">🔄 2500kVA Transformers</button>
-        <button class="chip-btn" onclick="focusNormalizedRegion(0.72, 0.50, 2.5)">🔋 2N Modular UPS Trains</button>
-        <button class="chip-btn" onclick="focusNormalizedRegion(0.92, 0.55, 3.0)">🖥️ Server Floor PDUs</button>
+        <button class="bookmark-chip" onclick="jumpTo(0.08, 0.45, 2.0)">⚡ 33kV Intake</button>
+        <button class="bookmark-chip" onclick="jumpTo(0.30, 0.45, 2.2)">🔌 11kV HT Breakers</button>
+        <button class="bookmark-chip" onclick="jumpTo(0.52, 0.45, 2.5)">🔄 2500kVA Transformers</button>
+        <button class="bookmark-chip" onclick="jumpTo(0.74, 0.50, 2.5)">🔋 2N UPS Trains</button>
+        <button class="bookmark-chip" onclick="jumpTo(0.92, 0.55, 3.0)">🖥️ Server Floor PDUs</button>
       </div>
 
-      <!-- Radar Mini-Map -->
-      <div class="radar-wrapper" title="Click to reposition view">
-        <canvas id="radarCanvas"></canvas>
-        <div id="radarViewport"></div>
+      <!-- Loading State -->
+      <div id="viewer-loader">
+        <div class="spinner"></div>
+        <div id="loader-status" style="font-size: 0.85rem;">Loading Single Line Diagram...</div>
       </div>
 
-      <!-- Primary Drawing Canvas -->
-      <canvas id="sldCanvas"></canvas>
+      <!-- Moving layer -->
+      <div id="sldTransformLayer">
+        <!-- Exact relative path to your file in the repository -->
+        <img id="sldImage" src="../assets/images/SLD%20Full%20Phase.png" alt="Single Line Diagram Full Phase">
+      </div>
     </div>
   </main>
 
@@ -276,19 +255,17 @@
   <script src="../js/utils.js"></script>
   <script src="../js/navigation.js"></script>
   <script>
-    // State Machine
-    const sldImage = new Image();
-    const IMAGE_URL = 'https://drive.google.com/uc?export=download&id=1qE30hXDbKxoD5YzvtYdhTd6aCtNLQ_n6';
-
-    const canvas = document.getElementById('sldCanvas');
-    const ctx = canvas.getContext('2d');
-    const radarCanvas = document.getElementById('radarCanvas');
-    const radarCtx = radarCanvas.getContext('2d');
-    const radarBox = document.getElementById('radarViewport');
+    // Geometry state
+    const viewport = document.getElementById('viewport');
+    const layer = document.getElementById('sldTransformLayer');
+    const img = document.getElementById('sldImage');
+    const zoomText = document.getElementById('zoom-readout');
+    const loader = document.getElementById('viewer-loader');
 
     let scale = 1;
-    let minScale = 0.05;
-    let maxScale = 6.0;
+    let fitScale = 1;
+    let minScale = 0.01;
+    let maxScale = 5.0;
     let panX = 0;
     let panY = 0;
     let isDragging = false;
@@ -297,97 +274,95 @@
 
     document.addEventListener('DOMContentLoaded', async () => {
       await Navigation.init('drawings');
-      initCanvasSize();
-      window.addEventListener('resize', () => {
-        initCanvasSize();
-        draw();
-      });
 
-      // Load Image
-      sldImage.crossOrigin = "anonymous";
-      sldImage.src = IMAGE_URL;
-      sldImage.onload = () => {
-        document.getElementById('loadingCover').style.display = 'none';
-        buildMiniMap();
-        fitToScreen();
-      };
-      sldImage.onerror = () => {
-        document.getElementById('loadingText').innerHTML = `
-          <span style="color:var(--danger);">Error loading diagram.</span><br>
-          <span style="font-size:0.75rem; color:var(--text-muted);">Please verify that <code>SLD Full Phase.png</code> exists at <code>ndc-dr.github.io/assets/images/</code></span>
-        `;
-      };
+      // Detect if image is already cached or wait for load
+      if (img.complete && img.naturalWidth !== 0) {
+        onImageLoaded();
+      } else {
+        img.onload = onImageLoaded;
+        img.onerror = onImageError;
+      }
 
-      bindInteractionEvents();
+      bindControls();
     });
 
-    function initCanvasSize() {
-      const rect = canvas.parentElement.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
+    function onImageLoaded() {
+      loader.style.display = 'none';
+      fitToScreen();
+    }
+
+    function onImageError() {
+      // Fallback: Check if file was saved without URL encoding or lowercase
+      const currentSrc = img.getAttribute('src');
+      if (currentSrc.includes('%20')) {
+        img.src = '../assets/images/SLD Full Phase.png';
+      } else {
+        document.getElementById('loader-status').innerHTML = `
+          <span style="color:var(--danger); font-weight:700;">File Not Found</span><br>
+          <span style="font-size:0.75rem; color:var(--text-muted);">
+            Could not find <code>assets/images/SLD Full Phase.png</code>.<br>
+            Please check GitHub to confirm the exact case and spelling of the filename.
+          </span>
+        `;
+      }
     }
 
     function fitToScreen() {
-      if (!sldImage.naturalWidth) return;
-      const hScale = canvas.width / sldImage.naturalWidth;
-      const vScale = canvas.height / sldImage.naturalHeight;
-      scale = Math.min(hScale, vScale) * 0.98;
-      minScale = scale * 0.8;
+      const vWidth = viewport.clientWidth;
+      const vHeight = viewport.clientHeight;
+      const iWidth = img.naturalWidth || 36261;
+      const iHeight = img.naturalHeight || 15396;
 
-      panX = (canvas.width - sldImage.naturalWidth * scale) / 2;
-      panY = (canvas.height - sldImage.naturalHeight * scale) / 2;
-      draw();
+      const scaleX = vWidth / iWidth;
+      const scaleY = vHeight / iHeight;
+      fitScale = Math.min(scaleX, scaleY) * 0.98;
+      scale = fitScale;
+      minScale = fitScale * 0.7;
+
+      panX = (vWidth - iWidth * scale) / 2;
+      panY = (vHeight - iHeight * scale) / 2;
+
+      applyTransform();
     }
 
-    function draw() {
-      if (!sldImage.naturalWidth) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'medium';
-
-      ctx.save();
-      ctx.translate(panX, panY);
-      ctx.scale(scale, scale);
-      ctx.drawImage(sldImage, 0, 0);
-      ctx.restore();
-
-      updateZoomHud();
-      updateRadarIndicator();
+    function applyTransform() {
+      layer.style.transform = `translate3d(${panX}px, ${panY}px, 0px) scale(${scale})`;
+      const percent = Math.round((scale / fitScale) * 100);
+      zoomText.textContent = `${percent}%`;
     }
 
-    function buildMiniMap() {
-      radarCanvas.width = 220;
-      radarCanvas.height = 93;
-      radarCtx.drawImage(sldImage, 0, 0, radarCanvas.width, radarCanvas.height);
+    function zoomAtPoint(clientX, clientY, factor) {
+      const rect = viewport.getBoundingClientRect();
+      const mouseX = clientX - rect.left;
+      const mouseY = clientY - rect.top;
+
+      const targetScale = Math.min(Math.max(scale * factor, minScale), maxScale);
+      
+      // Zoom centered directly on the cursor coordinate
+      panX = mouseX - (mouseX - panX) * (targetScale / scale);
+      panY = mouseY - (mouseY - panY) * (targetScale / scale);
+      scale = targetScale;
+
+      applyTransform();
     }
 
-    function updateRadarIndicator() {
-      if (!sldImage.naturalWidth) return;
-      const rw = radarCanvas.width;
-      const rh = radarCanvas.height;
+    function jumpTo(normX, normY, zoomFactor) {
+      const vWidth = viewport.clientWidth;
+      const vHeight = viewport.clientHeight;
+      const iWidth = img.naturalWidth || 36261;
+      const iHeight = img.naturalHeight || 15396;
 
-      const visibleImgWidth = canvas.width / scale;
-      const visibleImgHeight = canvas.height / scale;
+      scale = fitScale * zoomFactor;
+      panX = vWidth / 2 - (normX * iWidth * scale);
+      panY = vHeight / 2 - (normY * iHeight * scale);
 
-      const normX = -panX / (sldImage.naturalWidth * scale);
-      const normY = -panY / (sldImage.naturalHeight * scale);
-      const normW = visibleImgWidth / sldImage.naturalWidth;
-      const normH = visibleImgHeight / sldImage.naturalHeight;
-
-      radarBox.style.left = `${Math.max(0, normX * rw)}px`;
-      radarBox.style.top = `${Math.max(0, normY * rh)}px`;
-      radarBox.style.width = `${Math.min(rw, normW * rw)}px`;
-      radarBox.style.height = `${Math.min(rh, normH * rh)}px`;
+      applyTransform();
     }
 
-    function updateZoomHud() {
-      const pct = Math.round((scale / (canvas.width / sldImage.naturalWidth)) * 100);
-      document.getElementById('zoomReadout').textContent = `${pct}%`;
-    }
-
-    function bindInteractionEvents() {
-      // Pan drag
-      canvas.addEventListener('mousedown', (e) => {
+    function bindControls() {
+      // Mouse dragging
+      viewport.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return; // Left click only
         isDragging = true;
         startX = e.clientX - panX;
         startY = e.clientY - panY;
@@ -397,79 +372,83 @@
         if (!isDragging) return;
         panX = e.clientX - startX;
         panY = e.clientY - startY;
-        draw();
+        applyTransform();
       });
 
       window.addEventListener('mouseup', () => { isDragging = false; });
 
-      // Wheel Zoom Centered on Pointer
-      canvas.addEventListener('wheel', (e) => {
+      // Wheel Zoom
+      viewport.addEventListener('wheel', (e) => {
         e.preventDefault();
         const factor = e.deltaY < 0 ? 1.2 : 0.833;
         zoomAtPoint(e.clientX, e.clientY, factor);
       }, { passive: false });
 
-      // Double Click to Quick Zoom
-      canvas.addEventListener('dblclick', (e) => {
+      // Double-click zoom
+      viewport.addEventListener('dblclick', (e) => {
         zoomAtPoint(e.clientX, e.clientY, 1.8);
       });
 
-      // HUD Button Triggers
-      document.getElementById('btnZoomIn').addEventListener('click', () => {
-        zoomAtPoint(canvas.width / 2, canvas.height / 2, 1.3);
+      // HUD buttons
+      document.getElementById('btn-zoom-in').addEventListener('click', () => {
+        zoomAtPoint(viewport.clientWidth / 2, viewport.clientHeight / 2, 1.3);
       });
 
-      document.getElementById('btnZoomOut').addEventListener('click', () => {
-        zoomAtPoint(canvas.width / 2, canvas.height / 2, 0.77);
+      document.getElementById('btn-zoom-out').addEventListener('click', () => {
+        zoomAtPoint(viewport.clientWidth / 2, viewport.clientHeight / 2, 0.77);
       });
 
-      document.getElementById('btnReset').addEventListener('click', fitToScreen);
+      document.getElementById('btn-reset').addEventListener('click', fitToScreen);
 
-      document.getElementById('btnFullscreen').addEventListener('click', () => {
-        const wrap = document.getElementById('workspace');
+      document.getElementById('btn-fullscreen').addEventListener('click', () => {
         if (!document.fullscreenElement) {
-          wrap.requestFullscreen().catch(() => {});
+          viewport.requestFullscreen().catch(() => {});
         } else {
           document.exitFullscreen();
         }
       });
 
-      // Radar Click-To-Pan
-      radarCanvas.parentElement.addEventListener('click', (e) => {
-        const rect = radarCanvas.getBoundingClientRect();
-        const clickX = (e.clientX - rect.left) / rect.width;
-        const clickY = (e.clientY - rect.top) / rect.height;
+      // Touch screen support (Mobile & Tablet)
+      let initialDist = 0;
+      let initialScale = 1;
 
-        panX = canvas.width / 2 - (clickX * sldImage.naturalWidth * scale);
-        panY = canvas.height / 2 - (clickY * sldImage.naturalHeight * scale);
-        draw();
+      viewport.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          startX = e.touches[0].clientX - panX;
+          startY = e.touches[0].clientY - panY;
+        } else if (e.touches.length === 2) {
+          isDragging = false;
+          initialDist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          initialScale = scale;
+        }
+      }, { passive: true });
+
+      viewport.addEventListener('touchmove', (e) => {
+        if (isDragging && e.touches.length === 1) {
+          panX = e.touches[0].clientX - startX;
+          panY = e.touches[0].clientY - startY;
+          applyTransform();
+        } else if (e.touches.length === 2 && initialDist > 0) {
+          const currentDist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          const factor = currentDist / initialDist;
+          scale = Math.min(Math.max(initialScale * factor, minScale), maxScale);
+          applyTransform();
+        }
+      }, { passive: true });
+
+      viewport.addEventListener('touchend', () => {
+        isDragging = false;
+        initialDist = 0;
       });
-    }
 
-    function zoomAtPoint(clientX, clientY, factor) {
-      const rect = canvas.getBoundingClientRect();
-      const mouseX = clientX - rect.left;
-      const mouseY = clientY - rect.top;
-
-      const nextScale = Math.min(Math.max(scale * factor, minScale), maxScale);
-      panX = mouseX - (mouseX - panX) * (nextScale / scale);
-      panY = mouseY - (mouseY - panY) * (nextScale / scale);
-      scale = nextScale;
-      draw();
-    }
-
-    /**
-     * Normalized coordinate bookmark jump
-     * @param {number} normX (0.0 to 1.0)
-     * @param {number} normY (0.0 to 1.0)
-     * @param {number} targetZoomFactor
-     */
-    function focusNormalizedRegion(normX, normY, targetZoomFactor) {
-      const baseScale = canvas.width / sldImage.naturalWidth;
-      scale = baseScale * targetZoomFactor;
-      panX = canvas.width / 2 - (normX * sldImage.naturalWidth * scale);
-      panY = canvas.height / 2 - (normY * sldImage.naturalHeight * scale);
-      draw();
+      window.addEventListener('resize', fitToScreen);
     }
   </script>
 </body>

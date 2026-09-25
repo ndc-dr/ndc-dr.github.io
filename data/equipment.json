@@ -253,7 +253,7 @@
     "commonFaults": "Branch breaker trip on server power supply inrush, neutral harmonic heating.",
     "safetyPrecautions": "Verify branch breaker is open and tag out before pulling whip cables into server racks.",
     "relatedDocIds": ["PDU2000M Specs"]
-  }
+  },
   
   
   
@@ -293,5 +293,5 @@
     "commonFaults": "Slow pressure loss through manifold check valve, actuator lock-pin left in safe transport position.",
     "safetyPrecautions": "Insert manual actuator lock-pin before performing maintenance inside the server hall to prevent inadvertent discharge.",
     "relatedDocIds": ["DOC-FIRE-001"]
-  },
+  }
 ]

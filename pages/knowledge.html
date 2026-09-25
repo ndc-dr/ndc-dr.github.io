@@ -3,12 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Engineering Wiki & Knowledge Base | DR-DC Knowledge Base</title>
+  <title>Facility Technical Knowledge Base | DR-DC BCC</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/responsive.css">
+  <style>
+    .kb-section {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .kb-section:last-child {
+      border-bottom: none;
+    }
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.82rem;
+    }
+    .spec-table th, .spec-table td {
+      border: 1px solid var(--border-color);
+      padding: 8px 12px;
+      text-align: left;
+    }
+    .spec-table th {
+      background: var(--bg-surface);
+      color: var(--primary-light);
+      font-weight: 600;
+      width: 30%;
+    }
+    .spec-table td {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+    .callout-box {
+      background: var(--bg-primary);
+      border-left: 3px solid var(--primary-light);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    .callout-box.warning {
+      border-left-color: var(--warning);
+    }
+    .callout-box.accent {
+      border-left-color: var(--accent);
+    }
+    .topology-flow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: 1rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+    }
+    .topo-node {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: var(--radius);
+      color: var(--text-primary);
+    }
+    .topo-arrow {
+      color: var(--primary-light);
+      font-weight: bold;
+    }
+    .sidebar-sub-item {
+      padding-left: 1rem;
+      font-size: 0.78rem;
+    }
+  </style>
 </head>
 <body data-page-id="knowledge">
 
+  <!-- Header -->
   <header class="site-header">
     <div class="header-container">
       <div class="brand-wrapper">
@@ -16,7 +87,7 @@
           <img src="../assets/images/bcc-logo.svg" alt="BCC Logo" class="brand-logo">
           <div class="brand-text">
             <span class="brand-title dynamic-facility-title">Disaster Recovery Data Center</span>
-            <span class="brand-subtitle dynamic-org-title">Bangladesh Computer Council</span>
+            <span class="brand-subtitle dynamic-org-title">Bangladesh Computer Council (BCC)</span>
           </div>
         </a>
       </div>
@@ -38,48 +109,300 @@
     </div>
   </header>
 
+  <!-- Main Body -->
   <main class="app-container layout-with-sidebar">
-    <!-- Technical Sidebar Hierarchy -->
+
+    <!-- Interactive Navigation Sidebar -->
     <aside class="sidebar">
-      <div class="sidebar-title">Engineering Topics</div>
-      <ul class="sidebar-nav-list" id="sidebar-topics">
-        <li class="sidebar-nav-item"><a href="#redundancy" class="active">N+1 vs 2N Redundancy</a></li>
-        <li class="sidebar-nav-item"><a href="#sld-analysis">Single Line Diagram Logic</a></li>
-        <li class="sidebar-nav-item"><a href="#battery-health">VRLA & LiFePO4 Testing</a></li>
-        <li class="sidebar-nav-item"><a href="#clean-agent">Clean Agent Gas Mechanics</a></li>
-        <li class="sidebar-nav-item"><a href="#containment">Cold vs Hot Aisle Airflow</a></li>
-        <li class="sidebar-nav-item"><a href="#grounding">Equipotential Mesh Earthing</a></li>
+      <div class="sidebar-title">Infrastructure Domains</div>
+      <ul class="sidebar-nav-list">
+        <li class="sidebar-nav-item"><a href="#substation">1. Substation & Transformers</a></li>
+        <li class="sidebar-nav-item"><a href="#avr">2. 3600 kVA Central AVR</a></li>
+        <li class="sidebar-nav-item"><a href="#generators">3. 3× 2000 kVA Weichai DCC DGs</a></li>
+        <li class="sidebar-nav-item"><a href="#powerduct-bbt">4. Powerduct Pro BBT & NMW 2.1</a></li>
+        <li class="sidebar-nav-item"><a href="#ups-system">5. Huawei UPS5000-H Modular</a></li>
+        <li class="sidebar-nav-item"><a href="#smartli">6. Huawei SmartLi 3.0 (LFP)</a></li>
+        <li class="sidebar-nav-item"><a href="#containment">7. FusionModule 2000 6.0 Pods</a></li>
+        <li class="sidebar-nav-item"><a href="#cooling-inrow">8. FusionCol5000 In-Row PAC</a></li>
+        <li class="sidebar-nav-item"><a href="#cooling-inroom">9. NetCol8000 Perimeter PAC</a></li>
+        <li class="sidebar-nav-item"><a href="#vrf-comfort">10. DBV-6 Pro Full DC VRF</a></li>
+        <li class="sidebar-nav-item"><a href="#rPDU">11. PDU2000M Intelligent PDUs</a></li>
+        <li class="sidebar-nav-item"><a href="#vesda-fire">12. VESDA Aspirating Detection</a></li>
       </ul>
     </aside>
 
-    <!-- Content Wiki Area -->
-    <article style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius); padding:2rem;">
-      <section id="redundancy" style="margin-bottom:3rem;">
-        <h2 style="font-size:1.5rem; color:var(--primary-light); margin-bottom:0.75rem;">Understanding N+1, 2N, and 2(N+1) Redundancy in NDC</h2>
-        <p style="color:var(--text-secondary); line-height:1.7; margin-bottom:1rem;">
-          In high-reliability mission-critical facilities, the foundation of Tier III Concurrent Maintainability and Tier IV Fault Tolerance is mechanical and electrical redundancy.
+    <!-- Main Content Articles -->
+    <article style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius); padding:2rem; min-width:0;">
+
+      <!-- Header Title -->
+      <div style="margin-bottom:2rem; border-bottom:1px solid var(--border-color); padding-bottom:1rem;">
+        <span class="badge badge-primary">Technical Knowledge Base</span>
+        <h1 style="font-size:1.85rem; font-weight:800; color:var(--text-primary); margin:0.5rem 0 0.25rem;">
+          National Data Center Engineering & Infrastructure Reference
+        </h1>
+        <p style="color:var(--text-secondary); font-size:0.9rem;">
+          Authoritative technical specifications, operational topologies, maintenance criteria, and failure protection models for NDC facility engineers.
         </p>
-        <div style="background:var(--bg-primary); padding:1rem; border-left:3px solid var(--accent); margin-bottom:1rem;">
-          <strong>Definition (N):</strong> The exact base capacity required to sustain the full critical data center server load.
+      </div>
+
+      <!-- 1. Transformers -->
+      <section id="substation" class="kb-section">
+        <h2 style="color:var(--primary-light); font-size:1.35rem; margin-bottom:0.5rem;">
+          1. Substation Step-Down: Cast Resin Dry-Type Transformers (2000 kVA & 1600 kVA)
+        </h2>
+        <p style="color:var(--text-secondary); line-height:1.6;">
+          The intake power system utilizes two high-efficiency cast resin dry-type transformers stepping down the utility supply from 11 kV to 415 V / 240 V 3-phase 50 Hz. Unlike oil-immersed transformers, cast resin dry-type units utilize epoxy resin under vacuum casting, eliminating dielectric oil spill hazards, environmental contamination, and toxic gas release risks inside enclosed data center plant rooms.
+        </p>
+
+        <div class="topology-flow">
+          <span class="topo-node">11 kV Medium Voltage Grid</span>
+          <span class="topo-arrow">➔</span>
+          <span class="topo-node">11 kV VCB Vacuum Switchgear</span>
+          <span class="topo-arrow">➔</span>
+          <span class="topo-node">Cast Resin Transformers (2000 kVA / 1600 kVA)</span>
+          <span class="topo-arrow">➔</span>
+          <span class="topo-node">Low Voltage (LV) Intake Bus</span>
         </div>
-        <ul style="padding-left:1.5rem; color:var(--text-secondary); line-height:1.7; margin-bottom:1rem;">
-          <li><strong>N+1:</strong> Includes a single extra unit or module (e.g., 3 active chillers + 1 standby chiller). If one chiller trips, capacity remains 100% satisfied.</li>
-          <li><strong>2N:</strong> Two completely independent, isolated distribution trains from substation to IT servers. Failure or maintenance shutdown of an entire bus has zero disruption on operations.</li>
-          <li><strong>2(N+1):</strong> The highest availability class combining dual-bus fault tolerance with component modular redundancy within each independent train.</li>
-        </ul>
-        <a href="documents.html?category=Electrical%20Infrastructure" class="btn btn-secondary btn-sm">Browse Associated Electrical Documents →</a>
+
+        <table class="spec-table">
+          <tr><th>Transformer Array</th><td>Transformer-1: 2000 kVA | Transformer-2: 1600 kVA</td></tr>
+          <tr><th>Insulation Class</th><td>Class F / Class H (Winding temperature rise 100K / 125K limit)</td></tr>
+          <tr><th>Cooling Designation</th><td>AN / AF (Air Natural convection with forced cooling fan cross-blow)</td></tr>
+          <tr><th>Fire Behavior Rating</th><td>F1 (Low fire hazard, self-extinguishing epoxy, zero halogen emission)</td></tr>
+          <tr><th>Environmental / Climatic</th><td>E2 (Resistance to condensation/humidity) / C2 (Operating down to -25°C)</td></tr>
+          <tr><th>Thermal Monitoring</th><td>Pt100 RTD sensor embedded in core & LV windings with digital controller</td></tr>
+        </table>
+
+        <div class="callout-box warning">
+          <strong>Operating Rule:</strong> If winding temperature exceeds 130°C, the PT100 controller initiates automatic forced cooling fan blowers. If temperature reaches 150°C, a high-temperature alarm triggers on the BMS. Instant mechanical lockout trip occurs at 155°C.
+        </div>
       </section>
 
-      <section id="sld-analysis" style="margin-bottom:3rem; border-top:1px solid var(--border-color); padding-top:2rem;">
-        <h2 style="font-size:1.3rem; color:var(--primary-light); margin-bottom:0.75rem;">Medium Voltage Single Line Diagram (SLD) Philosophy</h2>
-        <p style="color:var(--text-secondary); line-height:1.7; margin-bottom:1rem;">
-          The single line diagram illustrates the path taken by electrical energy through transformers, switchboards, automatic transfer switches, and UPS modules. For safe switching, strict interlocking logic must be obeyed before operating vacuum circuit breakers.
+      <!-- 2. Central AVR -->
+      <section id="avr" class="kb-section">
+        <h2 style="color:var(--primary-light); font-size:1.35rem; margin-bottom:0.5rem;">
+          2. Power Quality Regulation: 3600 kVA Automatic Voltage Regulator (AVR)
+        </h2>
+        <p style="color:var(--text-secondary); line-height:1.6;">
+          The incoming LV grid supply passes through a high-capacity **3600 kVA Automatic Voltage Regulator (AVR)** prior to downstream distribution. The AVR neutralizes utility sags, brownouts, sustained overvoltages, and dynamic phase unbalances, isolating critical UPS rectifiers and mechanical chillers from severe utility grid variations.
         </p>
-        <a href="drawings.html" class="btn btn-secondary btn-sm">Inspect Complete SLD Drawing Set →</a>
+
+        <table class="spec-table">
+          <tr><th>System Rating</th><td>3600 kVA Continuous High-Power Heavy Duty</td></tr>
+          <tr><th>Input Voltage Range</th><td>340 V – 460 V AC (Wide utility fluctuation tolerance)</td></tr>
+          <tr><th>Output Voltage Precision</th><td>400 V / 415 V ±1% 3-Phase + Neutral stabilized</td></tr>
+          <tr><th>Correction Speed</th><td>High response speed (< 20 ms/V) via servo-controlled microstep drive</td></tr>
+          <tr><th>Efficiency</th><td>≥ 98.5% at rated full capacity load</td></tr>
+          <tr><th>Bypass Integration</th><td>Manual maintenance bypass and automatic static electronic bypass</td></tr>
+        </table>
       </section>
+
+      <!-- 3. Weichai DCC Generators -->
+      <section id="generators" class="kb-section">
+        <h2 style="color:var(--primary-light); font-size:1.35rem; margin-bottom:0.5rem;">
+          3. Emergency Prime Generation: 3× 2000 kVA Weichai DCC-Rated Gensets
+        </h2>
+        <p style="color:var(--text-secondary); line-height:1.6;">
+          The emergency generation plant comprises **three 2000 kVA (1600 kWe each) Weichai diesel generator sets** rated under the **Data Center Continuous (DCC)** standard according to ISO 8528-1. DCC certification ensures these engines can operate without runtime limitations at 100% continuous data center load during sustained utility blackouts.
+        </p>
+
+        <div class="topology-flow">
+          <span class="topo-node">DG 1 (2000 kVA DCC)</span>
+          <span class="topo-arrow">+</span>
+          <span class="topo-node">DG 2 (2000 kVA DCC)</span>
+          <span class="topo-arrow">+</span>
+          <span class="topo-node">DG 3 (2000 kVA DCC)</span>
+          <span class="topo-arrow">➔</span>
+          <span class="topo-node">Digital Woodward Parallel Master Panel</span>
+        </div>
+
+        <table class="spec-table">
+          <tr><th>Array Configuration</th><td>3× 2000 kVA DCC / 415 V / 50 Hz / 1500 RPM</td></tr>
+          <tr><th>Redundancy Scheme</th><td>N+1 Redundant Array (2 Sets Carry Total Peak Load + 1 Active Standby)</td></tr>
+          <tr><th>Step Load Capability</th><td>100% G3 transient response complying with ISO 8528-5</td></tr>
+          <tr><th>Autonomous Runtime</th><td>Continuous prime operation supported by bulk fuel storage and day-tanks</td></tr>
+          <tr><th>Synchronizing Time</th><td>Dual mains failure start signal: Synchronized & on-bus within 15 seconds</td></tr>
+        </table>
+      </section>
+
+      <!-- 4. BBT & Smart Busbars -->
+      <section id="powerduct-bbt" class="kb-section">
+        <h2 style="color:var(--primary-light); font-size:1.35rem; margin-bottom:0.5rem;">
+          4. Low-Loss Distribution: Powerduct Pro BBT & NMW 2.1 Smart Busway
+        </h2>
+        <p style="color:var(--text-secondary); line-height:1.6;">
+          Power distribution replaces traditional high-cable bulk trays with an integrated busway backbone:
+        </p>
+        <ul style="color:var(--text-secondary); line-height:1.7; padding-left:1.5rem; margin-bottom:1rem;">
+          <li>
+            <strong>Powerduct Pro Series Busbar Trunking (BBT):</strong> Heavy-capacity, sandwich-structured, low-impedance busbar system interconnecting the Substation LV panels, AVR, Weichai Generator parallel switchboards, and the Huawei UPS inputs. The all-aluminum housing delivers 50% lighter dead-load with magnetic shielding and IP55/IP66 ingress protection.
+          </li>
+          <li>
+            <strong>NMW 2.1 Smart Busbar System:</strong> Overhead plug-in track busway deployed along the white space server corridors. It supports hot-swappable Tap-Off Boxes (TOBs) with embedded digital branch circuit meters, allowing engineers to connect or reconfigure power whips to rack PDUs without shutting down busway sections.
+          </li>
+        </ul>
+
+        <div class="callout-box accent">
+          <strong>Key Maintenance Advantage:</strong> NMW 2.1 plug-in tap-off boxes allow live additions of server circuits with zero load disruption, adhering to Tier III Concurrent Maintainability requirements.
+        </div>
+      </section>
+
+      <!-- 5. Huawei UPS5000-H -->
+      <section id="ups-system" class="kb-section">
+        <h2 style="color:var(--primary-light); font-size:1.35rem; margin-bottom:0.5rem;">
+          5. Mission-Critical Conditioning: Huawei UPS5000-H-400K-NTR Modular UPS
+        </h2>
+        <p style="color:var(--text-secondary); line-height:1.6;">
+          The facility deploys the **Huawei UPS5000-H-400K-NTR**, an advanced high-density online double-conversion modular UPS system designed for Tier III/IV data center infrastructures. Built on ultra-compact 100 kVA/3U hot-swappable power modules, the system offers high power density, scalability, and up to 97% system efficiency in online double conversion mode.
+        </p>
+
+        <table class="spec-table">
+          <tr><th>System Model</th><td>HUAWEI UPS5000-H-400K-NTR</td></tr>
+          <tr><th>Module Architecture</th><td>High-density 100 kVA / 3U hot-swappable power conversion modules</td></tr>
+          <tr><th>Output Power Factor (PF)</th><td>1.0 (400 kVA delivers full 400 kW active IT computing capacity)</td></tr>
+          <tr><th>Operating Efficiency</th><td>97% in normal double conversion mode; up to 99% in S-ECO mode</td></tr>
+          <tr><th>Input Voltage & Frequency</th><td>138 V to 485 V AC (Wide range avoids battery discharge); 40–70 Hz</td></tr>
+          <tr><th>Transfer Time</th><td>0 ms (Inverter ⇄ Battery Seamless Double Conversion)</td></tr>
+          <tr><th>iPower Predictive Telemetry</th><td>Monitors internal capacitors, fans, busbar joints, and breaker contact life</td></tr>
+        </table>
+      </section>
+
+      <!-- 6. Huawei SmartLi 3.0 -->
+      <section id="smartli" class="kb-section">
+        <h2 style="color:var(--primary-light); font-size:1.35rem; margin-bottom:0.5rem;">
+          6. Energy Storage: Huawei SmartLi 3.0 Lithium Iron Phosphate (LiFePO4) Battery
+        </h2>
+        <p style="color:var(--text-secondary); line-height:1.6;">
+          DC energy storage is driven by **Huawei SmartLi 3.0** battery energy storage cabinets using Lithium Iron Phosphate (LiFePO4 / LFP) cell chemistry. LFP chemistry offers chemical stability with thermal runaway resistance, eliminating the thermal hazards typical of traditional lithium-cobalt or lead-acid batteries.
+        </p>
+
+        <table class="spec-table">
+          <tr><th>Chemistry & Lifespan</th><td>Lithium Iron Phosphate (LiFePO4); up to 5,000 deep discharge cycles</td></tr>
+          <tr><th>Active Balance Control</th><td>Active current-balance control supports mixing new and old battery cabinets</td></tr>
+          <tr><th>Pack-Level Fire Suppression</th><td>Built-in localized fire extinguisher at module level for targeted suppression</td></tr>
+          <tr><th>Three-Level BMS Architecture</th><td>Cell Level ➔ Module Level ➔ Cabinet Level with cloud intelligence</td></tr>
+          <tr><th>Footprint Advantage</th><td>Reduces floor load and footprint by up to 60–70% compared to equivalent VRLA banks</td></tr>
+        </table>
+
+        <div class="callout-box warning">
+          <strong>Safe Operation:</strong> SmartLi 3.0 monitors individual cell voltage, internal resistance, and terminal temperature every 5 minutes. If cell over-temperature occurs (> 60°C), the local BMS disconnects the string DC breaker and triggers localized aerosol suppression without affecting parallel strings.
+        </div>
+      </section>
+
+      <!-- 7. FusionModule 2000 -->
+      <section id="containment" class="kb-section">
+        <h2 style="color:var(--primary-light); font-size:1.35rem; margin-bottom:0.5rem;">
+          7. White Space Pod Architecture: Huawei FusionModule 2000 6.0 Containment
+        </h2>
+        <p style="color:var(--text-secondary); line-height:1.6;">
+          The white space compute zones are organized into **Huawei FusionModule 2000 6.0** modular pods. Each pod incorporates factory-integrated aisle containment, power distribution, smart cooling, access control, and environmental telemetry into a unified architecture.
+        </p>
+
+        <table class="spec-table">
+          <tr><th>Pod Allocation</th><td><strong>25 IT Equipment Racks</strong> + <strong>7 In-Row PAC Units</strong> per containment aisle</td></tr>
+          <tr><th>Containment Philosophy</th><td>Cold-Aisle Containment (CAC) with magnetic automatic sliding glass doors</td></tr>
+          <tr><th>Fire Interlock Integration</th><td>Ceiling panels drop open automatically via magnetic release on VESDA trigger</td></tr>
+          <tr><th>Lighting & Energy</th><td>Integrated high-lumen LED arrays actuated by aisle occupancy motion sensors</td></tr>
+          <tr><th>DCIM Integration</th><td>Embedded 10-inch local SmartPad for aisle-level temperature, PUE, and alarm O&M</td></tr>
+        </table>
+      </section>
+
+      <!-- 8. FusionCol5000 In-Row -->
+      <section id="cooling-inrow" class="kb-section">
+        <h2 style="color:var(--primary-light); font-size:1.35rem; margin-bottom:0.5rem;">
+          8. Microclimate Thermal Control: FusionCol5000 In-Row Air-Cooled Smart Cooling
+        </h2>
+        <p style="color:var(--text-secondary); line-height:1.6;">
+          Each FusionModule 2000 containment pod integrates **7 units of FusionCol5000 In-Row Air-Cooled Precision Cooling**. These units sit directly in line with the server racks, drawing hot air from the hot aisle and delivering cold conditioned air horizontally into the contained cold aisle.
+        </p>
+
+        <table class="spec-table">
+          <tr><th>Pod Configuration</th><td>7 Units deployed per pod (arranged in N+1 / N+2 active redundancy)</td></tr>
+          <tr><th>Compressor Technology</th><td>DC Inverter variable speed compressor regulating stepless cooling output</td></tr>
+          <tr><th>Air Distribution</th><td>Variable-speed Electronically Commutated (EC) fans with horizontal airflow</td></tr>
+          <tr><th>Refrigerant Cycle</th><td>Eco-friendly R410A with high return air temperature design (up to 40°C return)</td></tr>
+          <tr><th>iCooling Algorithms</th><td>AI dynamic algorithm optimizes fan speed and refrigerant expansion in real-time</td></tr>
+        </table>
+      </section>
+
+      <!-- 9. NetCol8000-A060 Perimeter -->
+      <section id="cooling-inroom" class="kb-section">
+        <h2 style="color:var(--primary-light); font-size:1.35rem; margin-bottom:0.5rem;">
+          9. Room-Level Precision Cooling: NetCol8000-A060 In-Room Smart Cooling
+        </h2>
+        <p style="color:var(--text-secondary); line-height:1.6;">
+          For general hall temperature equalization, electrical battery room conditioning, and reserve redundancy, the perimeter is managed by **NetCol8000-A060 In-Room Air-Cooled Precision Cooling units**. These downflow units discharge conditioned air to sweep perimeter heat loads and maintain stable relative humidity.
+        </p>
+
+        <table class="spec-table">
+          <tr><th>Model & Rating</th><td>NetCol8000-A060 (60 kW nominal sensible capacity per unit)</td></tr>
+          <tr><th>Air Delivery Mode</th><td>Downflow under raised floor / Forward displacement</td></tr>
+          <tr><th>Fan Technology</th><td>High-efficiency backward-curved centrifugal EC fans</td></tr>
+          <tr><th>Dehumidification / Humidity</th><td>Integrated PTC electric reheat and electrode wet-film humidifier system</td></tr>
+          <tr><th>Teamwork Group Control</th><td>Up to 32 units grouped via CAN bus to prevent simultaneous heating and cooling</td></tr>
+        </table>
+      </section>
+
+      <!-- 10. DBV-6 Pro VRF -->
+      <section id="vrf-comfort" class="kb-section">
+        <h2 style="color:var(--primary-light); font-size:1.35rem; margin-bottom:0.5rem;">
+          10. Support Infrastructure HVAC: DBV-6 Pro Full DC Inverter VRF System
+        </h2>
+        <p style="color:var(--text-secondary); line-height:1.6;">
+          Facility support spaces—including the 24/7 Network Operations Center (NOC), Security Operations Center (SOC), staging areas, and engineering offices—are conditioned by an independent **DBV-6 Pro Full DC Inverter VRF System**.
+        </p>
+
+        <table class="spec-table">
+          <tr><th>System Type</th><td>Variable Refrigerant Flow (VRF) with Full DC Inverter Twin-Rotary Compressors</td></tr>
+          <tr><th>Energy Efficiency</th><td>APF up to 5.2; stepless capacity modulation from 10% to 100%</td></tr>
+          <tr><th>Operating Temperature Range</th><td>Cooling from -15°C up to +52°C ambient outdoor temperature</td></tr>
+          <tr><th>BACnet/Modbus Gateway</th><td>Centralized BMS telemetry integration for schedule control and energy monitoring</td></tr>
+        </table>
+      </section>
+
+      <!-- 11. PDU2000M -->
+      <section id="rPDU" class="kb-section">
+        <h2 style="color:var(--primary-light); font-size:1.35rem; margin-bottom:0.5rem;">
+          11. Rack-Level Power Architecture: Huawei PDU2000M Intelligent PDUs
+        </h2>
+        <p style="color:var(--text-secondary); line-height:1.6;">
+          Every rack inside the 25-rack FusionModule 2000 pods is fitted with dual vertical **PDU2000M Series Intelligent Power Distribution Units** (A-Feed and B-Feed).
+        </p>
+
+        <table class="spec-table">
+          <tr><th>Architecture</th><td>2N Redundant Feeders (Feed-A from UPS Train A; Feed-B from UPS Train B)</td></tr>
+          <tr><th>Metering Granularity</th><td>Unit-level, branch breaker level, and outlet-level power & power-factor metering</td></tr>
+          <tr><th>Accuracy Standard</th><td>Class 1.0 (±1%) billing-grade power metering accuracy</td></tr>
+          <tr><th>Environmental Integration</th><td>Direct plug-in daisy-chain ports for rack front/rear dual temperature & humidity sensors</td></tr>
+          <tr><th>Security & Logic</th><td>Outlet-level remote on/off power cycling for recovering locked IT hardware</td></tr>
+        </table>
+      </section>
+
+      <!-- 12. VESDA -->
+      <section id="vesda-fire" class="kb-section">
+        <h2 style="color:var(--primary-light); font-size:1.35rem; margin-bottom:0.5rem;">
+          12. High-Sensitivity Protection: Aspirating Smoke Detection System (VESDA)
+        </h2>
+        <p style="color:var(--text-secondary); line-height:1.6;">
+          White space fire safety uses **VESDA Aspirating Very Early Smoke Detection Apparatus**. High-efficiency aspirator pumps continuously draw air samples through networked piping installed directly at server rack exhaust grilles and cold aisle containment intake returns.
+        </p>
+
+        <table class="spec-table">
+          <tr><th>Detection Threshold</th><td>Ultra-wide sensitivity: 0.001% to 20% obscuration/meter (Laser nephelometer)</td></tr>
+          <tr><th>Multi-Level Alert Thresholds</th><td>Alert ➔ Action ➔ Fire-1 ➔ Fire-2 progressive response staging</td></tr>
+          <tr><th>Containment Integration</th><td>At "Action" stage, FusionModule 2000 magnetic roof panels drop open</td></tr>
+          <tr><th>Suppression Interlock</th><td>Dual-zone coincidence confirmation triggers clean agent gas discharge release</td></tr>
+        </table>
+
+        <div class="callout-box warning">
+          <strong>Routine Testing Protocol:</strong> Per NFPA 72 and NFPA 75, VESDA sampling pipe transit time must be verified semi-annually at the farthest sampling hole. The transit duration must remain under 60 seconds.
+        </div>
+      </section>
+
     </article>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-bottom" style="border-top:none; padding-top:0;">
       <div>© 2026 National Data Center (NDC), Bangladesh Computer Council.</div>

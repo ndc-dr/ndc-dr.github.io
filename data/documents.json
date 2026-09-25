@@ -849,6 +849,31 @@
     "featured": true
   },
 
+  {
+    "id": "PDU2000M Specs",
+    "title": "PDU2000M-Datashet",
+    "category": "Electrical Infrastructure",
+    "subcategory": "PDU & Busway",
+    "type": "Manual",
+    "system": "Electrical",
+    "manufacturer": "Huawei",
+    "model": "02123384",
+    "description": "This datasheet details Huawei's PDU2000M series rack power distribution units, highlighting features, electrical specifications, input/output configurations, monitoring capabilities, and environmental parameters for network and server cabinets.",
+    "version": "N",
+    "date": "2026-06-05",
+    "tags": ["Huawei", "PDU2000M", "Power Distribution Unit", "Rack PDU", "Datasheet", "Specifications", "Data Center"],
+    "driveUrl": "https://drive.google.com/file/d/1Wz5kYEMR1UGzwdY7lmHWEqLnhNyNOcQI/view?usp=sharing",
+    "driveFileId": "1Wz5kYEMR1UGzwdY7lmHWEqLnhNyNOcQI",
+    "visibility": "public",
+    "featured": true
+  },
+
+
+
+
+  
+
+  
 
 
   

@@ -236,7 +236,24 @@
     "safetyPrecautions": "Authorized personnel only, isolate power before electrical maintenance, apply LOTO, verify absence of voltage, use appropriate PPE, maintain proper grounding, keep doors and access routes unobstructed, do not bypass fire or security systems, prevent water ingress, maintain clear airflow paths, use approved replacement components, restore all covers and protections before energization",
     "relatedDocIds": ["FusionModule2000 6.0 Product Description", "FusionModule2000 6.0 Installation Guide", "FusionModule2000 6.0 Commissioning Guide", "FusionModule2000 6.0 Maintenance Guide", "FusionModule2000 6.0 Cable Routing Diagram", "FusionModule2000 6.0 DCMS Wiring Diagram", "FusionModule2000 6.0 Electric Sliding Door Quick Guide", "FusionModule2000 6.0 DCSM Cable List"]
   },
-
+  {
+    "id": "PDU2000M",
+    "name": "Rack Power Distribution Unit PDU2000M Series",
+    "imageUrl": "../assets/images/equipment/PDU2000M.png",
+    "system": "Power System",
+    "manufacturer": "Huawei",
+    "model": "PDU2000M (02123384)",
+    "function": "Sub-distributes conditioned power from UPS to individual rack power strips with branch circuit power metering.",
+    "capacity": "21 kVA",
+    "ratedVoltage": "380/400/415 VAC (± 20%)",
+    "ratedCurrent": "32 A",
+    "redundancy": "Dual PDU (A-Feed & B-Feed) per server row",
+    "location": "White Space Perimeter",
+    "maintenanceFrequency": "Quarterly branch circuit current balance survey; Semi-annual IR thermography",
+    "commonFaults": "Branch breaker trip on server power supply inrush, neutral harmonic heating.",
+    "safetyPrecautions": "Verify branch breaker is open and tag out before pulling whip cables into server racks.",
+    "relatedDocIds": ["PDU2000M Specs"]
+  }
   
   
   
@@ -277,21 +294,4 @@
     "safetyPrecautions": "Insert manual actuator lock-pin before performing maintenance inside the server hall to prevent inadvertent discharge.",
     "relatedDocIds": ["DOC-FIRE-001"]
   },
-  {
-    "id": "EQ-PDU-01",
-    "name": "Intelligent Power Distribution Unit (PDU)",
-    "system": "Power System",
-    "manufacturer": "Vertiv",
-    "model": "Liebert FPC 300kVA",
-    "function": "Sub-distributes conditioned power from UPS to individual rack power strips with branch circuit power metering.",
-    "capacity": "300 kVA",
-    "ratedVoltage": "400V Primary / 400-230V Secondary",
-    "ratedCurrent": "433 A",
-    "redundancy": "Dual PDU (A-Feed & B-Feed) per server row",
-    "location": "White Space Perimeter",
-    "maintenanceFrequency": "Quarterly branch circuit current balance survey; Semi-annual IR thermography",
-    "commonFaults": "Branch breaker trip on server power supply inrush, neutral harmonic heating.",
-    "safetyPrecautions": "Verify branch breaker is open and tag out before pulling whip cables into server racks.",
-    "relatedDocIds": ["DOC-ELEC-001", "DOC-DRAW-001"]
-  }
 ]

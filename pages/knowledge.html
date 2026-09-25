@@ -151,11 +151,13 @@
           1. Substation Step-Down: Cast Resin Dry-Type Transformers (2000 kVA & 1600 kVA)
         </h2>
         <p style="color:var(--text-secondary); line-height:1.6;">
-          The intake power system utilizes two high-efficiency cast resin dry-type transformers stepping down the utility supply from 11 kV to 415 V / 240 V 3-phase 50 Hz. Unlike oil-immersed transformers, cast resin dry-type units utilize epoxy resin under vacuum casting, eliminating dielectric oil spill hazards, environmental contamination, and toxic gas release risks inside enclosed data center plant rooms.
+          The intake power system utilizes two high-efficiency cast resin dry-type transformers stepping down the utility supply from 11 kV to 415 V 3-phase 50 Hz. Unlike oil-immersed transformers, cast resin dry-type units utilize epoxy resin under vacuum casting, eliminating dielectric oil spill hazards, environmental contamination, and toxic gas release risks inside enclosed data center plant rooms.
         </p>
 
         <div class="topology-flow">
           <span class="topo-node">11 kV Medium Voltage Grid</span>
+          <span class="topo-arrow">➔</span>
+          <span class="topo-node">3 sets of Single Phase Step Voltage Regulator - AVR</span>
           <span class="topo-arrow">➔</span>
           <span class="topo-node">11 kV VCB Vacuum Switchgear</span>
           <span class="topo-arrow">➔</span>
@@ -166,7 +168,7 @@
 
         <table class="spec-table">
           <tr><th>Transformer Array</th><td>Transformer-1: 2000 kVA | Transformer-2: 1600 kVA</td></tr>
-          <tr><th>Insulation Class</th><td>Class F / Class H (Winding temperature rise 100K / 125K limit)</td></tr>
+          <tr><th>Insulation Class</th><td>Class F  (Winding temperature rise 100K limit)</td></tr>
           <tr><th>Cooling Designation</th><td>AN / AF (Air Natural convection with forced cooling fan cross-blow)</td></tr>
           <tr><th>Fire Behavior Rating</th><td>F1 (Low fire hazard, self-extinguishing epoxy, zero halogen emission)</td></tr>
           <tr><th>Environmental / Climatic</th><td>E2 (Resistance to condensation/humidity) / C2 (Operating down to -25°C)</td></tr>
@@ -184,15 +186,15 @@
           2. Power Quality Regulation: 3600 kVA Automatic Voltage Regulator (AVR)
         </h2>
         <p style="color:var(--text-secondary); line-height:1.6;">
-          The incoming LV grid supply passes through a high-capacity **3600 kVA Automatic Voltage Regulator (AVR)** prior to downstream distribution. The AVR neutralizes utility sags, brownouts, sustained overvoltages, and dynamic phase unbalances, isolating critical UPS rectifiers and mechanical chillers from severe utility grid variations.
+          The incoming MV(11KV) grid supply passes through a high-capacity **3600 kVA Automatic Voltage Regulator (AVR)** prior to the transformation operation. The AVR neutralizes utility sags, brownouts, sustained overvoltages, and dynamic phase unbalances, isolating critical UPS rectifiers and mechanical chillers from severe utility grid variations.
         </p>
 
         <table class="spec-table">
           <tr><th>System Rating</th><td>3600 kVA Continuous High-Power Heavy Duty</td></tr>
-          <tr><th>Input Voltage Range</th><td>340 V – 460 V AC (Wide utility fluctuation tolerance)</td></tr>
-          <tr><th>Output Voltage Precision</th><td>400 V / 415 V ±1% 3-Phase + Neutral stabilized</td></tr>
-          <tr><th>Correction Speed</th><td>High response speed (< 20 ms/V) via servo-controlled microstep drive</td></tr>
-          <tr><th>Efficiency</th><td>≥ 98.5% at rated full capacity load</td></tr>
+          <tr><th>Input Voltage Range</th><td>11 kV ±10% V AC (Wide utility fluctuation tolerance)</td></tr>
+          <tr><th>Output Voltage Precision</th><td>32 steps of correction</td></tr>
+          <tr><th>Efficiency</th><td>≥ 98% at rated full capacity load</td></tr>
+          <tr><th>Cooling Method</th><td>ONAN</td></tr>
           <tr><th>Bypass Integration</th><td>Manual maintenance bypass and automatic static electronic bypass</td></tr>
         </table>
       </section>
@@ -213,7 +215,7 @@
           <span class="topo-arrow">+</span>
           <span class="topo-node">DG 3 (2000 kVA DCC)</span>
           <span class="topo-arrow">➔</span>
-          <span class="topo-node">Digital Woodward Parallel Master Panel</span>
+          <span class="topo-node">DG Control Panel(s)</span>
         </div>
 
         <table class="spec-table">
@@ -221,7 +223,7 @@
           <tr><th>Redundancy Scheme</th><td>N+1 Redundant Array (2 Sets Carry Total Peak Load + 1 Active Standby)</td></tr>
           <tr><th>Step Load Capability</th><td>100% G3 transient response complying with ISO 8528-5</td></tr>
           <tr><th>Autonomous Runtime</th><td>Continuous prime operation supported by bulk fuel storage and day-tanks</td></tr>
-          <tr><th>Synchronizing Time</th><td>Dual mains failure start signal: Synchronized & on-bus within 15 seconds</td></tr>
+          <tr><th>Synchronizing Time</th><td>Mains failure start signal: Synchronized & on-bus within 15 seconds</td></tr>
         </table>
       </section>
 
@@ -300,10 +302,10 @@
 
         <table class="spec-table">
           <tr><th>Pod Allocation</th><td><strong>25 IT Equipment Racks</strong> + <strong>7 In-Row PAC Units</strong> per containment aisle</td></tr>
-          <tr><th>Containment Philosophy</th><td>Cold-Aisle Containment (CAC) with magnetic automatic sliding glass doors</td></tr>
+          <tr><th>Containment Philosophy</th><td>Hot-Aisle Containment (HAC) with magnetic automatic sliding glass doors</td></tr>
           <tr><th>Fire Interlock Integration</th><td>Ceiling panels drop open automatically via magnetic release on VESDA trigger</td></tr>
           <tr><th>Lighting & Energy</th><td>Integrated high-lumen LED arrays actuated by aisle occupancy motion sensors</td></tr>
-          <tr><th>DCIM Integration</th><td>Embedded 10-inch local SmartPad for aisle-level temperature, PUE, and alarm O&M</td></tr>
+          <tr><th>DCIM Integration</th><td>Embedded 43-inch local Smart Touch Screen for aisle-level temperature, PUE, and alarm O&M</td></tr>
         </table>
       </section>
 
@@ -313,7 +315,7 @@
           8. Microclimate Thermal Control: FusionCol5000 In-Row Air-Cooled Smart Cooling
         </h2>
         <p style="color:var(--text-secondary); line-height:1.6;">
-          Each FusionModule 2000 containment pod integrates **7 units of FusionCol5000 In-Row Air-Cooled Precision Cooling**. These units sit directly in line with the server racks, drawing hot air from the hot aisle and delivering cold conditioned air horizontally into the contained cold aisle.
+          Each FusionModule 2000 containment pod integrates **7 units of FusionCol5000 In-Row Air-Cooled Precision Cooling**. These units sit directly in line with the server racks, drawing hot air from the contained hot aisle and delivering cold conditioned air into the cold aisle.
         </p>
 
         <table class="spec-table">
@@ -331,15 +333,15 @@
           9. Room-Level Precision Cooling: NetCol8000-A060 In-Room Smart Cooling
         </h2>
         <p style="color:var(--text-secondary); line-height:1.6;">
-          For general hall temperature equalization, electrical battery room conditioning, and reserve redundancy, the perimeter is managed by **NetCol8000-A060 In-Room Air-Cooled Precision Cooling units**. These downflow units discharge conditioned air to sweep perimeter heat loads and maintain stable relative humidity.
+          For general hall temperature equalization, the two power rooms are managed by **NetCol8000-A060 In-Room Air-Cooled Precision Cooling units**. These downflow units discharge conditioned air to sweep perimeter heat loads and maintain stable relative humidity.
         </p>
 
         <table class="spec-table">
           <tr><th>Model & Rating</th><td>NetCol8000-A060 (60 kW nominal sensible capacity per unit)</td></tr>
-          <tr><th>Air Delivery Mode</th><td>Downflow under raised floor / Forward displacement</td></tr>
+          <tr><th>Air Delivery Mode</th><td>Upflow / Forward displacement</td></tr>
           <tr><th>Fan Technology</th><td>High-efficiency backward-curved centrifugal EC fans</td></tr>
           <tr><th>Dehumidification / Humidity</th><td>Integrated PTC electric reheat and electrode wet-film humidifier system</td></tr>
-          <tr><th>Teamwork Group Control</th><td>Up to 32 units grouped via CAN bus to prevent simultaneous heating and cooling</td></tr>
+          <tr><th>Teamwork Group Control</th><td>2 units per POwer Room are grouped via CAN bus to prevent simultaneous heating and cooling</td></tr>
         </table>
       </section>
 
@@ -349,7 +351,7 @@
           10. Support Infrastructure HVAC: DBV-6 Pro Full DC Inverter VRF System
         </h2>
         <p style="color:var(--text-secondary); line-height:1.6;">
-          Facility support spaces—including the 24/7 Network Operations Center (NOC), Security Operations Center (SOC), staging areas, and engineering offices—are conditioned by an independent **DBV-6 Pro Full DC Inverter VRF System**.
+          Facility support spaces—including the 24/7 Network Operations Center (NOC), Security Operations Center (SOC), staging areas, engineering offices and HT, LT, Battery Rooms—are conditioned by a set of independent **DBV-6 Pro Full DC Inverter VRF System**.
         </p>
 
         <table class="spec-table">

@@ -1,5 +1,33 @@
 [  
   {
+    "id": "sys-ht-substation",
+    "name": "11kV HT Substation & AVR Regulation System",
+    "summary": "3600 kVA 11kV utility incomer feeding an 8-panel Ring Main Unit (RMU) switchboard integrated with a 3× 1-phase 11kV step AVR bank (±10% regulation) featuring dedicated maintenance bypass interlocks and dual outgoing feeders for Phase 1 and Phase 2 step-down transformers.",
+    "mermaid": "graph TD\n  Utility[\"Utility Power 3600 kVA (11 kV)\"] --> IM[\"IM: Incomer Panel (630A)\"]\n  IM --> Bus1[\"11 kV Primary Common Busbar\"]\n  Bus1 --> PTMeter[\"PT & Metering Cubicle\"]\n  \n  %% AVR Incomer & Bypass Paths\n  Bus1 --> AVR_IN[\"AVR IN: Supply Breaker (630A)\"]\n  Bus1 --> AVR_BP[\"AVR BP: Bypass Breaker (630A)\"]\n  \n  %% AVR Bank\n  AVR_IN --> AVRBank[\"3x Single-Phase 11kV AVRs<br/>(AVR-1, AVR-2, AVR-3 | ±10%)\"]\n  AVRBank --> AVR_OUT[\"AVR OUT: Feeder Panel (630A)\"]\n  \n  %% Bypass Interlock\n  AVR_BP --> AVR_BPRU[\"AVR BP RU: Bypass Return Unit\"]\n  AVR_OUT -.-\"Mechanical / Electrical Interlock\"-.- AVR_BPRU\n  \n  %% Downstream Bus\n  AVR_OUT --> DistBus[\"11 kV Regulated Distribution Bus\"]\n  AVR_BPRU --> DistBus\n  \n  %% Outgoing Feeders\n  DistBus --> QM1[\"QM Feeder 1 (630A)\"]\n  DistBus --> QM2[\"QM Feeder 2 (630A)\"]\n  \n  QM1 --> Phase1[\"Phase 1 Transformer Feeder<br/>(2000 kVA Cast Resin XFR)\"]\n  QM2 --> Phase2[\"Phase 2 Transformer Feeder<br/>(1600 kVA Cast Resin XFR)\"]\n  \n  classDef bus fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;\n  classDef equipment fill:#1e293b,stroke:#0284c7,stroke-width:1px,color:#f8fafc;\n  classDef interlock fill:#7f1d1d,stroke:#ef4444,stroke-width:1px,color:#fca5a5;\n  \n  class Bus1,DistBus bus;\n  class IM,AVR_IN,AVR_BP,AVR_OUT,AVR_BPRU,QM1,QM2,AVRBank,PTMeter equipment;",
+    "stages": [
+      {
+        "step": "1. 11kV Utility Intake",
+        "detail": "3600 kVA utility power enters via the 630A Incomer Panel (IM) equipped with an earthing switch, vacuum circuit breaker, and cable testing facilities."
+      },
+      {
+        "step": "2. PT & Revenue Metering",
+        "detail": "Dedicated PT & Metering panel tapped off the primary busbar provides voltage transformation, surge suppression, and power quality metering."
+      },
+      {
+        "step": "3. Voltage Regulation & Conditioning",
+        "detail": "Power flows via 'AVR IN' (630A) into 3 sets of single-phase 11kV step AVR units (AVR-1, AVR-2, AVR-3) stabilizing voltage within ±10% before feeding back through 'AVR OUT' (630A)."
+      },
+      {
+        "step": "4. Zero-Downtime Maintenance Bypass",
+        "detail": "During AVR servicing, power is routed through 'AVR BP' and returned via 'AVR BP RU'. A key mechanical/electrical interlock ensures the bypass and AVR output cannot be tied out of sequence."
+      },
+      {
+        "step": "5. Downstream Transformer Outgoing",
+        "detail": "The regulated 11kV distribution bus feeds two 630A QM outgoing cubicles: Phase 1 (feeding the 2000 kVA dry transformer) and Phase 2 (feeding the 1600 kVA dry transformer)."
+      }
+    ]
+  },
+  {
     "id": "sys-power",
     "name": "Power Infrastructure System",
     "summary": "Dual-utility 33kV/11kV grid inputs, transformer step-down, synchronized generator bus, static transfer, and 2N UPS trains feeding server racks.",

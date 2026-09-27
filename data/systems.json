@@ -7,7 +7,7 @@
     "stages": [
       {
         "step": "1. 11kV Utility Intake",
-        "detail": "3600 kVA utility power enters via the 630A Incomer Panel (IM) equipped with an earthing switch, vacuum circuit breaker, and cable testing facilities."
+        "detail": "3600 kVA utility power enters via the 1250A VCB Incomer Panel (IM) equipped with an earthing switch."
       },
       {
         "step": "2. PT & Revenue Metering",
@@ -15,7 +15,7 @@
       },
       {
         "step": "3. Voltage Regulation & Conditioning",
-        "detail": "Power flows via 'AVR IN' (630A) into 3 sets of single-phase 11kV step AVR units (AVR-1, AVR-2, AVR-3) stabilizing voltage within ±10% before feeding back through 'AVR OUT' (630A)."
+        "detail": "Power flows via 'AVR IN' (1250A VCB) into 3 sets of single-phase 11kV step AVR units (AVR-1, AVR-2, AVR-3) stabilizing voltage within ±10% before feeding back through 'AVR OUT' (1250A VCB)."
       },
       {
         "step": "4. Zero-Downtime Maintenance Bypass",
@@ -23,22 +23,36 @@
       },
       {
         "step": "5. Downstream Transformer Outgoing",
-        "detail": "The regulated 11kV distribution bus feeds two 630A QM outgoing cubicles: Phase 1 (feeding the 2000 kVA dry transformer) and Phase 2 (feeding the 1600 kVA dry transformer)."
+        "detail": "The regulated 11kV distribution bus feeds two 1250A QM outgoing cubicles: Phase 1 (feeding the 2000 kVA dry transformer) and Phase 2 (feeding the 1600 kVA dry transformer)."
       }
     ]
   },
   {
-    "id": "sys-power",
-    "name": "Power Infrastructure System",
-    "summary": "Dual-utility 33kV/11kV grid inputs, transformer step-down, synchronized generator bus, static transfer, and 2N UPS trains feeding server racks.",
+    "id": "sys-lt-distribution",
+    "name": "LT Power Distribution & Dual-Cord UPS Architecture",
+    "summary": "Dual-incomer low tension (LT) distribution scheme combining 2000 kVA and 1600 kVA cast resin transformers, 3× 2000 kVA DG sets with 3200A busways, four 4-pole ATS units with power factor improvement (PFI) and Class A+B SPDs, feeding 2N modular UPS trains with LiFePO4 storage to dual-cord Huawei FusionModule 2000 6.0 containments."
     "mermaid": "graph TD\n    DG1(DG1) --> |Busway 3200A| 1DGSB[[1DGSB]] --> SPD3[\\Class A+B SPD/]\n    A@{ shape: bolt, label: \\\"Communication link\\\" } --> |Phase 1| TX1(((Transfromer 2000KVA)))\n    DG2(DG2) --> |Busway 3200A| 2DGSB[[2DGSB]]\n    B@{ shape: bolt, label: \\\"Communication link\\\" } --> |Phase 2| TX2(((Transfromer 1600KVA)))\n    DG3(DG3) --> |Busway 3200A| 3DGSB[[3DGSB]]\n    TX1 --> 1LTSB[[\"1LTSB (3200A ACB)\"]] --> 1ATSA{\"1ATS-A\"} & 1PFI[(1200 kvar)] & SPD1[\\Class A+B SPD/] & 1ATSB{\"1ATS-B\"}\n    TX2 --> 2LTSB[[\"2LTSB (2500A ACB)\"]] --> 21PFI[(960 kvar)] & 2ATSB{\"2ATS-B\"} & SPD2[\\Class A+B SPD/] & 2ATSA{\"2ATS-A\"}\n    1DGSB --> |Busway 3200A| 1ATSA --> |Busway 3200A| 1MDBA[[1MDB-A]]\n    2DGSB --> |Busway 3200A| 1ATSB --> |Busway 3200A| 1MDBB[[1MDB-B]]\n    3DGSB --> |Busway 3200A| 2ATSA --> |Busway 3200A| 2MDBA[[2MDB-A]]\n    3DGSB --> SPD5[\\Class A+B SPD/]\n    2DGSB --> SPD4[\\Class A+B SPD/]\n    2DGSB --> |Busway 3200A| 2ATSB --> |Busway 3200A| 2MDBB[[2MDB-B]]\n    1MDBA --> 1UPSA1[[1UPS-A1]] & 1UPSA2[[1UPS-A2]]\n    1MDBB --> 1UPSB1[[1UPS-B1]] & 1UPSB2[[1UPS-B2]]\n    1UPSA1 --- B1([LiFePO4])\n    1UPSA2 --- B2([LiFePO4])\n    1UPSB1 --- B3([LiFePO4])\n    1UPSB2 --- B4([LiFePO4])\n    1UPSA1 & 1UPSA2 --> 1ITudbA[[1IT-UDB-A]]\n    1UPSB1 & 1UPSB2 --> 1ITudbB[[1IT-UDB-B]]\n    1ITudbA & 1ITudbB --> C1{{Containment 1}}\n    1ITudbA & 1ITudbB --> C2{{Containment 2}}",
     "stages": [
-      {"step": "1. Grid Supply", "detail": "Redundant 33kV power feeds stepped to 11kV at the intake substation."},
-      {"step": "2. HT Distribution", "detail": "Dual-bus 11kV vacuum switchgear with protective relaying."},
-      {"step": "3. Step-down Transformation", "detail": "Cast-resin 2500kVA dry transformers reducing voltage to 415V/240V."},
-      {"step": "4. Emergency Backup", "detail": "4x 2500kVA synchronized Cummins diesel gensets taking full load within 12 seconds."},
-      {"step": "5. Uninterruptible Conditioning", "detail": "Modular UPS trains running in 2N configuration guaranteeing clean sine wave."},
-      {"step": "6. Rack Delivery", "detail": "Intelligent A+B busway and rack PDUs feeding redundant enterprise dual-cord power supplies."}
+      {
+      "step": "1. Transformation & LT Switchboards",
+      "detail": "TX1 (2000 kVA) feeds 1LTSB through a 3200A ACB with a 1200 kvar PFI plant; TX2 (1600 kVA) feeds 2LTSB through a 2500A ACB with a 960 kvar PFI plant. Both incomers are protected by Class A+B SPDs."
+    },
+    {
+      "step": "2. Emergency DG Distribution & 3200A Busways",
+      "detail": "DG1, DG2, and DG3 feed 1DGSB, 2DGSB, and 3DGSB via 3200A busways with dedicated SPDs. DG2 serves as a flexible swing source interconnected to both 1ATS-B and 2ATS-B."
+    },
+    {
+      "step": "3. Automatic Transfer & Main Distribution",
+      "detail": "Four transfer switches (1ATS-A, 1ATS-B, 2ATS-A, 2ATS-B) isolate or switch between grid and DG sources, feeding Main Distribution Boards (1MDB-A, 1MDB-B, 2MDB-A, 2MDB-B) through 3200A busways."
+    },
+    {
+      "step": "4. 2N Modular UPS & SmartLi Storage",
+      "detail": "1MDB-A and 1MDB-B feed redundant modular UPS units (1UPS-A1/A2 and 1UPS-B1/B2) integrated with Huawei SmartLi 3.0 LiFePO4 battery banks for instant reserve power."
+    },
+    {
+      "step": "5. White Space Dual-Cord Distribution",
+      "detail": "Conditioned power routes through 1IT-UDB-A and 1IT-UDB-B directly to dual-cord server racks inside FusionModule 2000 Containment Pods 1 & 2 for Tier III concurrent maintainability."
+    }
     ]
   },
   {

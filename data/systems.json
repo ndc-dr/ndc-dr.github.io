@@ -36,23 +36,23 @@
       {
       "step": "1. Transformation & LT Switchboards",
       "detail": "TX1 (2000 kVA) feeds 1LTSB through a 3200A ACB with a 1200 kvar PFI plant; TX2 (1600 kVA) feeds 2LTSB through a 2500A ACB with a 960 kvar PFI plant. Both incomers are protected by Class A+B SPDs."
-    },
-    {
+      },
+      {
       "step": "2. Emergency DG Distribution & 3200A Busways",
       "detail": "DG1, DG2, and DG3 feed 1DGSB, 2DGSB, and 3DGSB via 3200A busways with dedicated SPDs. DG2 serves as a flexible swing source interconnected to both 1ATS-B and 2ATS-B."
-    },
-    {
+      },
+      {
       "step": "3. Automatic Transfer & Main Distribution",
       "detail": "Four transfer switches (1ATS-A, 1ATS-B, 2ATS-A, 2ATS-B) isolate or switch between grid and DG sources, feeding Main Distribution Boards (1MDB-A, 1MDB-B, 2MDB-A, 2MDB-B) through 3200A busways."
-    },
-    {
+      },
+      {
       "step": "4. 2N Modular UPS & SmartLi Storage",
       "detail": "1MDB-A and 1MDB-B feed redundant modular UPS units (1UPS-A1/A2 and 1UPS-B1/B2) integrated with Huawei SmartLi 3.0 LiFePO4 battery banks for instant reserve power."
-    },
-    {
+      },
+      {
       "step": "5. White Space Dual-Cord Distribution",
       "detail": "Conditioned power routes through 1IT-UDB-A and 1IT-UDB-B directly to dual-cord server racks inside FusionModule 2000 Containment Pods 1 & 2 for Tier III concurrent maintainability."
-    }
+      }
     ]
   },
   {

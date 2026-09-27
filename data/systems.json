@@ -54,29 +54,5 @@
         "detail": "Conditioned power routes through 1IT-UDB-A and 1IT-UDB-B directly to dual-cord server racks inside FusionModule 2000 Containment Pods 1 & 2 for Tier III concurrent maintainability."
       }
     ]
-  },
-  {
-    "id": "sys-cooling",
-    "name": "HVAC & Precision Cooling System",
-    "summary": "Water-cooled centrifugal chiller plant with plate heat exchanger economizer, secondary pumped chilled water loops, and In-Row PAC units with Cold-Aisle Containment.",
-    "mermaid": "graph TD\n  Chiller[Water-Cooled Chiller 450TR] --> PrimPump[Primary Pump Loop]\n  PrimPump --> SecPump[Secondary VFD Pumps]\n  SecPump --> Ring[Dual-Ring Chilled Water Header]\n  Ring --> PAC1[In-Row Cooler Pod 1]\n  Ring --> PAC2[In-Row Cooler Pod 2]\n  Ring --> PAC3[In-Row Cooler Pod 3]\n  PAC1 --> ColdAisle[Cold Aisle Containment 22°C]\n  ColdAisle --> Rack[Server Equipment]\n  Rack --> HotAisle[Hot Aisle Return 35°C]\n  HotAisle --> PAC1",
-    "stages": [
-      {"step": "1. Chilled Water Generation", "detail": "Centrifugal chillers maintain 7°C supply with 13°C return loops."},
-      {"step": "2. Pumping Distribution", "detail": "VFD-controlled secondary pumps adjust flow based on aisle differential pressure."},
-      {"step": "3. White Space Heat Exchange", "detail": "In-Row precision air units blow cold air horizontally directly in front of IT intakes."},
-      {"step": "4. Aisle Containment", "detail": "Physical roof and sliding doors isolate supply cold air from heated server exhaust air."}
-    ]
-  },
-  {
-    "id": "sys-fire",
-    "name": "Fire Detection & Suppression System",
-    "summary": "Multi-stage defense employing aspirating smoke detection (VESDA) for early warnings, cross-zoned smoke detectors, and FK-5-1-12 clean agent gaseous flooding.",
-    "mermaid": "graph TD\n  VESDA[Aspirating Smoke Detector] --> Alert1[Level 1: NOC Pre-Alarm Alert]\n  DetA[Smoke Detector Zone A] --> CrossCheck{Dual Zone Coincidence?}\n  DetB[Smoke Detector Zone B] --> CrossCheck\n  CrossCheck -- Yes --> Timer[30s Evacuation Countdown & Sirens]\n  Timer --> Actuate[Release FK-5-1-12 Clean Agent Gas]\n  Actuate --> RoomExtinguish[Total Flooding Extinguishment without water]\n  CrossCheck -- No --> Alert2[Visual Annunciator Warning]",
-    "stages": [
-      {"step": "1. Air Sampling", "detail": "Continuous active air drawing via VESDA pipe network detects particles at incipient combustion."},
-      {"step": "2. Dual Coincidence Verification", "detail": "Two independent optical/ionization detector loops must trigger to arm gas discharge."},
-      {"step": "3. Audio/Visual Egress Warning", "detail": "30-second warning sirens sound while HVAC dampers automatically snap shut."},
-      {"step": "4. Gas Release", "detail": "Clean agent discharges in under 10 seconds, eliminating oxygen-free combustion while remaining non-toxic to humans."}
-    ]
   }
 ]

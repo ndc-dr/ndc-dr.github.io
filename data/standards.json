@@ -16,7 +16,7 @@
     "publisher": "Uptime Institute",
     "applicableSystem": "Electrical, Mechanical, Redundancy Architecture",
     "summary": "Defines Tier I through Tier IV availability criteria. Mandates Concurrent Maintainability (Tier III) and Fault Tolerance (Tier IV) without impacting live loads.",
-    "referenceUrl": "https://uptimeinstitute.com/tiers",
+    "referenceUrl": "https://drive.google.com/file/d/1u8UcNRa2dN4M76HbkbOGYDCuYbOBgOXy/view?usp=sharing",
     "ndcStatus": "Tier III Design & Facility Certified"
   },
   {

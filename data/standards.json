@@ -6,7 +6,7 @@
     "publisher": "Telecommunications Industry Association (TIA)",
     "applicableSystem": "Overall Facility, Architectural, Electrical, Cabling",
     "summary": "Specifies minimum requirements for data center site design, cabling architectures, redundancy tiers (Rated-1 through Rated-4), and safety distances.",
-    "referenceUrl": "https://tiaonline.org/standards/",
+    "referenceUrl": "https://drive.google.com/file/d/1txoCt5MJibsks21UdbP4UxBhAniNUBCg/view?usp=sharing",
     "ndcStatus": "Rated-3 / Rated-4 Concurrency Architecture Compliance"
   },
   {
@@ -21,12 +21,12 @@
   },
   {
     "id": "STD-ASHRAE-TC99",
-    "code": "ASHRAE TC 9.9 (2023 Edition)",
+    "code": "ASHRAE TC 9.9 (2016 Edition)",
     "title": "Thermal Guidelines for Data Processing Environments",
     "publisher": "ASHRAE",
     "applicableSystem": "Mechanical & Cooling, Environmental Monitoring",
     "summary": "Recommends dry-bulb temperature ranges (18°C to 27°C) and dew point ranges (5.5°C to 15°C) for server reliability and energy efficiency.",
-    "referenceUrl": "https://www.ashrae.org/technical-resources/bookstore/datacom-series",
+    "referenceUrl": "https://drive.google.com/file/d/1-KUud86smXLyancxzsQ1uGr_ptRuyCFj/view?usp=sharing",
     "ndcStatus": "Strictly monitored in BMS cold aisles"
   },
   {

@@ -31,12 +31,22 @@
   },
   {
     "id": "STD-NFPA-75",
-    "code": "NFPA 75 & NFPA 2001",
-    "title": "Standard for the Fire Protection of Information Technology Equipment & Clean Agent Systems",
+    "code": "NFPA 75",
+    "title": "Standard for the Fire Protection of Information Technology Equipment",
     "publisher": "National Fire Protection Association (NFPA)",
     "applicableSystem": "Fire Detection & Suppression",
-    "summary": "Provides standards on clean agent concentration, containment boundaries, door fan testing, and early air detection in IT white space.",
-    "referenceUrl": "https://www.nfpa.org/",
+    "summary": "NFPA 75 is the Standard for the Fire Protection of Information Technology Equipment, published by the National Fire Protection Association (NFPA). The standard outlines the minimum fire protection requirements to safeguard Information Technology Equipment (ITE), data centers, and computer rooms from fire, smoke, corrosion, heat, and water damage.",
+    "referenceUrl": "https://drive.google.com/file/d/1sQuynWbyjphme0LrZKUEwv8GYgwPUnjI/view?usp=sharing",
+    "ndcStatus": "Mandatory standard for all suppression systems"
+  },
+  {
+    "id": "STD-NFPA-2001",
+    "code": "NFPA 2001",
+    "title": "Standard on Clean Agent Fire Extinguishing Systems",
+    "publisher": "National Fire Protection Association (NFPA)",
+    "applicableSystem": "Fire Detection & Suppression",
+    "summary": "NFPA 2001 is the Standard on Clean Agent Fire Extinguishing Systems, a widely recognized code published by the National Fire Protection Association (NFPA). It provides comprehensive rules for the buying, designing, installing, testing, inspecting, approving, operating, and maintaining of gaseous fire suppression systems.",
+    "referenceUrl": "https://drive.google.com/file/d/1yvcScY9F1q9BSv9VdyzF8yoxfzHAWYbw/view?usp=sharing",
     "ndcStatus": "Mandatory standard for all suppression systems"
   },
   {

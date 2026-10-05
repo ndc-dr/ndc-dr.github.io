@@ -1,1239 +1,1461 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DG Control · Data Center Power System</title>
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --bg:#05080e; --panel:#0b1420; --panel2:#0e1a28; --line:#16283c;
-    --cyan:#22d3ee; --amber:#fbbf24; --violet:#a78bfa; --green:#34d399;
-    --red:#f87171; --orange:#fb923c; --txt:#c9d8e8; --dim:#5b7d9e;
-  }
-  html,body{height:100%}
-  body{
-    background:radial-gradient(ellipse at 50% -10%,#0b1826 0%,#05080e 60%);
-    color:var(--txt);
-    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
-    overflow:hidden;
-  }
-  .app{display:grid;grid-template-rows:auto 1fr;height:100vh}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DG Control & Grid Power Automation SCADA | NDC BCC</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
 
-  /* ---------- HEADER ---------- */
-  header{
-    display:flex;align-items:center;gap:18px;
-    padding:10px 18px;
-    background:linear-gradient(90deg,#0a1522,#0d1c2c 50%,#0a1522);
-    border-bottom:1px solid var(--line);
-    box-shadow:0 2px 18px rgba(0,0,0,.6);
-  }
-  .logo{
-    width:36px;height:36px;border-radius:9px;
-    background:linear-gradient(135deg,#0e7490,#22d3ee);
-    display:grid;place-items:center;font-size:19px;
-    box-shadow:0 0 18px rgba(34,211,238,.5);
-  }
-  header h1{font-size:15px;letter-spacing:1.6px;font-weight:600;color:#e6f4ff}
-  header h1 span{color:var(--cyan)}
-  header .sub{font-size:10.5px;letter-spacing:2px;color:var(--dim);margin-top:2px}
-  .hspace{flex:1}
-  .statpill{
-    display:flex;align-items:center;gap:8px;
-    padding:7px 14px;border-radius:20px;
-    background:#0d1a28;border:1px solid var(--line);
-    font-size:11.5px;letter-spacing:1.2px;font-weight:600;
-    transition:.3s;
-  }
-  .statpill .dot{width:8px;height:8px;border-radius:50%;background:var(--dim)}
-  .statpill.green{border-color:rgba(52,211,153,.5);color:#a7f3d0}
-  .statpill.green .dot{background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.6s infinite}
-  .statpill.amber{border-color:rgba(251,191,36,.5);color:#fde68a}
-  .statpill.amber .dot{background:var(--amber);box-shadow:0 0 10px var(--amber);animation:blink .7s infinite}
-  .statpill.orange{border-color:rgba(251,146,60,.6);color:#fdba74}
-  .statpill.orange .dot{background:var(--orange);box-shadow:0 0 10px var(--orange);animation:blink .6s infinite}
-  .statpill.red{border-color:rgba(248,113,113,.5);color:#fecaca}
-  .statpill.red .dot{background:var(--red);box-shadow:0 0 10px var(--red);animation:blink .5s infinite}
-  @keyframes blink{50%{opacity:.25}}
+  <style>
+    /* ==========================================================================
+       SCADA POWER AUTOMATION & TELEMETRY STYLES
+       ========================================================================== */
+    :root {
+      --scada-bg: #060913;
+      --scada-panel: #0d1527;
+      --scada-card: #131e36;
+      --scada-border: #1e293b;
+      --bus-off: #334155;
+      --bus-grid: #38bdf8;
+      --bus-dg: #f59e0b;
+      --bus-bat: #06b6d4;
+      --bus-live: #10b981;
+      --bus-fault: #ef4444;
+    }
 
-  /* ---------- LAYOUT ---------- */
-  .main{display:grid;grid-template-columns:1fr 400px;gap:12px;padding:12px;overflow:hidden}
-  .stage{
-    position:relative;border-radius:14px;overflow:hidden;
-    background:
-      radial-gradient(ellipse at 50% 0%,#0d1c2e 0%,#060a11 75%),
-      repeating-linear-gradient(0deg,transparent 0 39px,rgba(34,211,238,.028) 39px 40px),
-      repeating-linear-gradient(90deg,transparent 0 39px,rgba(34,211,238,.028) 39px 40px);
-    border:1px solid var(--line);
-    box-shadow:inset 0 0 90px rgba(0,0,0,.85);
-  }
-  .stage svg{width:100%;height:100%;display:block}
-  .badge{
-    position:absolute;top:12px;left:14px;
-    font-size:10.5px;letter-spacing:2.5px;color:#3d6a8c;
-    font-weight:600;pointer-events:none;
-  }
-  .seqbadge{
-    position:absolute;top:12px;right:14px;
-    padding:6px 14px;border-radius:6px;font-size:11px;letter-spacing:1.6px;font-weight:700;
-    background:rgba(13,26,40,.9);border:1px solid var(--line);color:var(--dim);
-    transition:.3s;
-  }
-  .seqbadge.active{color:#7dd3fc;border-color:rgba(34,211,238,.55);box-shadow:0 0 20px rgba(34,211,238,.25)}
+    body {
+      background-color: var(--scada-bg);
+      color: #f8fafc;
+    }
 
-  .battbanner{
-    position:absolute;top:52px;left:50%;transform:translateX(-50%);
-    display:none;align-items:center;gap:10px;
-    padding:8px 22px;border-radius:8px;
-    background:rgba(251,146,60,.14);
-    border:1px solid rgba(251,146,60,.55);
-    color:#fdba74;font-size:12px;font-weight:700;letter-spacing:2px;
-    box-shadow:0 0 30px rgba(251,146,60,.25);
-    animation:battpulse 1.2s infinite;pointer-events:none;
-    white-space:nowrap;
-  }
-  .battbanner.on{display:flex}
-  .battbanner b{color:#fff;font-family:'Consolas',monospace;margin-left:4px}
-  @keyframes battpulse{50%{opacity:.62}}
+    /* SCADA Top Dashboard */
+    .scada-topbar {
+      background: var(--scada-panel);
+      border: 1px solid var(--scada-border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
 
-  /* ---------- SIDE PANELS ---------- */
-  aside{display:flex;flex-direction:column;gap:11px;overflow-y:auto;padding-right:4px}
-  aside::-webkit-scrollbar{width:6px}
-  aside::-webkit-scrollbar-thumb{background:#1c3348;border-radius:3px}
-  .panel{
-    background:linear-gradient(160deg,rgba(14,26,40,.96),rgba(9,17,27,.96));
-    border:1px solid var(--line);border-radius:12px;padding:12px 13px;
-  }
-  .panel h3{
-    font-size:10.5px;letter-spacing:2.2px;color:#4d7ba0;font-weight:700;
-    margin-bottom:10px;display:flex;align-items:center;gap:8px;
-  }
-  .panel h3::before{content:'';width:3px;height:11px;border-radius:2px;background:var(--cyan)}
-  .btnrow{display:flex;gap:7px;margin-bottom:7px}
-  .btnrow:last-child{margin-bottom:0}
-  .btn{
-    flex:1;padding:9px 6px;border-radius:8px;border:1px solid var(--line);
-    background:#0f1e2d;color:var(--txt);font-size:11px;font-weight:600;
-    letter-spacing:.6px;cursor:pointer;transition:.18s;font-family:inherit;
-  }
-  .btn:hover{background:#152a3e;transform:translateY(-1px);border-color:#2c4a66}
-  .btn:active{transform:translateY(0)}
-  .btn.danger{border-color:rgba(248,113,113,.4);color:#fca5a5}
-  .btn.danger:hover{background:rgba(248,113,113,.16)}
-  .btn.warn{border-color:rgba(251,191,36,.35);color:#fcd34d}
-  .btn.warn:hover{background:rgba(251,191,36,.14)}
-  .btn.ok{border-color:rgba(52,211,153,.4);color:#6ee7b7}
-  .btn.ok:hover{background:rgba(52,211,153,.15)}
-  .btn.on{background:rgba(34,211,238,.2);border-color:var(--cyan);color:#a5f3fc;box-shadow:0 0 14px rgba(34,211,238,.25)}
+    .strategy-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
 
-  /* ---------- DG CARDS ---------- */
-  .dgcard{
-    border:1px solid var(--line);border-radius:10px;padding:9px 10px;margin-bottom:8px;
-    background:#0a1622;transition:.3s;position:relative;overflow:hidden;
-  }
-  .dgcard:last-child{margin-bottom:0}
-  .dgcard::before{
-    content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#1e3448;transition:.3s;
-  }
-  .dgcard.running::before{background:var(--green);box-shadow:0 0 12px var(--green)}
-  .dgcard.starting::before{background:var(--amber);box-shadow:0 0 12px var(--amber)}
-  .dgcard.cooldown::before{background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
-  .dgcard.fault::before{background:var(--red);box-shadow:0 0 12px var(--red)}
-  .dgcard.running{background:linear-gradient(90deg,rgba(52,211,153,.07),#0a1622 45%)}
-  .dgcard.starting{background:linear-gradient(90deg,rgba(251,191,36,.09),#0a1622 45%)}
-  .dgcard.fault{background:linear-gradient(90deg,rgba(248,113,113,.12),#0a1622 45%)}
-  .dghead{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
-  .dgname{font-size:12.5px;font-weight:700;letter-spacing:.8px;color:#dbeafe}
-  .dgpill{font-size:9px;letter-spacing:1.4px;font-weight:700;padding:3px 8px;border-radius:10px;
-    background:#14263a;color:var(--dim);transition:.3s}
-  .dgpill.running{background:rgba(52,211,153,.18);color:#6ee7b7}
-  .dgpill.starting{background:rgba(251,191,36,.18);color:#fcd34d;animation:blink .8s infinite}
-  .dgpill.cooldown{background:rgba(34,211,238,.16);color:#67e8f9}
-  .dgpill.fault{background:rgba(248,113,113,.2);color:#fca5a5}
-  .dgrole{font-size:9.5px;color:var(--dim);letter-spacing:.8px;margin-bottom:7px}
-  .gauges{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
-  .g{background:#08131e;border-radius:6px;padding:4px 3px;text-align:center;border:1px solid #122234}
-  .g label{display:block;font-size:8px;letter-spacing:1px;color:#3f6a8c;margin-bottom:2px}
-  .g b{font-size:11.5px;font-family:'Consolas',monospace;color:#9fd8f0;font-weight:600}
-  .g b.hot{color:#fcd34d}
-  .progline{height:3px;border-radius:2px;background:#14273a;margin-top:8px;overflow:hidden}
-  .progline i{display:block;height:100%;width:0;background:linear-gradient(90deg,#0e7490,var(--cyan));
-    border-radius:2px;transition:width .12s linear}
+    .strat-btn {
+      background: var(--scada-card);
+      border: 1px solid var(--scada-border);
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
 
-  /* ---------- BATTERY PANEL ---------- */
-  .battstat{display:flex;justify-content:space-between;align-items:center;font-size:11px;margin-bottom:6px}
-  .battlabel{color:#5b7d9e;letter-spacing:1.2px;font-size:10px;font-weight:600}
-  .battval{font-family:'Consolas',monospace;color:#9fd8f0;font-weight:700;font-size:12px}
-  .battval.ok{color:#6ee7b7}
-  .battval.warn{color:#fcd34d}
-  .battval.batt{color:#fb923c;animation:blink .9s infinite}
-  .socbar{height:6px;background:#14273a;border-radius:3px;overflow:hidden;margin-top:4px}
-  .socbar i{display:block;height:100%;background:linear-gradient(90deg,#0e7490,#22d3ee);border-radius:3px;
-    transition:width .25s,background .4s}
-  .socbar i.batt{background:linear-gradient(90deg,#c2410c,#fb923c)}
+    .strat-btn:hover {
+      border-color: var(--primary-light);
+      color: #fff;
+    }
 
-  /* ---------- LOG ---------- */
-  .log{max-height:220px;overflow-y:auto;font-size:10.5px;line-height:1.65;
-       font-family:'Consolas',monospace;display:flex;flex-direction:column-reverse;gap:1px}
-  .log::-webkit-scrollbar{width:5px}
-  .log::-webkit-scrollbar-thumb{background:#1c3348;border-radius:3px}
-  .log div{display:flex;gap:8px;padding:2px 4px;border-radius:4px;animation:fadein .35s}
-  @keyframes fadein{from{opacity:0;transform:translateX(-6px)}to{opacity:1}}
-  .log .t{color:#33566f;flex-shrink:0}
-  .log .m{color:#8fb3cc}
-  .log .info .m{color:#8fb3cc}
-  .log .ok .m{color:#6ee7b7}
-  .log .warn .m{color:#fcd34d}
-  .log .err .m{color:#fca5a5}
-  .log .dim .m{color:#4d7ba0}
-  .log .batt .m{color:#fdba74}
+    .strat-btn.active {
+      background: var(--primary);
+      border-color: var(--primary-light);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(2, 132, 199, 0.4);
+    }
 
-  /* =====================================================
-     SVG WIRE STYLES — base wires are ALWAYS VISIBLE
-     ===================================================== */
-  .wire{fill:none;stroke:#33516e;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;
-        transition:stroke .3s,stroke-width .3s}
-  .bus{fill:none;stroke:#33516e;stroke-width:9;stroke-linecap:round;
-       transition:stroke .3s,stroke-width .3s}
+    .strat-btn.manual.active {
+      background: #7c2d12;
+      border-color: #f97316;
+      box-shadow: 0 0 12px rgba(249, 115, 22, 0.4);
+    }
 
-  /* Live = animated flow + bright colour + glow */
-  .wire.live,.bus.live{stroke-dasharray:14 9;animation:flow .65s linear infinite}
-  .bus.live{stroke-dasharray:26 14;animation-duration:.9s}
-  @keyframes flow{from{stroke-dashoffset:46}to{stroke-dashoffset:0}}
+    /* Status Bar */
+    .scada-status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 1.25rem;
+    }
 
-  .wire.mains.live,.bus.mains.live{stroke:var(--cyan);filter:url(#glowC)}
-  .wire.gen.live,.bus.gen.live{stroke:var(--amber);filter:url(#glowA)}
-  .wire.dc.live,.bus.dc.live{stroke:var(--violet);filter:url(#glowV)}
-  .wire.batt.live,.bus.batt.live{stroke:var(--orange);filter:url(#glowO);stroke-width:2.8}
+    .status-metric-card {
+      background: var(--scada-panel);
+      border: 1px solid var(--scada-border);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+    }
 
-  /* Nodes */
-  .node{fill:#0c1826;stroke:#24425c;stroke-width:1.4;transition:.3s}
-  .node.grid{fill:#0b1a2a;stroke:#2a6f8a}
-  .node.on{stroke:#22d3ee;filter:url(#glowC)}
-  .node.genon{stroke:#fbbf24;filter:url(#glowA)}
-  .node.dcon{stroke:#a78bfa;filter:url(#glowV)}
-  .node.dead{opacity:.6}
-  .node.battnode{stroke:#fb923c;filter:url(#glowO);animation:battpulse 1.2s infinite}
+    .metric-val {
+      font-family: var(--font-mono);
+      font-size: 1.35rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-top: 4px;
+    }
 
-  .nlabel{fill:#a9c9e2;font-size:11.5px;font-weight:600;text-anchor:middle;letter-spacing:.4px;pointer-events:none}
-  .nlabel.sm{font-size:10px}
-  .nsub{fill:#4d7ba0;font-size:9.5px;text-anchor:middle;letter-spacing:.6px;pointer-events:none}
-  .dgtitle{fill:#e2f1ff;font-size:15px;font-weight:700;text-anchor:middle;letter-spacing:1.5px;pointer-events:none}
-  .buslabel{fill:#4d7ba0;font-size:10px;letter-spacing:1px;text-anchor:middle;pointer-events:none}
-  .clickable{cursor:pointer;pointer-events:all}
-  .clickable:hover .node{stroke:#67e8f9}
+    .metric-lbl {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
 
-  .atsbox{fill:#0c1826;stroke:#24425c}
-  .atspill{fill:#14263a;transition:.3s}
-  .atspill.m{fill:rgba(34,211,238,.22);stroke:#22d3ee}
-  .atspill.g{fill:rgba(251,191,36,.24);stroke:#fbbf24}
-  .atspill.o{fill:rgba(248,113,113,.18);stroke:#f87171}
-  .atstxt{fill:#cbe9ff;font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-anchor:middle;pointer-events:none}
+    /* Main Mimic Layout */
+    .mimic-container {
+      background: var(--scada-panel);
+      border: 1px solid var(--scada-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      position: relative;
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+    }
 
-  .brkbox{fill:#0c1826;stroke:#2a4a66}
-  .brkbox.closed{fill:rgba(52,211,153,.2);stroke:#34d399;filter:url(#glowG)}
-  .brkbox.faulted{fill:rgba(248,113,113,.2);stroke:#f87171}
+    /* SVG Canvas Lines */
+    #sldSvg {
+      width: 100%;
+      min-width: 1100px;
+      height: 680px;
+      display: block;
+    }
 
-  .dgbox{fill:#0b1520;stroke:#24425c}
-  .dggroup.running .dgbox{stroke:#34d399;filter:url(#glowG)}
-  .dggroup.starting .dgbox{stroke:#fbbf24;filter:url(#glowA);animation:boxpulse .8s infinite}
-  .dggroup.fault .dgbox{stroke:#f87171;filter:url(#glowR)}
-  @keyframes boxpulse{50%{opacity:.65}}
-  .sttxt{fill:#4d7ba0;font-size:9.5px;text-anchor:middle;letter-spacing:1.4px;font-weight:700;pointer-events:none}
-  .dggroup.running .sttxt{fill:#6ee7b7}
-  .dggroup.starting .sttxt{fill:#fcd34d}
-  .dggroup.fault .sttxt{fill:#fca5a5}
-  .fuelbg{fill:#14273a}
-  .fuelfill{fill:#34d399;transition:width .3s}
+    /* Wire styling & Flow Animations */
+    .wire {
+      stroke: var(--bus-off);
+      stroke-width: 3.5;
+      fill: none;
+      transition: stroke 0.3s ease;
+    }
 
-  /* UPS group — battery mode */
-  .upsgroup.battmode .upsbox{stroke:#fb923c;filter:url(#glowO);animation:battpulse 1.2s infinite}
-  .upsgroup.battmode .batttxt{fill:#fb923c;font-weight:700}
+    .wire.active-grid {
+      stroke: var(--bus-grid);
+      filter: drop-shadow(0 0 3px rgba(56, 189, 248, 0.6));
+    }
 
-  .spdbox{fill:#0c1826;stroke:#5b7d9e;stroke-width:1.2}
-  .spdtxt{fill:#7ea8c8;font-size:8px;text-anchor:middle;letter-spacing:.8px;font-weight:600}
+    .wire.active-dg {
+      stroke: var(--bus-dg);
+      filter: drop-shadow(0 0 3px rgba(245, 158, 11, 0.6));
+    }
 
-  .legend{position:absolute;bottom:10px;left:14px;display:flex;gap:16px;font-size:9.5px;
-    letter-spacing:1px;color:#4d7ba0;pointer-events:none}
-  .legend i{display:inline-block;width:16px;height:2.5px;border-radius:2px;margin-right:5px;vertical-align:middle}
-</style>
+    .wire.active-bat {
+      stroke: var(--bus-bat);
+      stroke-dasharray: 8, 4;
+      animation: pulseFlow 0.8s linear infinite;
+      filter: drop-shadow(0 0 4px rgba(6, 182, 212, 0.8));
+    }
+
+    .wire.active-it {
+      stroke: var(--bus-live);
+      filter: drop-shadow(0 0 3px rgba(16, 185, 129, 0.6));
+    }
+
+    @keyframes pulseFlow {
+      from { stroke-dashoffset: 24; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* Breaker Symbols & Interactivity */
+    .breaker-box {
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .breaker-box:hover {
+      transform: scale(1.08);
+    }
+
+    /* Bottom HUD Details: Gauges & SmartLi Panel */
+    .hud-columns {
+      display: grid;
+      grid-template-columns: 1.4fr 1.6fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .hud-panel {
+      background: var(--scada-panel);
+      border: 1px solid var(--scada-border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+    }
+
+    .hud-panel-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--primary-light);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Weichai DG Cluster */
+    .dg-cluster {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .dg-strip {
+      background: var(--scada-card);
+      border: 1px solid var(--scada-border);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      display: grid;
+      grid-template-columns: 1fr 1.8fr 1fr;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dg-strip.online {
+      border-color: #f59e0b;
+      background: #1c1917;
+    }
+
+    .dg-strip.fault {
+      border-color: #ef4444;
+      background: #200e0e;
+    }
+
+    /* SmartLi 3.0 Pack Visualizer */
+    .smartli-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .battery-visual {
+      background: #09131d;
+      border: 1px solid var(--scada-border);
+      border-radius: var(--radius);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .battery-visual.discharging {
+      border-color: var(--bus-bat);
+      box-shadow: 0 0 14px rgba(6, 182, 212, 0.25);
+    }
+
+    .cell-matrix {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 4px;
+    }
+
+    .battery-cell {
+      height: 18px;
+      background: #1e293b;
+      border-radius: 2px;
+      transition: background 0.3s ease;
+    }
+
+    .battery-cell.lit {
+      background: #06b6d4;
+      box-shadow: 0 0 6px rgba(6, 182, 212, 0.7);
+    }
+
+    .battery-cell.discharging {
+      background: #f59e0b;
+      animation: pulseCell 0.6s infinite alternate;
+    }
+
+    @keyframes pulseCell {
+      from { opacity: 0.6; }
+      to { opacity: 1; }
+    }
+
+    /* SCADA Event Logger */
+    .event-log-box {
+      height: 230px;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      background: #070c18;
+      border: 1px solid var(--scada-border);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .log-item {
+      padding: 3px 6px;
+      border-radius: 2px;
+      border-left: 3px solid #64748b;
+    }
+
+    .log-item.info { border-color: var(--bus-grid); color: #bae6fd; }
+    .log-item.warn { border-color: var(--bus-dg); color: #fef08a; }
+    .log-item.danger { border-color: var(--bus-fault); color: #fca5a5; }
+    .log-item.success { border-color: var(--bus-live); color: #bbf7d0; }
+
+    /* Interlock Security Banner */
+    #interlockBanner {
+      display: none;
+      background: rgba(239, 68, 68, 0.18);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+      font-size: 0.82rem;
+      align-items: center;
+      justify-content: space-between;
+      animation: flashBanner 0.3s ease;
+    }
+
+    @keyframes flashBanner {
+      0% { opacity: 0; transform: translateY(-4px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-<body>
-<div class="app">
+<body data-page-id="dg-control">
 
-  <header>
-    <div class="logo">⚡</div>
-    <div>
-      <h1>DATA CENTER POWER SYSTEM · <span>DG CONTROL</span></h1>
-      <div class="sub">DIESEL GENERATOR / ATS / MDB AUTOMATION</div>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="brand-wrapper">
+        <a href="../index.html" style="display:flex; align-items:center; gap:12px; text-decoration:none;">
+          <img src="../assets/images/bcc-logo.svg" alt="BCC Logo" class="brand-logo">
+          <div class="brand-text">
+            <span class="brand-title dynamic-facility-title">National Data Center (NDC)</span>
+            <span class="brand-subtitle dynamic-org-title">Bangladesh Computer Council</span>
+          </div>
+        </a>
+      </div>
+
+      <nav class="main-nav">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="knowledge.html" class="nav-link">Knowledge Base</a>
+        <a href="systems.html" class="nav-link">Systems</a>
+        <a href="documents.html" class="nav-link">Documents</a>
+        <a href="equipment.html" class="nav-link">Equipment</a>
+        <a href="procedures.html" class="nav-link">SOP / MOP / EOP</a>
+        <a href="dg-control.html" class="nav-link active">DG Control & SCADA</a>
+        <a href="drawings.html" class="nav-link">Drawings & SLD</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="theme-toggle" class="theme-toggle-btn">☀️ Light</button>
+      </div>
     </div>
-    <div class="hspace"></div>
-    <div class="statpill" id="statusPill"><span class="dot"></span><span id="statusTxt">SYSTEM NORMAL</span></div>
   </header>
 
-  <div class="main">
+  <!-- Main Viewport -->
+  <main class="app-container" style="padding-bottom: 1.5rem;">
+    <!-- Breadcrumb -->
+    <div class="breadcrumbs">
+      <a href="../index.html">Portal Home</a>
+      <span class="separator">/</span>
+      <a href="systems.html">Systems</a>
+      <span class="separator">/</span>
+      <span>DG Automation & Power Strategy SCADA</span>
+    </div>
 
-    <!-- ============ SINGLE LINE DIAGRAM ============ -->
-    <div class="stage">
-      <div class="badge">SINGLE-LINE DIAGRAM · LV DISTRIBUTION</div>
-      <div class="seqbadge" id="seqBadge">SEQ · IDLE</div>
+    <!-- Title Bar -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem; flex-wrap:wrap; gap:10px;">
+      <div>
+        <h1 style="font-size: 1.45rem; font-weight: 800; margin-bottom: 2px;">
+          Electrical Power Automation & DG Control Strategy
+        </h1>
+        <p style="color: var(--text-secondary); font-size: 0.8rem;">
+          Dual Grid Step-Down (3600 kVA) • 3× 2000 kVA Weichai DCC DGs • 4× 3200A ATS • 2N Huawei UPS5000-H • SmartLi 3.0 LiFePO4
+        </p>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span id="audioState" style="font-size:0.75rem; color:var(--text-muted);">🔊 Audio: Armed</span>
+        <button id="btnAudioToggle" class="btn btn-secondary btn-sm" onclick="toggleAudioEngine()">Toggle Sound</button>
+      </div>
+    </div>
 
-      <div class="battbanner" id="battBanner">
-        🔋 UPS ON BATTERY · AUTONOMY <b id="battTime">---</b> s
+    <!-- Interlock Warning Banner -->
+    <div id="interlockBanner">
+      <span id="interlockMsg">⚠️ <strong>SAFETY INTERLOCK:</strong> Manual breaker and switch operation is restricted in Automatic Strategy modes. Switch to Strategy [5] Manual BUS Switch to operate.</span>
+      <button onclick="document.getElementById('interlockBanner').style.display='none'" style="background:none; border:none; color:#fca5a5; cursor:pointer; font-size:1rem;">✕</button>
+    </div>
+
+    <!-- SCADA Control Bar: 5 Strategies -->
+    <div class="scada-topbar">
+      <div>
+        <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; margin-bottom:6px;">Select Operational Strategy</div>
+        <div class="strategy-pills">
+          <button class="strat-btn active" id="btnStrat1" onclick="applyStrategy(1)">
+            <span>1️⃣</span> Normal Utility Grid
+          </button>
+          <button class="strat-btn" id="btnStrat2" onclick="applyStrategy(2)">
+            <span>2️⃣</span> Grid Outage (Auto DG1+DG3)
+          </button>
+          <button class="strat-btn" id="btnStrat3" onclick="applyStrategy(3)">
+            <span>3️⃣</span> DG1 Crank Fail ➔ DG2 Auto-Swing
+          </button>
+          <button class="strat-btn" id="btnStrat4" onclick="applyStrategy(4)">
+            <span>4️⃣</span> Grid Recovery & DG Cooldown
+          </button>
+          <button class="strat-btn manual" id="btnStrat5" onclick="applyStrategy(5)">
+            <span>5️⃣</span> 🛠️ Manual BUS Switch Mode
+          </button>
+        </div>
       </div>
 
-      <svg id="sld" viewBox="0 0 1400 1000" preserveAspectRatio="xMidYMid meet">
+      <div style="text-align:right;">
+        <div style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; margin-bottom:4px;">Automation State</div>
+        <div id="activeModeBadge" style="display:inline-block; font-size:0.8rem; font-weight:700; padding:4px 10px; border-radius:var(--radius); background:rgba(16, 185, 129, 0.2); color:var(--bus-live); border:1px solid #059669;">
+          STRATEGY 1: NORMAL DUAL GRID
+        </div>
+      </div>
+    </div>
+
+    <!-- Metric Telemetry Ribbon -->
+    <div class="scada-status-grid">
+      <div class="status-metric-card">
+        <span class="metric-lbl">Total IT Critical Load</span>
+        <span class="metric-val" id="metricItLoad" style="color:var(--bus-live);">1,280 kW</span>
+      </div>
+      <div class="status-metric-card">
+        <span class="metric-lbl">Mains Grid Import</span>
+        <span class="metric-val" id="metricGridKw" style="color:var(--bus-grid);">1,348 kW</span>
+      </div>
+      <div class="status-metric-card">
+        <span class="metric-lbl">Weichai DG Plant Output</span>
+        <span class="metric-val" id="metricDgKw" style="color:var(--bus-dg);">0 kW</span>
+      </div>
+      <div class="status-metric-card">
+        <span class="metric-lbl">SmartLi 3.0 Battery State</span>
+        <span class="metric-val" id="metricBatState" style="color:var(--bus-bat);">100% Float</span>
+      </div>
+      <div class="status-metric-card">
+        <span class="metric-lbl">Containment PUE (Instant)</span>
+        <span class="metric-val" style="color:#a78bfa;">1.24</span>
+      </div>
+    </div>
+
+    <!-- Interactive SCADA Mimic Single Line Diagram -->
+    <div class="mimic-container">
+      <svg id="sldSvg" viewBox="0 0 1200 640">
         <defs>
-          <filter id="glowC" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="3" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="glowA" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="3.2" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="glowV" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="2.6" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="glowG" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="3" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="glowR" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="3.4" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="glowO" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="3.2" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
+          <!-- Grid Markers and Gradients -->
+          <linearGradient id="gridGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#38bdf8"/>
+            <stop offset="100%" stop-color="#0284c7"/>
+          </linearGradient>
+          <linearGradient id="dgGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#fbbf24"/>
+            <stop offset="100%" stop-color="#d97706"/>
+          </linearGradient>
         </defs>
 
-        <!-- ================= WIRES ================= -->
-        <g id="wireLayer">
-
-          <!-- ===== MAINS ===== -->
-          <path id="w-grid"    class="wire mains" d="M700,72 V105"/>
-          <path id="w-mains"   class="wire mains" d="M180,105 H1120"/>
-          <path id="w-tx1"     class="wire mains" d="M330,105 V125"/>
-          <path id="w-tx2"     class="wire mains" d="M970,105 V125"/>
-          <path id="w-tx1o"    class="wire mains" d="M330,175 V205"/>
-          <path id="w-tx2o"    class="wire mains" d="M970,175 V205"/>
-
-          <!-- LTSB outputs -->
-          <path id="w-l1t"     class="wire mains" d="M330,237 V270"/>
-          <path id="w-l1bus"   class="wire mains" d="M180,270 H480"/>
-          <path id="w-l1a"     class="wire mains" d="M180,270 V316"/>
-          <path id="w-l1b2"    class="wire mains" d="M480,270 V316"/>
-          <path id="w-l2t"     class="wire mains" d="M970,237 V270"/>
-          <path id="w-l2bus"   class="wire mains" d="M820,270 H1120"/>
-          <path id="w-l2a"     class="wire mains" d="M820,270 V316"/>
-          <path id="w-l2b2"    class="wire mains" d="M1120,270 V316"/>
-
-          <!-- ===== ATS OUTPUTS ===== -->
-          <path id="w-a1o" class="wire dc" d="M180,372 V445"/>
-          <path id="w-b1o" class="wire dc" d="M480,372 V445"/>
-          <path id="w-a2o" class="wire dc" d="M820,372 V445"/>
-          <path id="w-b2o" class="wire dc" d="M1120,372 V445"/>
-
-          <!-- ===== MDB BUSBARS ===== -->
-          <path id="w-mdb1a" class="bus mains" d="M130,445 H300"/>
-          <path id="w-mdb1b" class="bus mains" d="M360,445 H530"/>
-          <path id="w-mdb2a" class="bus mains" d="M770,445 H940"/>
-          <path id="w-mdb2b" class="bus mains" d="M1000,445 H1170"/>
-
-          <!-- ===== MDB → UPS (INPUT) ===== -->
-          <path id="w-u1a1" class="wire dc" d="M160,449 V490"/>
-          <path id="w-u1a2" class="wire dc" d="M250,449 V490"/>
-          <path id="w-u1b1" class="wire dc" d="M390,449 V490"/>
-          <path id="w-u1b2" class="wire dc" d="M470,449 V490"/>
-          <path id="w-u2a1" class="wire dc" d="M800,449 V490"/>
-          <path id="w-u2a2" class="wire dc" d="M890,449 V490"/>
-          <path id="w-u2b1" class="wire dc" d="M1030,449 V490"/>
-          <path id="w-u2b2" class="wire dc" d="M1110,449 V490"/>
-
-          <!-- ===== UPS → UDB (OUTPUT — ALWAYS LIVE) ===== -->
-          <path id="w-ud1a1" class="wire dc" d="M160,546 V580 H190 V600"/>
-          <path id="w-ud1a2" class="wire dc" d="M250,546 V580 H190 V600"/>
-          <path id="w-ud1b1" class="wire dc" d="M390,546 V580 H400 V600"/>
-          <path id="w-ud1b2" class="wire dc" d="M470,546 V580 H400 V600"/>
-          <path id="w-ud2a1" class="wire dc" d="M800,546 V580 H830 V600"/>
-          <path id="w-ud2a2" class="wire dc" d="M890,546 V580 H830 V600"/>
-          <path id="w-ud2b1" class="wire dc" d="M1030,546 V580 H1040 V600"/>
-          <path id="w-ud2b2" class="wire dc" d="M1110,546 V580 H1040 V600"/>
-
-          <!-- ===== UDB → CONTAINMENT (DUAL FEED) ===== -->
-          <path id="w-udc1a" class="wire dc" d="M190,636 V665"/>
-          <path id="w-udc1b" class="wire dc" d="M400,636 V665"/>
-          <path id="w-ctbus1" class="bus dc" d="M180,665 H400"/>
-          <path id="w-ct1" class="wire dc" d="M180,665 V700"/>
-          <path id="w-ct2" class="wire dc" d="M380,665 V700"/>
-          <path id="w-udc2a" class="wire dc" d="M830,636 V665"/>
-          <path id="w-udc2b" class="wire dc" d="M1040,636 V665"/>
-          <path id="w-ctbus2" class="bus dc" d="M820,665 H1040"/>
-          <path id="w-ct3" class="wire dc" d="M820,665 V700"/>
-          <path id="w-ct4" class="wire dc" d="M1020,665 V700"/>
-
-          <!-- ===== GENERATOR BUSWAYS ===== -->
-          <path id="w-dg1"  class="wire gen" d="M100,820 V420 H160 V372"/>
-          <path id="w-dg2v" class="wire gen" d="M660,820 V420"/>
-          <path id="w-dg2l" class="wire gen" d="M660,420 H460 V372"/>
-          <path id="w-dg2r" class="wire gen" d="M660,420 H1100 V372"/>
-          <path id="w-dg3"  class="wire gen" d="M1300,820 V410 H800 V372"/>
-
-          <!-- ===== SPD BRANCHES ON GENERATOR BUSWAYS ===== -->
-          <path id="w-spd3" class="wire gen" d="M140,820 H180"/>
-          <path id="w-spd4" class="wire gen" d="M700,820 H740"/>
-          <path id="w-spd5" class="wire gen" d="M1260,820 H1220"/>
+        <!-- ================= LAYER 1: SOURCES ================= -->
+        <!-- Utility Phase 1 -->
+        <g id="nodeTX1" class="breaker-box" onclick="manualToggleNode('TX1')">
+          <rect x="40" y="20" width="130" height="52" rx="4" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+          <text x="105" y="42" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">TX1 (2000 kVA)</text>
+          <text x="105" y="58" fill="#94a3b8" font-size="9" text-anchor="middle">11kV / 415V Phase 1</text>
         </g>
 
-        <!-- ================= NODES ================= -->
-        <g id="nodeLayer">
-
-          <!-- ===== UTILITY GRID ===== -->
-          <rect x="580" y="18" width="240" height="54" rx="9" class="node grid" id="n-grid"/>
-          <text x="700" y="40" class="nlabel" style="font-size:13px;letter-spacing:2px">UTILITY GRID</text>
-          <text x="700" y="57" class="nsub">MAINS 11 kV · 50 Hz</text>
-
-          <!-- ===== TRANSFORMERS ===== -->
-          <rect x="282" y="125" width="96" height="50" rx="7" class="node" id="n-tx1"/>
-          <text x="330" y="146" class="nlabel">TX-1</text>
-          <text x="330" y="163" class="nsub">2000 kVA</text>
-          <rect x="922" y="125" width="96" height="50" rx="7" class="node" id="n-tx2"/>
-          <text x="970" y="146" class="nlabel">TX-2</text>
-          <text x="970" y="163" class="nsub">1600 kVA</text>
-
-          <!-- ===== LTSB ===== -->
-          <g class="clickable" id="brk-ltsb1">
-            <rect x="272" y="205" width="116" height="32" rx="6" class="node brkbox" id="n-ltsb1"/>
-            <text x="330" y="225" class="nlabel sm">1LTSB · 3200A</text>
-          </g>
-          <g class="clickable" id="brk-ltsb2">
-            <rect x="912" y="205" width="116" height="32" rx="6" class="node brkbox" id="n-ltsb2"/>
-            <text x="970" y="225" class="nlabel sm">2LTSB · 2500A</text>
-          </g>
-
-          <!-- ===== PFI / SPD TAGS ===== -->
-          <circle cx="240" cy="270" r="11" fill="#0c1826" stroke="#24425c" stroke-width="1.2"/>
-          <text x="240" y="274" class="nsub" style="font-size:8px">PFI</text>
-          <circle cx="880" cy="270" r="11" fill="#0c1826" stroke="#24425c" stroke-width="1.2"/>
-          <text x="880" y="274" class="nsub" style="font-size:8px">PFI</text>
-          <rect x="408" y="262" width="34" height="15" rx="4" fill="#0c1826" stroke="#24425c" stroke-width="1.2"/>
-          <text x="425" y="273" class="nsub" style="font-size:7.5px">SPD1</text>
-          <rect x="1048" y="262" width="34" height="15" rx="4" fill="#0c1826" stroke="#24425c" stroke-width="1.2"/>
-          <text x="1065" y="273" class="nsub" style="font-size:7.5px">SPD2</text>
-
-          <!-- ===== ATS ===== -->
-          <g id="ats-1A">
-            <rect x="130" y="316" width="100" height="56" rx="8" class="node atsbox"/>
-            <text x="180" y="334" class="nlabel sm">1ATS-A</text>
-            <rect x="146" y="342" width="68" height="20" rx="10" class="atspill m" id="pill-1A"/>
-            <text x="180" y="356" class="atstxt" id="txt-1A">MAINS</text>
-          </g>
-          <g id="ats-1B">
-            <rect x="430" y="316" width="100" height="56" rx="8" class="node atsbox"/>
-            <text x="480" y="334" class="nlabel sm">1ATS-B</text>
-            <rect x="446" y="342" width="68" height="20" rx="10" class="atspill m" id="pill-1B"/>
-            <text x="480" y="356" class="atstxt" id="txt-1B">MAINS</text>
-          </g>
-          <g id="ats-2A">
-            <rect x="770" y="316" width="100" height="56" rx="8" class="node atsbox"/>
-            <text x="820" y="334" class="nlabel sm">2ATS-A</text>
-            <rect x="786" y="342" width="68" height="20" rx="10" class="atspill m" id="pill-2A"/>
-            <text x="820" y="356" class="atstxt" id="txt-2A">MAINS</text>
-          </g>
-          <g id="ats-2B">
-            <rect x="1070" y="316" width="100" height="56" rx="8" class="node atsbox"/>
-            <text x="1120" y="334" class="nlabel sm">2ATS-B</text>
-            <rect x="1086" y="342" width="68" height="20" rx="10" class="atspill m" id="pill-2B"/>
-            <text x="1120" y="356" class="atstxt" id="txt-2B">MAINS</text>
-          </g>
-
-          <!-- ===== MDB LABELS ===== -->
-          <text x="205" y="437" class="buslabel">1MDB-A</text>
-          <text x="452" y="437" class="buslabel">1MDB-B</text>
-          <text x="845" y="437" class="buslabel">2MDB-A</text>
-          <text x="1092" y="437" class="buslabel">2MDB-B</text>
-
-          <!-- ===== TIE BREAKERS ===== -->
-          <g class="clickable" id="brk-tie1">
-            <rect x="300" y="433" width="60" height="24" rx="5" class="node brkbox" id="n-tie1"/>
-            <text x="330" y="449" class="nlabel sm">TIE-1</text>
-          </g>
-          <g class="clickable" id="brk-tie2">
-            <rect x="940" y="433" width="60" height="24" rx="5" class="node brkbox" id="n-tie2"/>
-            <text x="970" y="449" class="nlabel sm">TIE-2</text>
-          </g>
-
-          <!-- ===== SECTION 1 UPS ===== -->
-          <g class="upsgroup" id="ug-1a1">
-            <rect x="120" y="490" width="80" height="56" rx="7" class="node upsbox" id="n-1a1"/>
-            <text x="160" y="508" class="nlabel sm">1UPS-A1</text>
-            <text x="160" y="522" class="nsub" style="font-size:8px">400 kVA</text>
-            <text x="160" y="540" class="nsub batttxt" style="font-size:7px">LiFePO4</text>
-          </g>
-          <g class="upsgroup" id="ug-1a2">
-            <rect x="210" y="490" width="80" height="56" rx="7" class="node upsbox" id="n-1a2"/>
-            <text x="250" y="508" class="nlabel sm">1UPS-A2</text>
-            <text x="250" y="522" class="nsub" style="font-size:8px">400 kVA</text>
-            <text x="250" y="540" class="nsub batttxt" style="font-size:7px">LiFePO4</text>
-          </g>
-          <g class="upsgroup" id="ug-1b1">
-            <rect x="350" y="490" width="80" height="56" rx="7" class="node upsbox" id="n-1b1"/>
-            <text x="390" y="508" class="nlabel sm">1UPS-B1</text>
-            <text x="390" y="522" class="nsub" style="font-size:8px">400 kVA</text>
-            <text x="390" y="540" class="nsub batttxt" style="font-size:7px">LiFePO4</text>
-          </g>
-          <g class="upsgroup" id="ug-1b2">
-            <rect x="430" y="490" width="80" height="56" rx="7" class="node upsbox" id="n-1b2"/>
-            <text x="470" y="508" class="nlabel sm">1UPS-B2</text>
-            <text x="470" y="522" class="nsub" style="font-size:8px">400 kVA</text>
-            <text x="470" y="540" class="nsub batttxt" style="font-size:7px">LiFePO4</text>
-          </g>
-
-          <!-- ===== SECTION 2 UPS ===== -->
-          <g class="upsgroup" id="ug-2a1">
-            <rect x="760" y="490" width="80" height="56" rx="7" class="node upsbox" id="n-2a1"/>
-            <text x="800" y="508" class="nlabel sm">2UPS-A1</text>
-            <text x="800" y="522" class="nsub" style="font-size:8px">400 kVA</text>
-            <text x="800" y="540" class="nsub batttxt" style="font-size:7px">LiFePO4</text>
-          </g>
-          <g class="upsgroup" id="ug-2a2">
-            <rect x="850" y="490" width="80" height="56" rx="7" class="node upsbox" id="n-2a2"/>
-            <text x="890" y="508" class="nlabel sm">2UPS-A2</text>
-            <text x="890" y="522" class="nsub" style="font-size:8px">400 kVA</text>
-            <text x="890" y="540" class="nsub batttxt" style="font-size:7px">LiFePO4</text>
-          </g>
-          <g class="upsgroup" id="ug-2b1">
-            <rect x="990" y="490" width="80" height="56" rx="7" class="node upsbox" id="n-2b1"/>
-            <text x="1030" y="508" class="nlabel sm">2UPS-B1</text>
-            <text x="1030" y="522" class="nsub" style="font-size:8px">400 kVA</text>
-            <text x="1030" y="540" class="nsub batttxt" style="font-size:7px">LiFePO4</text>
-          </g>
-          <g class="upsgroup" id="ug-2b2">
-            <rect x="1070" y="490" width="80" height="56" rx="7" class="node upsbox" id="n-2b2"/>
-            <text x="1110" y="508" class="nlabel sm">2UPS-B2</text>
-            <text x="1110" y="522" class="nsub" style="font-size:8px">400 kVA</text>
-            <text x="1110" y="540" class="nsub batttxt" style="font-size:7px">LiFePO4</text>
-          </g>
-
-          <!-- ===== UDB ===== -->
-          <rect x="120" y="600" width="140" height="36" rx="6" class="node upsbox" id="n-ud1a"/>
-          <text x="190" y="622" class="nlabel sm">1IT-UDB-A</text>
-          <rect x="330" y="600" width="140" height="36" rx="6" class="node upsbox" id="n-ud1b"/>
-          <text x="400" y="622" class="nlabel sm">1IT-UDB-B</text>
-          <rect x="760" y="600" width="140" height="36" rx="6" class="node upsbox" id="n-ud2a"/>
-          <text x="830" y="622" class="nlabel sm">2IT-UDB-A</text>
-          <rect x="970" y="600" width="140" height="36" rx="6" class="node upsbox" id="n-ud2b"/>
-          <text x="1040" y="622" class="nlabel sm">2IT-UDB-B</text>
-
-          <!-- ===== CONTAINMENT ===== -->
-          <rect x="110" y="700" width="140" height="60" rx="9" class="node upsbox" id="n-c1"/>
-          <text x="180" y="726" class="nlabel">Containment 1</text>
-          <text x="180" y="742" class="nsub">IT RACK LOAD</text>
-          <rect x="310" y="700" width="140" height="60" rx="9" class="node upsbox" id="n-c2"/>
-          <text x="380" y="726" class="nlabel">Containment 2</text>
-          <text x="380" y="742" class="nsub">IT RACK LOAD</text>
-          <rect x="750" y="700" width="140" height="60" rx="9" class="node upsbox" id="n-c3"/>
-          <text x="820" y="726" class="nlabel">Containment 3</text>
-          <text x="820" y="742" class="nsub">IT RACK LOAD</text>
-          <rect x="950" y="700" width="140" height="60" rx="9" class="node upsbox" id="n-c4"/>
-          <text x="1020" y="726" class="nlabel">Containment 4</text>
-          <text x="1020" y="742" class="nsub">IT RACK LOAD</text>
-
-          <!-- ===== DGSB ===== -->
-          <rect x="60" y="820" width="80" height="26" rx="5" class="node brkbox" id="n-dgsb1"/>
-          <text x="100" y="837" class="nlabel sm">1DGSB</text>
-          <rect x="620" y="820" width="80" height="26" rx="5" class="node brkbox" id="n-dgsb2"/>
-          <text x="660" y="837" class="nlabel sm">2DGSB</text>
-          <rect x="1260" y="820" width="80" height="26" rx="5" class="node brkbox" id="n-dgsb3"/>
-          <text x="1300" y="837" class="nlabel sm">3DGSB</text>
-
-          <!-- ===== SPD ON GENERATOR BUSWAYS ===== -->
-          <rect x="180" y="806" width="40" height="28" rx="5" class="spdbox"/>
-          <text x="200" y="824" class="spdtxt">SPD3</text>
-          <rect x="740" y="806" width="40" height="28" rx="5" class="spdbox"/>
-          <text x="760" y="824" class="spdtxt">SPD4</text>
-          <rect x="1180" y="806" width="40" height="28" rx="5" class="spdbox"/>
-          <text x="1200" y="824" class="spdtxt">SPD5</text>
-
-          <!-- ===== GENERATOR BOXES ===== -->
-          <g class="dggroup" id="dgbox-1">
-            <rect x="30" y="860" width="140" height="96" rx="12" class="dgbox"/>
-            <text x="100" y="888" class="dgtitle">DG 1</text>
-            <text x="100" y="906" class="nsub">2000 kVA · 1600 kW</text>
-            <text x="100" y="922" class="nsub">PRIMARY · SECTION-1</text>
-            <text x="100" y="942" class="sttxt" id="dgst-1">STOPPED</text>
-            <rect x="42" y="948" width="116" height="4" rx="2" class="fuelbg"/>
-            <rect x="42" y="948" width="116" height="4" rx="2" class="fuelfill" id="dgfuel-1"/>
-          </g>
-          <g class="dggroup" id="dgbox-2">
-            <rect x="590" y="860" width="140" height="96" rx="12" class="dgbox"/>
-            <text x="660" y="888" class="dgtitle">DG 2</text>
-            <text x="660" y="906" class="nsub">2000 kVA · 1600 kW</text>
-            <text x="660" y="922" class="nsub">STANDBY · BACKUP</text>
-            <text x="660" y="942" class="sttxt" id="dgst-2">STOPPED</text>
-            <rect x="602" y="948" width="116" height="4" rx="2" class="fuelbg"/>
-            <rect x="602" y="948" width="116" height="4" rx="2" class="fuelfill" id="dgfuel-2"/>
-          </g>
-          <g class="dggroup" id="dgbox-3">
-            <rect x="1230" y="860" width="140" height="96" rx="12" class="dgbox"/>
-            <text x="1300" y="888" class="dgtitle">DG 3</text>
-            <text x="1300" y="906" class="nsub">2000 kVA · 1600 kW</text>
-            <text x="1300" y="922" class="nsub">PRIMARY · SECTION-2</text>
-            <text x="1300" y="942" class="sttxt" id="dgst-3">STOPPED</text>
-            <rect x="1242" y="948" width="116" height="4" rx="2" class="fuelbg"/>
-            <rect x="1242" y="948" width="116" height="4" rx="2" class="fuelfill" id="dgfuel-3"/>
-          </g>
+        <!-- 1LTSB ACB 3200A -->
+        <g id="node1LTSB" class="breaker-box" onclick="manualToggleNode('1LTSB')">
+          <rect x="55" y="100" width="100" height="34" rx="3" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+          <text x="105" y="121" fill="#f8fafc" font-size="11" font-weight="600" text-anchor="middle">1LTSB (3200A)</text>
         </g>
+
+        <!-- Utility Phase 2 -->
+        <g id="nodeTX2" class="breaker-box" onclick="manualToggleNode('TX2')">
+          <rect x="1030" y="20" width="130" height="52" rx="4" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+          <text x="1095" y="42" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">TX2 (1600 kVA)</text>
+          <text x="1095" y="58" fill="#94a3b8" font-size="9" text-anchor="middle">11kV / 415V Phase 2</text>
+        </g>
+
+        <!-- 2LTSB ACB 2500A -->
+        <g id="node2LTSB" class="breaker-box" onclick="manualToggleNode('2LTSB')">
+          <rect x="1045" y="100" width="100" height="34" rx="3" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+          <text x="1095" y="121" fill="#f8fafc" font-size="11" font-weight="600" text-anchor="middle">2LTSB (2500A)</text>
+        </g>
+
+        <!-- Emergency DGs (Center Cluster) -->
+        <!-- DG1 (Left Outer) -->
+        <g id="nodeDG1" class="breaker-box" onclick="manualToggleNode('DG1')">
+          <circle cx="280" cy="46" r="28" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+          <text x="280" y="50" fill="#f59e0b" font-size="11" font-weight="800" text-anchor="middle">DG 1</text>
+          <text x="280" y="86" fill="#94a3b8" font-size="9" text-anchor="middle">2000 kVA DCC</text>
+        </g>
+        <rect id="node1DGSB" x="240" y="100" width="80" height="30" rx="3" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+        <text x="280" y="119" fill="#f8fafc" font-size="10" font-weight="600" text-anchor="middle">1DGSB (3200A)</text>
+
+        <!-- DG2 (Center Swing) -->
+        <g id="nodeDG2" class="breaker-box" onclick="manualToggleNode('DG2')">
+          <circle cx="600" cy="46" r="30" fill="#1e293b" stroke="#f59e0b" stroke-width="2.5"/>
+          <text x="600" y="47" fill="#f59e0b" font-size="12" font-weight="800" text-anchor="middle">DG 2</text>
+          <text x="600" y="60" fill="#38bdf8" font-size="8" font-weight="700" text-anchor="middle">[SWING BACKUP]</text>
+          <text x="600" y="88" fill="#94a3b8" font-size="9" text-anchor="middle">2000 kVA DCC</text>
+        </g>
+        <rect id="node2DGSB" x="560" y="100" width="80" height="30" rx="3" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+        <text x="600" y="119" fill="#f8fafc" font-size="10" font-weight="600" text-anchor="middle">2DGSB (3200A)</text>
+
+        <!-- DG3 (Right Outer) -->
+        <g id="nodeDG3" class="breaker-box" onclick="manualToggleNode('DG3')">
+          <circle cx="920" cy="46" r="28" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+          <text x="920" y="50" fill="#f59e0b" font-size="11" font-weight="800" text-anchor="middle">DG 3</text>
+          <text x="920" y="86" fill="#94a3b8" font-size="9" text-anchor="middle">2000 kVA DCC</text>
+        </g>
+        <rect id="node3DGSB" x="880" y="100" width="80" height="30" rx="3" fill="#1e293b" stroke="#64748b" stroke-width="1.5"/>
+        <text x="920" y="119" fill="#f8fafc" font-size="10" font-weight="600" text-anchor="middle">3DGSB (3200A)</text>
+
+        <!-- ================= LAYER 2: 4× ATS UNITS (SYMMETRICAL) ================= -->
+        <!-- 1ATS-A (Phase 1 Feed A) -->
+        <g id="box1ATSA" class="breaker-box" onclick="manualToggleATS('1ATS-A')">
+          <polygon points="175,190 225,160 275,190 225,220" fill="#0f172a" stroke="#64748b" stroke-width="1.8"/>
+          <text x="225" y="194" fill="#38bdf8" font-size="11" font-weight="700" text-anchor="middle">1ATS-A</text>
+          <text id="txtPos1ATSA" x="225" y="234" fill="#94a3b8" font-size="8.5" text-anchor="middle">MAINS</text>
+        </g>
+
+        <!-- 1ATS-B (Phase 1 Feed B) -->
+        <g id="box1ATSB" class="breaker-box" onclick="manualToggleATS('1ATS-B')">
+          <polygon points="395,190 445,160 495,190 445,220" fill="#0f172a" stroke="#64748b" stroke-width="1.8"/>
+          <text x="445" y="194" fill="#38bdf8" font-size="11" font-weight="700" text-anchor="middle">1ATS-B</text>
+          <text id="txtPos1ATSB" x="445" y="234" fill="#94a3b8" font-size="8.5" text-anchor="middle">MAINS</text>
+        </g>
+
+        <!-- 2ATS-B (Phase 2 Feed B - Repositioned inner) -->
+        <g id="box2ATSB" class="breaker-box" onclick="manualToggleATS('2ATS-B')">
+          <polygon points="705,190 755,160 805,190 755,220" fill="#0f172a" stroke="#64748b" stroke-width="1.8"/>
+          <text x="755" y="194" fill="#38bdf8" font-size="11" font-weight="700" text-anchor="middle">2ATS-B</text>
+          <text id="txtPos2ATSB" x="755" y="234" fill="#94a3b8" font-size="8.5" text-anchor="middle">MAINS</text>
+        </g>
+
+        <!-- 2ATS-A (Phase 2 Feed A - Repositioned outer) -->
+        <g id="box2ATSA" class="breaker-box" onclick="manualToggleATS('2ATS-A')">
+          <polygon points="925,190 975,160 1025,190 975,220" fill="#0f172a" stroke="#64748b" stroke-width="1.8"/>
+          <text x="975" y="194" fill="#38bdf8" font-size="11" font-weight="700" text-anchor="middle">2ATS-A</text>
+          <text id="txtPos2ATSA" x="975" y="234" fill="#94a3b8" font-size="8.5" text-anchor="middle">MAINS</text>
+        </g>
+
+        <!-- ================= LAYER 3: MAIN DISTRIBUTION BOARDS & TIE ACBs ================= -->
+        <!-- 1MDB-A -->
+        <rect id="box1MDBA" x="175" y="270" width="100" height="38" rx="3" fill="#1e293b" stroke="#38bdf8" stroke-width="1.8"/>
+        <text x="225" y="293" fill="#f8fafc" font-size="11" font-weight="700" text-anchor="middle">1MDB-A</text>
+
+        <!-- TIE ACB 1 (Between 1MDB-A and 1MDB-B) -->
+        <g id="boxTIE1" class="breaker-box" onclick="manualToggleTIE(1)">
+          <rect x="315" y="275" width="80" height="28" rx="2" fill="#0f172a" stroke="#64748b" stroke-width="1.8"/>
+          <text id="txtTIE1" x="355" y="293" fill="#64748b" font-size="10" font-weight="700" text-anchor="middle">TIE 1: OPEN</text>
+        </g>
+
+        <!-- 1MDB-B -->
+        <rect id="box1MDBB" x="435" y="270" width="100" height="38" rx="3" fill="#1e293b" stroke="#38bdf8" stroke-width="1.8"/>
+        <text x="485" y="293" fill="#f8fafc" font-size="11" font-weight="700" text-anchor="middle">1MDB-B</text>
+
+        <!-- 2MDB-B -->
+        <rect id="box2MDBB" x="665" y="270" width="100" height="38" rx="3" fill="#1e293b" stroke="#38bdf8" stroke-width="1.8"/>
+        <text x="715" y="293" fill="#f8fafc" font-size="11" font-weight="700" text-anchor="middle">2MDB-B</text>
+
+        <!-- TIE ACB 2 (Between 2MDB-B and 2MDB-A) -->
+        <g id="boxTIE2" class="breaker-box" onclick="manualToggleTIE(2)">
+          <rect x="805" y="275" width="80" height="28" rx="2" fill="#0f172a" stroke="#64748b" stroke-width="1.8"/>
+          <text id="txtTIE2" x="845" y="293" fill="#64748b" font-size="10" font-weight="700" text-anchor="middle">TIE 2: OPEN</text>
+        </g>
+
+        <!-- 2MDB-A -->
+        <rect id="box2MDBA" x="925" y="270" width="100" height="38" rx="3" fill="#1e293b" stroke="#38bdf8" stroke-width="1.8"/>
+        <text x="975" y="293" fill="#f8fafc" font-size="11" font-weight="700" text-anchor="middle">2MDB-A</text>
+
+        <!-- ================= LAYER 4: 2N UPS & SMARTLI 3.0 BATTERY ================= -->
+        <!-- Train A: 1UPS-A1 and 1UPS-A2 -->
+        <rect id="boxUPSA" x="175" y="360" width="140" height="50" rx="4" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+        <text x="245" y="380" fill="#10b981" font-size="11" font-weight="700" text-anchor="middle">1UPS-A1 / 1UPS-A2</text>
+        <text x="245" y="398" fill="#94a3b8" font-size="9" text-anchor="middle">Huawei UPS5000-H 400kVA</text>
+
+        <!-- SmartLi Battery A -->
+        <g id="boxBatA">
+          <rect x="50" y="364" width="95" height="42" rx="3" fill="#082f49" stroke="#06b6d4" stroke-width="1.5"/>
+          <text x="97" y="383" fill="#06b6d4" font-size="10" font-weight="700" text-anchor="middle">SmartLi 3.0 A</text>
+          <text id="txtBatA" x="97" y="397" fill="#67e8f9" font-size="8.5" text-anchor="middle">100% Float</text>
+        </g>
+
+        <!-- Train B: 1UPS-B1 and 1UPS-B2 -->
+        <rect id="boxUPSB" x="885" y="360" width="140" height="50" rx="4" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+        <text x="955" y="380" fill="#10b981" font-size="11" font-weight="700" text-anchor="middle">1UPS-B1 / 1UPS-B2</text>
+        <text x="955" y="398" fill="#94a3b8" font-size="9" text-anchor="middle">Huawei UPS5000-H 400kVA</text>
+
+        <!-- SmartLi Battery B -->
+        <g id="boxBatB">
+          <rect x="1055" y="364" width="95" height="42" rx="3" fill="#082f49" stroke="#06b6d4" stroke-width="1.5"/>
+          <text x="1102" y="383" fill="#06b6d4" font-size="10" font-weight="700" text-anchor="middle">SmartLi 3.0 B</text>
+          <text id="txtBatB" x="1102" y="397" fill="#67e8f9" font-size="8.5" text-anchor="middle">100% Float</text>
+        </g>
+
+        <!-- Distribution Boards -->
+        <rect id="boxITUDBA" x="195" y="450" width="100" height="32" rx="3" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+        <text x="245" y="470" fill="#f8fafc" font-size="10" font-weight="700" text-anchor="middle">1IT-UDB-A</text>
+
+        <rect id="boxITUDBB" x="905" y="450" width="100" height="32" rx="3" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+        <text x="955" y="470" fill="#f8fafc" font-size="10" font-weight="700" text-anchor="middle">1IT-UDB-B</text>
+
+        <!-- ================= LAYER 5: WHITE SPACE CONTAINMENTS ================= -->
+        <!-- Containment Pod 1 -->
+        <rect id="boxC1" x="380" y="530" width="180" height="60" rx="4" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+        <text x="470" y="555" fill="#f8fafc" font-size="12" font-weight="800" text-anchor="middle">Containment Pod 1</text>
+        <text x="470" y="575" fill="#94a3b8" font-size="9" text-anchor="middle">FusionModule 2000 (25 Racks / 7 PACs)</text>
+
+        <!-- Containment Pod 2 -->
+        <rect id="boxC2" x="640" y="530" width="180" height="60" rx="4" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+        <text x="730" y="555" fill="#f8fafc" font-size="12" font-weight="800" text-anchor="middle">Containment Pod 2</text>
+        <text x="730" y="575" fill="#94a3b8" font-size="9" text-anchor="middle">FusionModule 2000 (25 Racks / 7 PACs)</text>
+
+        <!-- ================= ELECTRICAL WIRE PATHS ================= -->
+        <!-- Grid TX1 feeds 1LTSB -> splits to 1ATS-A and 1ATS-B -->
+        <path id="wireTX1_LTSB" d="M105,72 L105,100" class="wire active-grid"/>
+        <path id="wireLTSB_1ATSA" d="M105,134 L105,170 L200,170 L200,175" class="wire active-grid"/>
+        <path id="wireLTSB_1ATSB" d="M105,150 L420,150 L420,175" class="wire active-grid"/>
+
+        <!-- Grid TX2 feeds 2LTSB -> splits to 2ATS-B and 2ATS-A -->
+        <path id="wireTX2_LTSB" d="M1095,72 L1095,100" class="wire active-grid"/>
+        <path id="wireLTSB_2ATSA" d="M1095,134 L1095,170 L1000,170 L1000,175" class="wire active-grid"/>
+        <path id="wireLTSB_2ATSB" d="M1095,150 L780,150 L780,175" class="wire active-grid"/>
+
+        <!-- DG1 feeds 1DGSB -> 1ATS-A (Gen side) -->
+        <path id="wireDG1_DGSB" d="M280,74 L280,100" class="wire"/>
+        <path id="wire1DGSB_1ATSA" d="M280,130 L280,165 L250,165 L250,175" class="wire"/>
+
+        <!-- DG2 (Center) feeds 2DGSB -> Dual split to 1ATS-B (Left) and 2ATS-B (Right) [NO CROSSOVERS] -->
+        <path id="wireDG2_DGSB" d="M600,76 L600,100" class="wire"/>
+        <path id="wire2DGSB_1ATSB" d="M580,130 L580,140 L470,140 L470,175" class="wire"/>
+        <path id="wire2DGSB_2ATSB" d="M620,130 L620,140 L730,140 L730,175" class="wire"/>
+
+        <!-- DG3 feeds 3DGSB -> 2ATS-A (Gen side) -->
+        <path id="wireDG3_DGSB" d="M920,74 L920,100" class="wire"/>
+        <path id="wire3DGSB_2ATSA" d="M920,130 L920,165 L950,165 L950,175" class="wire"/>
+
+        <!-- ATS outputs to MDBs -->
+        <path id="wire1ATSA_MDBA" d="M225,220 L225,270" class="wire active-grid"/>
+        <path id="wire1ATSB_MDBB" d="M445,220 L485,270" class="wire active-grid"/>
+        <path id="wire2ATSB_MDBB" d="M755,220 L715,270" class="wire active-grid"/>
+        <path id="wire2ATSA_MDBA" d="M975,220 L975,270" class="wire active-grid"/>
+
+        <!-- MDB TIE lines -->
+        <path id="wireTIE1_L" d="M275,289 L315,289" class="wire"/>
+        <path id="wireTIE1_R" d="M395,289 L435,289" class="wire"/>
+        <path id="wireTIE2_L" d="M765,289 L805,289" class="wire"/>
+        <path id="wireTIE2_R" d="M885,289 L925,289" class="wire"/>
+
+        <!-- MDB to UPS feeds -->
+        <path id="wireMDBA_UPS" d="M225,308 L225,360" class="wire active-it"/>
+        <path id="wireMDBB_UPS" d="M485,308 L485,340 L935,340 L935,360" class="wire active-it"/>
+
+        <!-- SmartLi Battery links -->
+        <path id="wireBatA" d="M145,385 L175,385" class="wire"/>
+        <path id="wireBatB" d="M1055,385 L1025,385" class="wire"/>
+
+        <!-- UPS to IT-UDB -->
+        <path id="wireUPSA_UDB" d="M245,410 L245,450" class="wire active-it"/>
+        <path id="wireUPSB_UDB" d="M955,410 L955,450" class="wire active-it"/>
+
+        <!-- Dual-cord to Containments -->
+        <path id="wireUDBA_C1" d="M245,482 L245,560 L380,560" class="wire active-it"/>
+        <path id="wireUDBA_C2" d="M265,482 L265,580 L640,580" class="wire active-it"/>
+        <path id="wireUDBB_C1" d="M935,482 L935,580 L560,580" class="wire active-it"/>
+        <path id="wireUDBB_C2" d="M955,482 L955,560 L820,560" class="wire active-it"/>
       </svg>
-
-      <div class="legend">
-        <span><i style="background:#22d3ee"></i>MAINS</span>
-        <span><i style="background:#fbbf24"></i>GENERATOR</span>
-        <span><i style="background:#a78bfa"></i>DC / UPS</span>
-        <span><i style="background:#fb923c"></i>BATTERY</span>
-      </div>
     </div>
 
-    <!-- ============ SIDE PANELS ============ -->
-    <aside>
+    <!-- Lower HUD Controls: Generator Telemetry, SmartLi Panel, Event Journal -->
+    <div class="hud-columns">
+      <!-- Panel 1: Weichai 2000kVA DCC Generator Cluster -->
+      <div class="hud-panel">
+        <div class="hud-panel-title">
+          <span>Weichai DCC Generator Cluster</span>
+          <span style="font-size:0.7rem; color:var(--text-muted);">ISO 8528 G3</span>
+        </div>
+        <div class="dg-cluster">
+          <!-- DG 1 -->
+          <div class="dg-strip" id="hudStripDG1">
+            <div>
+              <div style="font-weight:700; font-size:0.85rem;" id="hudNameDG1">DG 1</div>
+              <div style="font-size:0.7rem; color:var(--text-muted);" id="hudStatusDG1">STANDBY</div>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:0.7rem;">
+                <span>RPM: <strong id="valRpmDG1">0</strong></span>
+                <span>VOLT: <strong id="valVoltDG1">0 V</strong></span>
+              </div>
+              <div style="height:4px; background:#334155; border-radius:2px; margin-top:4px; overflow:hidden;">
+                <div id="barRpmDG1" style="height:100%; width:0%; background:#f59e0b; transition:width 0.2s linear;"></div>
+              </div>
+            </div>
+            <div style="text-align:right; font-family:var(--font-mono); font-size:0.85rem; font-weight:700;" id="valKwDG1">
+              0 kW
+            </div>
+          </div>
 
-      <div class="panel">
-        <h3>SEQUENCE CONTROL</h3>
-        <div class="btnrow">
-          <button class="btn danger" id="btnFail">⚡ GRID FAILURE</button>
-          <button class="btn ok" id="btnRestore">✔ GRID RESTORE</button>
-        </div>
-        <div class="btnrow">
-          <button class="btn warn" id="btnTrip1">TRIP DG1</button>
-          <button class="btn warn" id="btnTrip3">TRIP DG3</button>
-          <button class="btn warn" id="btnTrip2">TRIP DG2</button>
-        </div>
-        <div class="btnrow">
-          <button class="btn" id="btnAuto">AUTO MODE · ON</button>
-          <button class="btn" id="btnReset">RESET FAULTS</button>
-        </div>
-        <div class="btnrow">
-          <button class="btn danger" id="btnEstop" style="flex:1">🛑 EMERGENCY STOP</button>
+          <!-- DG 2 (Swing Backup) -->
+          <div class="dg-strip" id="hudStripDG2">
+            <div>
+              <div style="font-weight:700; font-size:0.85rem;" id="hudNameDG2">DG 2 (SWING)</div>
+              <div style="font-size:0.7rem; color:var(--text-muted);" id="hudStatusDG2">STANDBY</div>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:0.7rem;">
+                <span>RPM: <strong id="valRpmDG2">0</strong></span>
+                <span>VOLT: <strong id="valVoltDG2">0 V</strong></span>
+              </div>
+              <div style="height:4px; background:#334155; border-radius:2px; margin-top:4px; overflow:hidden;">
+                <div id="barRpmDG2" style="height:100%; width:0%; background:#38bdf8; transition:width 0.2s linear;"></div>
+              </div>
+            </div>
+            <div style="text-align:right; font-family:var(--font-mono); font-size:0.85rem; font-weight:700;" id="valKwDG2">
+              0 kW
+            </div>
+          </div>
+
+          <!-- DG 3 -->
+          <div class="dg-strip" id="hudStripDG3">
+            <div>
+              <div style="font-weight:700; font-size:0.85rem;" id="hudNameDG3">DG 3</div>
+              <div style="font-size:0.7rem; color:var(--text-muted);" id="hudStatusDG3">STANDBY</div>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:0.7rem;">
+                <span>RPM: <strong id="valRpmDG3">0</strong></span>
+                <span>VOLT: <strong id="valVoltDG3">0 V</strong></span>
+              </div>
+              <div style="height:4px; background:#334155; border-radius:2px; margin-top:4px; overflow:hidden;">
+                <div id="barRpmDG3" style="height:100%; width:0%; background:#f59e0b; transition:width 0.2s linear;"></div>
+              </div>
+            </div>
+            <div style="text-align:right; font-family:var(--font-mono); font-size:0.85rem; font-weight:700;" id="valKwDG3">
+              0 kW
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="panel">
-        <h3>GENERATOR STATUS</h3>
-        <div id="dgCards"></div>
+      <!-- Panel 2: Huawei SmartLi 3.0 Lithium Battery Visualizer -->
+      <div class="hud-panel">
+        <div class="hud-panel-title">
+          <span>Huawei SmartLi 3.0 (LiFePO4) Telemetry</span>
+          <span id="smartliActiveBadge" style="font-size:0.7rem; background:#082f49; color:#38bdf8; padding:2px 8px; border-radius:2px;">FLOAT 100%</span>
+        </div>
+        <div class="smartli-container">
+          <div class="battery-visual" id="smartliBox">
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem;">
+              <span>Cell Chemistry: <strong>LFP (Pack-Level Aero Fire Extinguisher)</strong></span>
+              <span>Bus: <strong id="smartliVolt">542.4 VDC</strong></span>
+            </div>
+            <!-- Matrix of 16 simulated Lithium cells -->
+            <div class="cell-matrix" id="cellMatrix">
+              <div class="battery-cell lit"></div><div class="battery-cell lit"></div>
+              <div class="battery-cell lit"></div><div class="battery-cell lit"></div>
+              <div class="battery-cell lit"></div><div class="battery-cell lit"></div>
+              <div class="battery-cell lit"></div><div class="battery-cell lit"></div>
+              <div class="battery-cell lit"></div><div class="battery-cell lit"></div>
+              <div class="battery-cell lit"></div><div class="battery-cell lit"></div>
+              <div class="battery-cell lit"></div><div class="battery-cell lit"></div>
+              <div class="battery-cell lit"></div><div class="battery-cell lit"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:4px;">
+              <span>Current: <strong id="smartliAmp">0.0 A</strong></span>
+              <span>Temp: <strong>26.4 °C</strong></span>
+              <span>Estimated Runtime: <strong id="smartliRuntime">> 45 Min</strong></span>
+            </div>
+          </div>
+          <div style="font-size:0.72rem; color:var(--text-muted); line-height:1.5;">
+            ⚡ <strong>0 ms Lithium Buffer:</strong> During Grid-to-DG transfer windows, the SmartLi 3.0 system instantly discharges through the DC link, guaranteeing zero microsecond loss on IT buses while Weichai DCC engines synchronize.
+          </div>
+        </div>
       </div>
 
-      <div class="panel">
-        <h3>UPS · BATTERY</h3>
-        <div class="battstat">
-          <span class="battlabel">MODE</span>
-          <b class="battval ok" id="battModeTxt">AC NORMAL</b>
+      <!-- Panel 3: SCADA Event Journal -->
+      <div class="hud-panel">
+        <div class="hud-panel-title">
+          <span>SCADA Event Journal</span>
+          <button class="btn btn-secondary btn-sm" onclick="clearEventLog()">Clear</button>
         </div>
-        <div class="battstat">
-          <span class="battlabel">STATE OF CHARGE</span>
-          <b class="battval" id="battSocTxt">100%</b>
+        <div class="event-log-box" id="eventLogContainer">
+          <!-- Live logged events appear here -->
         </div>
-        <div class="battstat">
-          <span class="battlabel">AUTONOMY</span>
-          <b class="battval" id="battAutoTxt">600s</b>
-        </div>
-        <div class="socbar"><i id="socFill" style="width:100%"></i></div>
       </div>
-
-      <div class="panel">
-        <h3>EVENT LOG</h3>
-        <div class="log" id="log"></div>
-      </div>
-
-    </aside>
-  </div>
-</div>
-
-<script>
-/* =========================================================
-   STATE
-   ========================================================= */
-const $ = id => document.getElementById(id);
-
-const DG_META = {
-  1:{name:'DG 1', kva:'2000 kVA', role:'PRIMARY · SECTION-1'},
-  2:{name:'DG 2', kva:'2000 kVA', role:'STANDBY / BACKUP'},
-  3:{name:'DG 3', kva:'2000 kVA', role:'PRIMARY · SECTION-2'}
-};
-
-const START_TIME = 3.5;
-const STABILIZE  = 1.6;
-const COOLDOWN   = 12;
-
-const S = {
-  gridOk:true,
-  auto:true,
-  estop:false,
-  phase:'IDLE',
-  transferArmed:false,
-  stabTimer:0,
-  requiredDGs:[],
-  tie:{1:false, 2:false},
-  ats:{'1A':'M','1B':'M','2A':'M','2B':'M'},
-  battery:{
-    mode:'AC',       // 'AC' or 'BATT'
-    soc:100,         // %
-    autonomy:600,    // total seconds available
-    runtime:600      // remaining seconds
-  },
-  dg:{
-    1:{st:'STOPPED',prog:0,rpm:0,kw:0,v:0,hz:0,fuel:94,cool:38,hrs:1284,fault:false,ct:0},
-    2:{st:'STOPPED',prog:0,rpm:0,kw:0,v:0,hz:0,fuel:88,cool:36,hrs:642 ,fault:false,ct:0},
-    3:{st:'STOPPED',prog:0,rpm:0,kw:0,v:0,hz:0,fuel:91,cool:37,hrs:1197,fault:false,ct:0}
-  }
-};
-
-/* =========================================================
-   LOGGING
-   ========================================================= */
-const logEl = $('log');
-function log(msg, type='info'){
-  const now = new Date();
-  const t = now.toTimeString().slice(0,8);
-  const d = document.createElement('div');
-  d.className = type;
-  d.innerHTML = `<span class="t">${t}</span><span class="m">${msg}</span>`;
-  logEl.appendChild(d);
-  while (logEl.children.length > 70) logEl.removeChild(logEl.firstChild);
-}
-
-/* =========================================================
-   DG CARD UI
-   ========================================================= */
-const cardsEl = $('dgCards');
-[1,2,3].forEach(id=>{
-  const m = DG_META[id];
-  const c = document.createElement('div');
-  c.className = 'dgcard';
-  c.id = 'card-'+id;
-  c.innerHTML = `
-    <div class="dghead">
-      <span class="dgname">${m.name}</span>
-      <span class="dgpill" id="pill-dg${id}">STOPPED</span>
     </div>
-    <div class="dgrole">${m.kva} · ${m.role}</div>
-    <div class="gauges">
-      <div class="g"><label>RPM</label><b id="g${id}-rpm">0</b></div>
-      <div class="g"><label>kW</label><b id="g${id}-kw">0</b></div>
-      <div class="g"><label>VOLT</label><b id="g${id}-v">0</b></div>
-      <div class="g"><label>HZ</label><b id="g${id}-hz">0</b></div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-bottom" style="border-top:none; padding-top:0;">
+      <div>© 2026 National Data Center (NDC), Bangladesh Computer Council.</div>
+      <div>NDC Electrical Engineering Division • Tier III Concurrent Maintainability</div>
     </div>
-    <div class="progline"><i id="g${id}-prog"></i></div>
-  `;
-  cardsEl.appendChild(c);
-});
+  </footer>
 
-/* =========================================================
-   SEQUENCE LOGIC
-   ========================================================= */
-function dgRun(id){ return S.dg[id].st === 'RUNNING'; }
+  <!-- Scripts -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/navigation.js"></script>
+  <script>
+    /* ==========================================================================
+       SCADA POWER AUTOMATION & TELEMETRY CONTROLLER
+       ========================================================================== */
 
-function evaluateATS(){
-  if (S.gridOk || !S.transferArmed){
-    S.ats['1A']='M'; S.ats['1B']='M'; S.ats['2A']='M'; S.ats['2B']='M';
-    return;
-  }
-  S.ats['1A'] = dgRun(1) ? 'G' : 'O';
-  S.ats['1B'] = dgRun(2) ? 'G' : 'O';
-  S.ats['2A'] = dgRun(3) ? 'G' : 'O';
-  S.ats['2B'] = dgRun(2) ? 'G' : 'O';
-}
+    // System Electrical State Model
+    const SysState = {
+      activeStrategy: 1,      // 1 to 5
+      isManualMode: false,
+      gridHealthy: true,
 
-function startDG(id){
-  const d = S.dg[id];
-  if (d.fault || d.st !== 'STOPPED') return;
-  d.st = 'STARTING'; d.prog = 0;
-  log(`DG${id} cranking… start sequence initiated`, 'warn');
-}
+      // Power Sources
+      sources: {
+        TX1: true,
+        TX2: true,
+        LTSB1: true,
+        LTSB2: true,
+        DG1: { state: 'STANDBY', rpm: 0, volt: 0, hz: 0, kw: 0, breaker: false },
+        DG2: { state: 'STANDBY', rpm: 0, volt: 0, hz: 0, kw: 0, breaker: false },
+        DG3: { state: 'STANDBY', rpm: 0, volt: 0, hz: 0, kw: 0, breaker: false },
+      },
 
-function gridFail(){
-  if (!S.gridOk || S.estop) return;
-  S.gridOk = false;
-  S.transferArmed = false;
-  S.tie[1] = false; S.tie[2] = false;
+      // 4× ATS switches ('MAINS' or 'GEN')
+      ats: {
+        '1ATS-A': 'MAINS',
+        '1ATS-B': 'MAINS',
+        '2ATS-B': 'MAINS',
+        '2ATS-A': 'MAINS'
+      },
 
-  /* UPS goes to BATTERY immediately */
-  S.battery.mode = 'BATT';
+      // MDB TIE ACBs
+      tie: {
+        1: false, // OPEN
+        2: false  // OPEN
+      },
 
-  evaluateATS();
-  log('⚡ UTILITY MAINS FAILURE — mains voltage lost', 'err');
-  log('🔋 UPS on battery — supplying IT load during gap', 'batt');
+      // Battery state
+      smartli: {
+        mode: 'FLOAT', // FLOAT, DISCHARGING, RECHARGE
+        soc: 100,
+        amps: 0,
+        kw: 0
+      }
+    };
 
-  const req = [];
-  if (!S.dg[1].fault) req.push(1);
-  if (!S.dg[3].fault) req.push(3);
-  const need2 = S.dg[1].fault || S.dg[3].fault;
-  if (need2 && !S.dg[2].fault) req.push(2);
+    // Audio Synthesizer Context
+    let audioCtx = null;
+    let audioArmed = true;
 
-  if (req.length === 0){
-    log('CRITICAL — no DG available to start!', 'err');
-    S.phase = 'IDLE';
-    return;
-  }
-  S.requiredDGs = req;
-  req.forEach(startDG);
-  S.phase = 'DG_START';
-  log(`Start command issued to ${req.map(i=>'DG'+i).join(' + ')}`, 'info');
-  if (need2) log('DG2 (backup) called in to replace a failed primary generator', 'warn');
-}
-
-function gridRestore(){
-  if (S.gridOk) return;
-  S.gridOk = true;
-  S.transferArmed = false;
-  S.tie[1] = false; S.tie[2] = false;
-  S.phase = 'IDLE';
-
-  /* UPS back to AC — recharging */
-  S.battery.mode = 'AC';
-  log('🔋 UPS back on AC — battery recharging', 'batt');
-
-  evaluateATS();
-  log('✔ UTILITY MAINS RESTORED — ATS transferring back to mains', 'ok');
-  [1,2,3].forEach(id=>{
-    const d = S.dg[id];
-    if (d.st === 'RUNNING'){
-      d.st = 'COOLDOWN'; d.ct = COOLDOWN;
-      log(`DG${id} unloaded — running cool-down (${COOLDOWN}s)`, 'dim');
+    function playTone(freq, duration, type='sine') {
+      if (!audioArmed) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) { console.warn('Audio err', e); }
     }
-  });
-}
 
-function tripDG(id){
-  const d = S.dg[id];
-  if (d.fault) return;
-  d.fault = true; d.st = 'FAULT'; d.prog = 0;
-  log(`⛔ DG${id} FAULT — generator unavailable`, 'err');
-  if (!S.gridOk){
-    if (id === 1 || id === 3){
-      if (!S.dg[2].fault){
-        log(`DG2 (BACKUP) starting to replace DG${id}`, 'warn');
-        startDG(2);
-        if (S.phase === 'IDLE' || S.phase === 'ON_GEN') S.phase = 'DG_START';
-        S.requiredDGs = S.requiredDGs.filter(x=>x!==id);
-        if (!S.requiredDGs.includes(2)) S.requiredDGs.push(2);
+    function toggleAudioEngine() {
+      audioArmed = !audioArmed;
+      document.getElementById('audioState').textContent = `🔊 Audio: ${audioArmed ? 'Armed' : 'Muted'}`;
+    }
+
+    // SCADA Event Logger
+    function logEvent(msg, type='info') {
+      const logBox = document.getElementById('eventLogContainer');
+      const item = document.createElement('div');
+      item.className = `log-item ${type}`;
+      const now = new Date();
+      const timeStr = now.toTimeString().split(' ')[0] + '.' + String(now.getMilliseconds()).padStart(3, '0');
+      item.textContent = `[${timeStr}] ${msg}`;
+      logBox.prepend(item);
+    }
+
+    function clearEventLog() {
+      document.getElementById('eventLogContainer').innerHTML = '';
+      logEvent('Event buffer cleared by operator.', 'info');
+    }
+
+    // Safety Interlock Notification
+    function showInterlock(actionAttempted) {
+      playTone(180, 0.35, 'sawtooth');
+      const banner = document.getElementById('interlockBanner');
+      const msg = document.getElementById('interlockMsg');
+      msg.innerHTML = `⚠️ <strong>INTERLOCK BLOCKED:</strong> Cannot manually operate <em>${actionAttempted}</em> during Automated Strategy Mode! Select <strong>Strategy [5] Manual BUS Switch Mode</strong> to gain manual breaker authority.`;
+      banner.style.display = 'flex';
+      logEvent(`SECURITY INTERLOCK: Blocked manual command for ${actionAttempted}.`, 'danger');
+    }
+
+    /* ==========================================================================
+       REALISTIC ENGINE CRANKING & PHYSICS ACCELERATION
+       ========================================================================== */
+    const dgAnimationTimers = { DG1: null, DG2: null, DG3: null };
+
+    function rampEngine(dgId, targetRpm, durationSec, onComplete) {
+      if (dgAnimationTimers[dgId]) clearInterval(dgAnimationTimers[dgId]);
+
+      const dg = SysState.sources[dgId];
+      const startRpm = dg.rpm;
+      const startTime = performance.now();
+      const durationMs = durationSec * 1000;
+
+      dg.state = targetRpm > 0 ? (dg.rpm > 100 ? 'RAMPING' : 'CRANKING') : 'COOLDOWN';
+      logEvent(`${dgId} initiating transition to ${targetRpm} RPM. Status: ${dg.state}`, 'warn');
+
+      dgAnimationTimers[dgId] = setInterval(() => {
+        const elapsed = performance.now() - startTime;
+        const progress = Math.min(elapsed / durationMs, 1.0);
+
+        // Cubic ease-in-out for realistic engine mass inertia
+        const ease = progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+        dg.rpm = Math.round(startRpm + (targetRpm - startRpm) * ease);
+        dg.volt = Math.round((dg.rpm / 1500) * 415);
+        dg.hz = Number(((dg.rpm / 1500) * 50.0).toFixed(1));
+
+        if (dg.rpm >= 1480 && targetRpm === 1500) {
+          dg.state = 'ONLINE';
+          dg.rpm = 1500;
+          dg.volt = 415;
+          dg.hz = 50.0;
+        } else if (dg.rpm <= 10 && targetRpm === 0) {
+          dg.state = 'STANDBY';
+          dg.rpm = 0;
+          dg.volt = 0;
+          dg.hz = 0;
+          dg.breaker = false;
+        }
+
+        updateDgTelemetryHud(dgId);
+
+        if (progress >= 1.0) {
+          clearInterval(dgAnimationTimers[dgId]);
+          dgAnimationTimers[dgId] = null;
+          if (onComplete) onComplete();
+        }
+      }, 50);
+    }
+
+    function updateDgTelemetryHud(dgId) {
+      const dg = SysState.sources[dgId];
+      const strip = document.getElementById(`hudStrip${dgId}`);
+      const valRpm = document.getElementById(`valRpm${dgId}`);
+      const valVolt = document.getElementById(`valVolt${dgId}`);
+      const valKw = document.getElementById(`valKw${dgId}`);
+      const barRpm = document.getElementById(`barRpm${dgId}`);
+      const hudStatus = document.getElementById(`hudStatus${dgId}`);
+
+      valRpm.textContent = dg.rpm;
+      valVolt.textContent = `${dg.volt} V`;
+      valKw.textContent = `${dg.kw} kW`;
+      barRpm.style.width = `${Math.min((dg.rpm / 1500) * 100, 100)}%`;
+      hudStatus.textContent = dg.state;
+
+      strip.classList.remove('online', 'fault');
+      if (dg.state === 'ONLINE') strip.classList.add('online');
+      if (dg.state === 'CRANK_FAIL') strip.classList.add('fault');
+    }
+
+    /* ==========================================================================
+       STRATEGY EXECUTION ENGINE
+       ========================================================================== */
+    let stratTimeoutHandle = null;
+
+    function applyStrategy(stratNum) {
+      if (stratTimeoutHandle) clearTimeout(stratTimeoutHandle);
+      SysState.activeStrategy = stratNum;
+      SysState.isManualMode = (stratNum === 5);
+
+      // Update UI Button Styles
+      document.querySelectorAll('.strat-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`btnStrat${stratNum}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      document.getElementById('interlockBanner').style.display = 'none';
+
+      // Execute strategy-specific electrical flows
+      switch (stratNum) {
+        case 1:
+          runStrategy1_NormalGrid();
+          break;
+        case 2:
+          runStrategy2_GridOutage();
+          break;
+        case 3:
+          runStrategy3_Dg1Failover();
+          break;
+        case 4:
+          runStrategy4_GridRecovery();
+          break;
+        case 5:
+          runStrategy5_ManualMode();
+          break;
+      }
+    }
+
+    /**
+     * STRATEGY 1: NORMAL UTILITY GRID
+     * 3 Sets of DGs do not start. TIE ACBs Open. All ATS on Mains.
+     */
+    function runStrategy1_NormalGrid() {
+      document.getElementById('activeModeBadge').textContent = 'STRATEGY 1: NORMAL DUAL GRID';
+      document.getElementById('activeModeBadge').style.color = 'var(--bus-live)';
+      logEvent('Engaging STRATEGY 1: Utility grid normal (Dual 11kV intake).', 'success');
+      playTone(440, 0.15);
+
+      SysState.gridHealthy = true;
+      SysState.sources.TX1 = true;
+      SysState.sources.TX2 = true;
+      SysState.sources.LTSB1 = true;
+      SysState.sources.LTSB2 = true;
+
+      // ATS to Mains
+      SysState.ats['1ATS-A'] = 'MAINS';
+      SysState.ats['1ATS-B'] = 'MAINS';
+      SysState.ats['2ATS-B'] = 'MAINS';
+      SysState.ats['2ATS-A'] = 'MAINS';
+
+      // TIE Open
+      SysState.tie[1] = false;
+      SysState.tie[2] = false;
+
+      // Shutdown DGs if running
+      rampEngine('DG1', 0, 2);
+      rampEngine('DG2', 0, 2);
+      rampEngine('DG3', 0, 2);
+
+      // Batteries float
+      setSmartLiMode('FLOAT');
+
+      recomputePowerFlows();
+    }
+
+    /**
+     * STRATEGY 2: GRID OUTAGE
+     * Step 2a: Grid drops -> 0ms SmartLi Takeover -> DG1 & DG3 crank simultaneously.
+     * Step 2b: DGs stable (1500 RPM) -> ATS transfer to GEN -> TIE 1 and TIE 2 close!
+     */
+    function runStrategy2_GridOutage() {
+      document.getElementById('activeModeBadge').textContent = 'STRATEGY 2: GRID FAILURE (AUTO DGS)';
+      document.getElementById('activeModeBadge').style.color = 'var(--bus-dg)';
+      logEvent('⚠️ ALERT: Total Utility Grid Failure! 11kV Substation Voltage = 0V.', 'danger');
+      playTone(220, 0.35, 'sawtooth');
+
+      // Grid drops dead
+      SysState.gridHealthy = false;
+      SysState.sources.TX1 = false;
+      SysState.sources.TX2 = false;
+      SysState.sources.LTSB1 = false;
+      SysState.sources.LTSB2 = false;
+
+      // INSTANT 0ms SMARTLI BATTERY BUFFER TAKEOVER
+      setSmartLiMode('DISCHARGING');
+      logEvent('⚡ 0ms Buffer: Huawei SmartLi 3.0 Lithium banks discharging to sustain inverters.', 'warn');
+      recomputePowerFlows();
+
+      // Start DG1 and DG3 simultaneously (takes 6 seconds to accelerate to 1500 RPM)
+      logEvent('Autonomous DG Command: Dispatched parallel crank to Weichai DG1 & DG3.', 'info');
+      rampEngine('DG1', 1500, 6);
+      rampEngine('DG3', 1500, 6);
+
+      // Once engines stabilize at 1500 RPM / 415V, transfer ATS and CLOSE TIE ACBs
+      stratTimeoutHandle = setTimeout(() => {
+        if (SysState.activeStrategy !== 2) return;
+
+        logEvent('Weichai DG1 & DG3 synchronized at 1500 RPM / 415V / 50Hz. Commencing ATS transfer.', 'success');
+        playTone(520, 0.2);
+
+        // ATS transfer
+        SysState.sources.DG1.breaker = true;
+        SysState.sources.DG3.breaker = true;
+        SysState.ats['1ATS-A'] = 'GEN';
+        SysState.ats['2ATS-A'] = 'GEN';
+
+        // CLOSE TIE ACBs TO SUPPLY DUAL POWER TO ALL LOADS
+        SysState.tie[1] = true;
+        SysState.tie[2] = true;
+        logEvent('TIE ACB 1 CLOSED: DG1 supplying both 1MDB-A and 1MDB-B.', 'warn');
+        logEvent('TIE ACB 2 CLOSED: DG3 supplying both 2MDB-A and 2MDB-B.', 'warn');
+
+        // Battery returns to float as inverters take DG power
+        setSmartLiMode('FLOAT');
+        logEvent('SmartLi 3.0 batteries secured. Inverters accepting prime generator power.', 'success');
+
+        recomputePowerFlows();
+      }, 6200);
+    }
+
+    /**
+     * STRATEGY 3: DG1 CRANK FAIL ➔ DG2 SWING BACKUP
+     * DG1 crank lockout -> SmartLi buffers Phase 1 -> DG2 starts and replaces DG1 via 1ATS-B.
+     */
+    function runStrategy3_Dg1Failover() {
+      document.getElementById('activeModeBadge').textContent = 'STRATEGY 3: DG1 FAIL ➔ DG2 AUTO-SWING';
+      document.getElementById('activeModeBadge').style.color = '#f97316';
+      logEvent('SIMULATION TRIGGER: Simulating DG1 Starter Overcrank Failure.', 'danger');
+      playTone(180, 0.4, 'sawtooth');
+
+      SysState.gridHealthy = false;
+      SysState.sources.TX1 = false;
+      SysState.sources.TX2 = false;
+
+      // Lockout DG1
+      if (dgAnimationTimers.DG1) clearInterval(dgAnimationTimers.DG1);
+      SysState.sources.DG1.state = 'CRANK_FAIL';
+      SysState.sources.DG1.rpm = 120;
+      SysState.sources.DG1.volt = 0;
+      SysState.sources.DG1.kw = 0;
+      SysState.sources.DG1.breaker = false;
+      updateDgTelemetryHud('DG1');
+
+      // DG3 is healthy
+      rampEngine('DG3', 1500, 3);
+      SysState.sources.DG3.breaker = true;
+      SysState.ats['2ATS-A'] = 'GEN';
+      SysState.tie[2] = true;
+
+      // SmartLi actively buffers Train A while DG1 is dead
+      setSmartLiMode('DISCHARGING');
+      logEvent('SmartLi 3.0 Train A holding 100% server loads during DG1 starting fault.', 'warn');
+      recomputePowerFlows();
+
+      // AUTO-DISPATCH SWING BACKUP DG2
+      logEvent('AUTOMATION: Auto-starting DG2 (Swing Backup) to replace failed DG1.', 'info');
+      rampEngine('DG2', 1500, 5, () => {
+        if (SysState.activeStrategy !== 3) return;
+
+        logEvent('DG2 (Swing Backup) Online & Stable. Transferring 1ATS-B to DG2.', 'success');
+        playTone(600, 0.2);
+
+        SysState.sources.DG2.breaker = true;
+        SysState.ats['1ATS-B'] = 'GEN'; // Connects DG2 via 2DGSB -> 1ATS-B
+        SysState.tie[1] = true;         // TIE 1 closed ensures both 1MDB-A and 1MDB-B are powered by DG2!
+
+        setSmartLiMode('FLOAT');
+        logEvent('Phase 1 normalized on DG2. Zero packet loss on White Space Containments.', 'success');
+        recomputePowerFlows();
+      });
+    }
+
+    /**
+     * STRATEGY 4: GRID RESTORATION & COOLDOWN
+     * Step 4a: Turn off TIE ACBs.
+     * Step 4b: ATS transfers back to Mains.
+     * Step 4c: DGs run cooldown then shut down automatically.
+     */
+    function runStrategy4_GridRecovery() {
+      document.getElementById('activeModeBadge').textContent = 'STRATEGY 4: GRID RECOVERY & COOLDOWN';
+      document.getElementById('activeModeBadge').style.color = 'var(--bus-grid)';
+      logEvent('Grid Sensing: 11kV Utility grid voltage restored and phase-synchronized.', 'info');
+      playTone(550, 0.2);
+
+      // Grid is healthy again
+      SysState.gridHealthy = true;
+      SysState.sources.TX1 = true;
+      SysState.sources.TX2 = true;
+      SysState.sources.LTSB1 = true;
+      SysState.sources.LTSB2 = true;
+
+      // STEP 4A: FIRST TURN OFF TIE ACBs (PREVENT OUT-OF-PHASE TIE!)
+      SysState.tie[1] = false;
+      SysState.tie[2] = false;
+      logEvent('Safety Protocol: TIE ACB 1 and TIE ACB 2 opened prior to utility transfer.', 'warn');
+      recomputePowerFlows();
+
+      stratTimeoutHandle = setTimeout(() => {
+        if (SysState.activeStrategy !== 4) return;
+
+        // STEP 4B: ATSs TRANSFER BACK TO MAINS
+        SysState.ats['1ATS-A'] = 'MAINS';
+        SysState.ats['1ATS-B'] = 'MAINS';
+        SysState.ats['2ATS-B'] = 'MAINS';
+        SysState.ats['2ATS-A'] = 'MAINS';
+        logEvent('4× 3200A ATS transferred back to Utility Mains.', 'success');
+        playTone(440, 0.15);
+
+        // Disconnect generator breakers
+        SysState.sources.DG1.breaker = false;
+        SysState.sources.DG2.breaker = false;
+        SysState.sources.DG3.breaker = false;
+
+        recomputePowerFlows();
+
+        // STEP 4C: DGS RUN UNLOADED COOLDOWN PERIOD THEN SHUT DOWN
+        logEvent('DGs disconnected from load. Running 4-second unloaded cooldown cycle.', 'info');
+        stratTimeoutHandle = setTimeout(() => {
+          if (SysState.activeStrategy !== 4) return;
+          rampEngine('DG1', 0, 3);
+          rampEngine('DG2', 0, 3);
+          rampEngine('DG3', 0, 3);
+          logEvent('Engine Cooldown Complete. All Weichai DGs stopped in Standby.', 'success');
+          recomputePowerFlows();
+        }, 4000);
+      }, 1500);
+    }
+
+    /**
+     * STRATEGY 5: MANUAL BUS SWITCH MODE
+     * Unlocks operator manual click control for breakers, ATS, and DGs.
+     */
+    function runStrategy5_ManualMode() {
+      document.getElementById('activeModeBadge').textContent = 'STRATEGY 5: MANUAL BUS SWITCH MODE [UNLOCKED]';
+      document.getElementById('activeModeBadge').style.color = '#f97316';
+      logEvent('MANUAL BUS MODE ACTIVATED: Breaker and switch interlocks transferred to manual operator authority.', 'warn');
+      playTone(330, 0.25);
+    }
+
+    /* ==========================================================================
+       MANUAL INTERACTION HANDLERS (ENFORCING STRATEGY 5 RESTRICTION)
+       ========================================================================== */
+    function manualToggleNode(nodeId) {
+      if (!SysState.isManualMode) {
+        showInterlock(`Breaker / Source [${nodeId}]`);
+        return;
+      }
+
+      playTone(480, 0.08);
+      if (nodeId === 'TX1') SysState.sources.TX1 = !SysState.sources.TX1;
+      if (nodeId === 'TX2') SysState.sources.TX2 = !SysState.sources.TX2;
+      if (nodeId === '1LTSB') SysState.sources.LTSB1 = !SysState.sources.LTSB1;
+      if (nodeId === '2LTSB') SysState.sources.LTSB2 = !SysState.sources.LTSB2;
+
+      if (nodeId.startsWith('DG')) {
+        const dg = SysState.sources[nodeId];
+        if (dg.state === 'ONLINE') {
+          rampEngine(nodeId, 0, 2);
+        } else {
+          rampEngine(nodeId, 1500, 3);
+          dg.breaker = true;
+        }
+      }
+
+      logEvent(`MANUAL: Toggled ${nodeId} state.`, 'warn');
+      recomputePowerFlows();
+    }
+
+    function manualToggleATS(atsId) {
+      if (!SysState.isManualMode) {
+        showInterlock(`Automatic Transfer Switch [${atsId}]`);
+        return;
+      }
+      playTone(400, 0.1);
+      SysState.ats[atsId] = SysState.ats[atsId] === 'MAINS' ? 'GEN' : 'MAINS';
+      logEvent(`MANUAL: Transferred ${atsId} to ${SysState.ats[atsId]} side.`, 'warn');
+      recomputePowerFlows();
+    }
+
+    function manualToggleTIE(tieNum) {
+      if (!SysState.isManualMode) {
+        showInterlock(`TIE Breaker ACB [TIE ${tieNum}]`);
+        return;
+      }
+      playTone(350, 0.12);
+      SysState.tie[tieNum] = !SysState.tie[tieNum];
+      logEvent(`MANUAL: TIE ${tieNum} is now ${SysState.tie[tieNum] ? 'CLOSED' : 'OPEN'}.`, 'warn');
+      recomputePowerFlows();
+    }
+
+    /* ==========================================================================
+       SMARTLI 3.0 BATTERY VISUALIZER CONTROLLER
+       ========================================================================== */
+    function setSmartLiMode(mode) {
+      SysState.smartli.mode = mode;
+      const box = document.getElementById('smartliBox');
+      const badge = document.getElementById('smartliActiveBadge');
+      const cells = document.querySelectorAll('.battery-cell');
+      const voltEl = document.getElementById('smartliVolt');
+      const ampEl = document.getElementById('smartliAmp');
+      const runtimeEl = document.getElementById('smartliRuntime');
+      const txtBatA = document.getElementById('txtBatA');
+      const txtBatB = document.getElementById('txtBatB');
+      const metricBat = document.getElementById('metricBatState');
+
+      if (mode === 'DISCHARGING') {
+        box.classList.add('discharging');
+        badge.textContent = '⚡ 0ms ACTIVE DISCHARGE';
+        badge.style.background = '#854d0e';
+        badge.style.color = '#fef08a';
+        voltEl.textContent = '498.2 VDC';
+        ampEl.textContent = '-962 A';
+        runtimeEl.textContent = '38 Min';
+        txtBatA.textContent = 'DISCHARGING';
+        txtBatB.textContent = 'DISCHARGING';
+        metricBat.textContent = 'Discharging (0ms Buffer)';
+        metricBat.style.color = 'var(--bus-bat)';
+
+        cells.forEach(c => c.classList.add('discharging'));
       } else {
-        log('DG2 also unavailable — section supply at risk!', 'err');
-      }
-    }
-  }
-  evaluateATS();
-}
+        box.classList.remove('discharging');
+        badge.textContent = 'FLOAT 100%';
+        badge.style.background = '#082f49';
+        badge.style.color = '#38bdf8';
+        voltEl.textContent = '542.4 VDC';
+        ampEl.textContent = '0.0 A';
+        runtimeEl.textContent = '> 45 Min';
+        txtBatA.textContent = '100% Float';
+        txtBatB.textContent = '100% Float';
+        metricBat.textContent = '100% Float';
+        metricBat.style.color = 'var(--bus-bat)';
 
-function resetFaults(){
-  [1,2,3].forEach(id=>{
-    const d = S.dg[id];
-    if (d.fault){
-      d.fault = false;
-      if (d.st === 'FAULT') d.st = 'STOPPED';
-      d.prog = 0;
-      log(`DG${id} fault reset — available for service`, 'ok');
-    }
-  });
-  S.estop = false;
-}
-
-function estop(){
-  S.estop = true;
-  S.gridOk = false;
-  S.transferArmed = false;
-  S.tie[1] = false; S.tie[2] = false;
-  S.phase = 'IDLE';
-  [1,2,3].forEach(id=>{
-    const d = S.dg[id];
-    d.st = 'STOPPED'; d.prog = 0; d.kw = 0; d.rpm = 0; d.v = 0; d.hz = 0;
-  });
-  evaluateATS();
-  log('🛑 EMERGENCY STOP — all DGs tripped, all breakers open', 'err');
-}
-
-/* =========================================================
-   PHYSICS TICK
-   ========================================================= */
-function tick(dt){
-  /* ---- generator dynamics ---- */
-  for (const id of [1,2,3]){
-    const d = S.dg[id];
-
-    if (d.st === 'STARTING'){
-      d.prog += dt / START_TIME;
-      if (d.prog >= 1){
-        d.prog = 1; d.st = 'RUNNING';
-        log(`DG${id} up to speed — 1500 rpm · 400 V · 50 Hz — output stable`, 'ok');
+        cells.forEach(c => c.classList.remove('discharging'));
       }
     }
 
-    if (d.st === 'STARTING' || d.st === 'RUNNING'){
-      const p = d.prog;
-      d.rpm = p*1500 + (p>=1 ? (Math.random()-0.5)*7 : 0);
-      d.v   = p*400  + (p>=1 ? (Math.random()-0.5)*3.5 : 0);
-      d.hz  = p*50   + (p>=1 ? (Math.random()-0.5)*0.18 : 0);
-      d.cool += (83 - d.cool) * dt * 0.18;
-    } else if (d.st === 'COOLDOWN'){
-      d.ct -= dt;
-      d.rpm = 1500 + (Math.random()-0.5)*7;
-      d.v   = 400  + (Math.random()-0.5)*3;
-      d.hz  = 50   + (Math.random()-0.5)*0.18;
-      d.cool += (74 - d.cool) * dt * 0.25;
-      if (d.ct <= 0){
-        d.st = 'STOPPED'; d.prog = 0;
-        log(`DG${id} cool-down complete — engine stopped automatically`, 'dim');
+    /* ==========================================================================
+       POWER FLOW RECOMPUTATION & SVG WIRE ENGINE
+       ========================================================================== */
+    function setWireState(wireId, stateClass) {
+      const el = document.getElementById(wireId);
+      if (!el) return;
+      el.className.baseVal = 'wire';
+      if (stateClass) el.classList.add(stateClass);
+    }
+
+    function recomputePowerFlows() {
+      // 1. Transformer Feeds
+      const tx1Live = SysState.sources.TX1;
+      const tx2Live = SysState.sources.TX2;
+      const ltsb1Live = tx1Live && SysState.sources.LTSB1;
+      const ltsb2Live = tx2Live && SysState.sources.LTSB2;
+
+      setWireState('wireTX1_LTSB', tx1Live ? 'active-grid' : null);
+      setWireState('wireTX2_LTSB', tx2Live ? 'active-grid' : null);
+      setWireState('wireLTSB_1ATSA', ltsb1Live ? 'active-grid' : null);
+      setWireState('wireLTSB_1ATSB', ltsb1Live ? 'active-grid' : null);
+      setWireState('wireLTSB_2ATSB', ltsb2Live ? 'active-grid' : null);
+      setWireState('wireLTSB_2ATSA', ltsb2Live ? 'active-grid' : null);
+
+      // 2. Generator Feeds
+      const dg1Live = SysState.sources.DG1.state === 'ONLINE';
+      const dg2Live = SysState.sources.DG2.state === 'ONLINE';
+      const dg3Live = SysState.sources.DG3.state === 'ONLINE';
+
+      setWireState('wireDG1_DGSB', dg1Live ? 'active-dg' : null);
+      setWireState('wire1DGSB_1ATSA', dg1Live ? 'active-dg' : null);
+
+      setWireState('wireDG2_DGSB', dg2Live ? 'active-dg' : null);
+      setWireState('wire2DGSB_1ATSB', dg2Live ? 'active-dg' : null);
+      setWireState('wire2DGSB_2ATSB', dg2Live ? 'active-dg' : null);
+
+      setWireState('wireDG3_DGSB', dg3Live ? 'active-dg' : null);
+      setWireState('wire3DGSB_2ATSA', dg3Live ? 'active-dg' : null);
+
+      // 3. ATS Outputs
+      const out1ATSA_Live = (SysState.ats['1ATS-A'] === 'MAINS' && ltsb1Live) || (SysState.ats['1ATS-A'] === 'GEN' && dg1Live);
+      const out1ATSB_Live = (SysState.ats['1ATS-B'] === 'MAINS' && ltsb1Live) || (SysState.ats['1ATS-B'] === 'GEN' && dg2Live);
+      const out2ATSB_Live = (SysState.ats['2ATS-B'] === 'MAINS' && ltsb2Live) || (SysState.ats['2ATS-B'] === 'GEN' && dg2Live);
+      const out2ATSA_Live = (SysState.ats['2ATS-A'] === 'MAINS' && ltsb2Live) || (SysState.ats['2ATS-A'] === 'GEN' && dg3Live);
+
+      const type1ATSA = (SysState.ats['1ATS-A'] === 'MAINS' && ltsb1Live) ? 'active-grid' : (dg1Live ? 'active-dg' : null);
+      const type1ATSB = (SysState.ats['1ATS-B'] === 'MAINS' && ltsb1Live) ? 'active-grid' : (dg2Live ? 'active-dg' : null);
+      const type2ATSB = (SysState.ats['2ATS-B'] === 'MAINS' && ltsb2Live) ? 'active-grid' : (dg2Live ? 'active-dg' : null);
+      const type2ATSA = (SysState.ats['2ATS-A'] === 'MAINS' && ltsb2Live) ? 'active-grid' : (dg3Live ? 'active-dg' : null);
+
+      setWireState('wire1ATSA_MDBA', out1ATSA_Live ? type1ATSA : null);
+      setWireState('wire1ATSB_MDBB', out1ATSB_Live ? type1ATSB : null);
+      setWireState('wire2ATSB_MDBB', out2ATSB_Live ? type2ATSB : null);
+      setWireState('wire2ATSA_MDBA', out2ATSA_Live ? type2ATSA : null);
+
+      // Update ATS text labels
+      document.getElementById('txtPos1ATSA').textContent = SysState.ats['1ATS-A'];
+      document.getElementById('txtPos1ATSB').textContent = SysState.ats['1ATS-B'];
+      document.getElementById('txtPos2ATSB').textContent = SysState.ats['2ATS-B'];
+      document.getElementById('txtPos2ATSA').textContent = SysState.ats['2ATS-A'];
+
+      // 4. MDB Energization & TIE ACBs
+      let mdb1A_Live = out1ATSA_Live;
+      let mdb1B_Live = out1ATSB_Live;
+      if (SysState.tie[1]) {
+        if (mdb1A_Live || mdb1B_Live) {
+          mdb1A_Live = true;
+          mdb1B_Live = true;
+        }
       }
-    } else {
-      d.rpm = Math.max(0, d.rpm - 1400*dt);
-      d.v   = Math.max(0, d.v   - 700*dt);
-      d.hz  = Math.max(0, d.hz  - 70*dt);
-      d.cool += (38 - d.cool) * dt * 0.12;
+
+      let mdb2B_Live = out2ATSB_Live;
+      let mdb2A_Live = out2ATSA_Live;
+      if (SysState.tie[2]) {
+        if (mdb2B_Live || mdb2A_Live) {
+          mdb2B_Live = true;
+          mdb2A_Live = true;
+        }
+      }
+
+      // TIE Wire visuals
+      const tie1Active = SysState.tie[1] && (mdb1A_Live || mdb1B_Live);
+      setWireState('wireTIE1_L', tie1Active ? 'active-dg' : null);
+      setWireState('wireTIE1_R', tie1Active ? 'active-dg' : null);
+      document.getElementById('txtTIE1').textContent = `TIE 1: ${SysState.tie[1] ? 'CLOSED' : 'OPEN'}`;
+      document.getElementById('txtTIE1').setAttribute('fill', SysState.tie[1] ? '#10b981' : '#64748b');
+
+      const tie2Active = SysState.tie[2] && (mdb2B_Live || mdb2A_Live);
+      setWireState('wireTIE2_L', tie2Active ? 'active-dg' : null);
+      setWireState('wireTIE2_R', tie2Active ? 'active-dg' : null);
+      document.getElementById('txtTIE2').textContent = `TIE 2: ${SysState.tie[2] ? 'CLOSED' : 'OPEN'}`;
+      document.getElementById('txtTIE2').setAttribute('fill', SysState.tie[2] ? '#10b981' : '#64748b');
+
+      // 5. UPS Input Wires
+      setWireState('wireMDBA_UPS', mdb1A_Live ? 'active-it' : null);
+      setWireState('wireMDBB_UPS', mdb1B_Live ? 'active-it' : null);
+
+      // 6. UPS & Battery Outputs
+      const isBatDischarging = SysState.smartli.mode === 'DISCHARGING';
+      setWireState('wireBatA', isBatDischarging ? 'active-bat' : null);
+      setWireState('wireBatB', isBatDischarging ? 'active-bat' : null);
+
+      const upsA_Live = mdb1A_Live || isBatDischarging;
+      const upsB_Live = mdb1B_Live || isBatDischarging;
+
+      setWireState('wireUPSA_UDB', upsA_Live ? 'active-it' : null);
+      setWireState('wireUPSB_UDB', upsB_Live ? 'active-it' : null);
+
+      // 7. Dual Cord Containments
+      setWireState('wireUDBA_C1', upsA_Live ? 'active-it' : null);
+      setWireState('wireUDBA_C2', upsA_Live ? 'active-it' : null);
+      setWireState('wireUDBB_C1', upsB_Live ? 'active-it' : null);
+      setWireState('wireUDBB_C2', upsB_Live ? 'active-it' : null);
+
+      // 8. Dynamic Metric Ribbon Calculations
+      let totalGridKw = 0;
+      if (tx1Live) totalGridKw += 674;
+      if (tx2Live) totalGridKw += 674;
+      document.getElementById('metricGridKw').textContent = `${totalGridKw} kW`;
+
+      let totalDgKw = 0;
+      if (dg1Live) { SysState.sources.DG1.kw = 640; totalDgKw += 640; } else { SysState.sources.DG1.kw = 0; }
+      if (dg2Live) { SysState.sources.DG2.kw = 640; totalDgKw += 640; } else { SysState.sources.DG2.kw = 0; }
+      if (dg3Live) { SysState.sources.DG3.kw = 640; totalDgKw += 640; } else { SysState.sources.DG3.kw = 0; }
+      document.getElementById('metricDgKw').textContent = `${totalDgKw} kW`;
+
+      updateDgTelemetryHud('DG1');
+      updateDgTelemetryHud('DG2');
+      updateDgTelemetryHud('DG3');
     }
 
-    /* load following */
-    let loaded = false;
-    if (S.ats['1A']==='G' && id===1) loaded = true;
-    if (S.ats['1B']==='G' && id===2) loaded = true;
-    if (S.ats['2B']==='G' && id===2) loaded = true;
-    if (S.ats['2A']==='G' && id===3) loaded = true;
-
-    const running = (d.st==='RUNNING' || d.st==='COOLDOWN');
-    const target  = running ? (loaded ? 1450 : 65) : 0;
-    d.kw += (target - d.kw) * Math.min(1, dt * 1.8);
-    if (running) d.fuel = Math.max(3, d.fuel - dt*(loaded ? 0.022 : 0.006));
-  }
-
-  /* ---- battery dynamics ---- */
-  if (S.battery.mode === 'BATT'){
-    S.battery.runtime = Math.max(0, S.battery.runtime - dt);
-    S.battery.soc = Math.max(0, S.battery.soc - dt * 0.5);
-  } else {
-    S.battery.runtime = Math.min(S.battery.autonomy, S.battery.runtime + dt * 3);
-    S.battery.soc = Math.min(100, S.battery.soc + dt * 0.8);
-  }
-
-  /* ---- sequence controller ---- */
-  if (S.phase === 'DG_START'){
-    const req = S.requiredDGs || [];
-    const ready = req.length > 0 && req.every(id => S.dg[id].st === 'RUNNING');
-    if (ready){
-      S.phase = 'STABILIZE';
-      S.stabTimer = STABILIZE;
-      log('All required generators stable — preparing ATS transfer', 'info');
-    }
-  } else if (S.phase === 'STABILIZE'){
-    S.stabTimer -= dt;
-    if (S.stabTimer <= 0){
-      S.transferArmed = true;
-      evaluateATS();
-      S.tie[1] = true; S.tie[2] = true;
-      S.phase = 'ON_GEN';
-
-      /* UPS rectifier back on AC */
-      S.battery.mode = 'AC';
-      log('🔋 UPS back on AC — rectifier online, battery charging', 'batt');
-
-      log('ATS transferred to GENERATOR side · TIE ACBs CLOSED on both MDB sides', 'ok');
-      log('DC loads now on dual generator supply', 'ok');
-    }
-  }
-
-  evaluateATS();
-}
-
-/* =========================================================
-   RENDER
-   ========================================================= */
-function setLive(id, on){
-  const e = $(id);
-  if (e) e.classList.toggle('live', !!on);
-}
-function setNode(id, cls, on){
-  const e = $(id);
-  if (e) e.classList.toggle(cls, !!on);
-}
-function setGroup(id, cls, on){
-  const e = $(id);
-  if (e) e.classList.toggle(cls, !!on);
-}
-
-function render(){
-  const grid = S.gridOk;
-  const ats  = S.ats;
-  const battMode = S.battery.mode === 'BATT';
-  const run  = id => S.dg[id].st === 'RUNNING';
-
-  /* =====================================================
-     MAINS SIDE
-     ===================================================== */
-  ['w-grid','w-mains','w-tx1','w-tx2','w-tx1o','w-tx2o','w-l1t','w-l1bus','w-l2t','w-l2bus']
-    .forEach(id => setLive(id, grid));
-  setLive('w-l1a',  grid && ats['1A']==='M');
-  setLive('w-l1b2', grid && ats['1B']==='M');
-  setLive('w-l2a',  grid && ats['2A']==='M');
-  setLive('w-l2b2', grid && ats['2B']==='M');
-
-  setNode('n-grid', 'on', grid);
-  setNode('n-tx1','on', grid);
-  setNode('n-tx2','on', grid);
-  setNode('n-ltsb1','closed', grid && !S.estop);
-  setNode('n-ltsb2','closed', grid && !S.estop);
-
-  /* =====================================================
-     ATS OUTPUT — source availability
-     ===================================================== */
-  const out1A = (ats['1A']==='M' && grid) || (ats['1A']==='G' && run(1));
-  const out1B = (ats['1B']==='M' && grid) || (ats['1B']==='G' && run(2));
-  const out2A = (ats['2A']==='M' && grid) || (ats['2A']==='G' && run(3));
-  const out2B = (ats['2B']==='M' && grid) || (ats['2B']==='G' && run(2));
-
-  setLive('w-a1o', out1A); setLive('w-b1o', out1B);
-  setLive('w-a2o', out2A); setLive('w-b2o', out2B);
-
-  /* =====================================================
-     MDB BUS — with tie back-feed
-     ===================================================== */
-  const mdb1A = out1A || (S.tie[1] && out1B);
-  const mdb1B = out1B || (S.tie[1] && out1A);
-  const mdb2A = out2A || (S.tie[2] && out2B);
-  const mdb2B = out2B || (S.tie[2] && out2A);
-
-  setLive('w-mdb1a', mdb1A); setLive('w-mdb1b', mdb1B);
-  setLive('w-mdb2a', mdb2A); setLive('w-mdb2b', mdb2B);
-
-  setNode('n-tie1','closed', S.tie[1]);
-  setNode('n-tie2','closed', S.tie[2]);
-
-  /* =====================================================
-     UPS INPUT WIRES (MDB → UPS rectifier)
-     ===================================================== */
-  setLive('w-u1a1', mdb1A); setLive('w-u1a2', mdb1A);
-  setLive('w-u1b1', mdb1B); setLive('w-u1b2', mdb1B);
-  setLive('w-u2a1', mdb2A); setLive('w-u2a2', mdb2A);
-  setLive('w-u2b1', mdb2B); setLive('w-u2b2', mdb2B);
-
-  /* =====================================================
-     UPS OUTPUT WIRES (inverter → UDB) — ALWAYS LIVE
-     colour = violet (AC) or orange (BATTERY)
-     ===================================================== */
-  const upsOutputs = ['w-ud1a1','w-ud1a2','w-ud1b1','w-ud1b2',
-                      'w-ud2a1','w-ud2a2','w-ud2b1','w-ud2b2'];
-  upsOutputs.forEach(id=>{
-    const e = $(id);
-    if (!e) return;
-    e.classList.add('live');
-    if (battMode){ e.classList.remove('dc'); e.classList.add('batt'); }
-    else { e.classList.remove('batt'); e.classList.add('dc'); }
-  });
-
-  /* =====================================================
-     UDB → CONTAINMENT (always live)
-     ===================================================== */
-  const dcDownstream = ['w-udc1a','w-udc1b','w-ctbus1','w-ct1','w-ct2',
-                        'w-udc2a','w-udc2b','w-ctbus2','w-ct3','w-ct4'];
-  dcDownstream.forEach(id=>{
-    const e = $(id);
-    if (!e) return;
-    e.classList.add('live');
-    if (battMode){ e.classList.remove('dc'); e.classList.add('batt'); }
-    else { e.classList.remove('batt'); e.classList.add('dc'); }
-  });
-
-  /* =====================================================
-     UPS GROUPS — battery mode styling
-     ===================================================== */
-  const upsGroups = ['ug-1a1','ug-1a2','ug-1b1','ug-1b2',
-                     'ug-2a1','ug-2a2','ug-2b1','ug-2b2'];
-  upsGroups.forEach(id=> setGroup(id,'battmode', battMode));
-
-  /* =====================================================
-     UPS / UDB / CONTAINMENT NODE STATES
-     ===================================================== */
-  /* UPS input side: dim if MDB dead */
-  ['n-1a1','n-1a2'].forEach(id=> setNode(id,'dead', !mdb1A));
-  ['n-1b1','n-1b2'].forEach(id=> setNode(id,'dead', !mdb1B));
-  ['n-2a1','n-2a2'].forEach(id=> setNode(id,'dead', !mdb2A));
-  ['n-2b1','n-2b2'].forEach(id=> setNode(id,'dead', !mdb2B));
-
-  /* UDB + containment: always on (UPS output) — colour by mode */
-  ['n-ud1a','n-ud1b','n-c1','n-c2','n-ud2a','n-ud2b','n-c3','n-c4'].forEach(id=>{
-    const e = $(id);
-    if (!e) return;
-    e.classList.remove('dead');
-    e.classList.toggle('battnode', battMode);
-    e.classList.toggle('dcon', !battMode);
-  });
-
-  /* =====================================================
-     GENERATOR BUSWAYS
-     ===================================================== */
-  setLive('w-dg1',  run(1) && ats['1A']==='G');
-  setLive('w-dg2v', run(2) && (ats['1B']==='G' || ats['2B']==='G'));
-  setLive('w-dg2l', run(2) && ats['1B']==='G');
-  setLive('w-dg2r', run(2) && ats['2B']==='G');
-  setLive('w-dg3',  run(3) && ats['2A']==='G');
-
-  /* SPD branches */
-  setLive('w-spd3', run(1) && ats['1A']==='G');
-  setLive('w-spd4', run(2) && (ats['1B']==='G' || ats['2B']==='G'));
-  setLive('w-spd5', run(3) && ats['2A']==='G');
-
-  /* =====================================================
-     ATS POSITION PILLS
-     ===================================================== */
-  ['1A','1B','2A','2B'].forEach(k=>{
-    const pos = ats[k];
-    const pill = $('pill-'+k), txt = $('txt-'+k);
-    pill.classList.remove('m','g','o');
-    if (pos === 'M'){ pill.classList.add('m'); txt.textContent = grid ? 'MAINS' : 'DEAD'; }
-    else if (pos === 'G'){ pill.classList.add('g'); txt.textContent = 'GEN'; }
-    else { pill.classList.add('o'); txt.textContent = 'OPEN'; }
-  });
-
-  /* =====================================================
-     DG BOXES + SIDE CARDS
-     ===================================================== */
-  [1,2,3].forEach(id=>{
-    const d = S.dg[id];
-    const g = $('dgbox-'+id);
-    g.classList.remove('running','starting','fault');
-    if (d.st === 'RUNNING' || d.st === 'COOLDOWN') g.classList.add('running');
-    else if (d.st === 'STARTING') g.classList.add('starting');
-    else if (d.st === 'FAULT') g.classList.add('fault');
-
-    $('dgst-'+id).textContent = d.fault ? 'FAULT' : d.st;
-    $('dgfuel-'+id).setAttribute('width', (116 * d.fuel/100).toFixed(1));
-
-    const card = $('card-'+id);
-    card.classList.remove('running','starting','cooldown','fault');
-    if (d.st === 'RUNNING') card.classList.add('running');
-    else if (d.st === 'STARTING') card.classList.add('starting');
-    else if (d.st === 'COOLDOWN') card.classList.add('cooldown');
-    else if (d.st === 'FAULT') card.classList.add('fault');
-
-    const pill = $('pill-dg'+id);
-    pill.className = 'dgpill ' + (d.st === 'RUNNING' ? 'running' :
-                                  d.st === 'STARTING' ? 'starting' :
-                                  d.st === 'COOLDOWN' ? 'cooldown' :
-                                  d.st === 'FAULT' ? 'fault' : '');
-    pill.textContent = d.st;
-
-    $('g'+id+'-rpm').textContent = Math.round(d.rpm);
-    $('g'+id+'-kw').textContent  = Math.round(d.kw);
-    $('g'+id+'-v').textContent   = Math.round(d.v);
-    $('g'+id+'-hz').textContent  = d.hz.toFixed(1);
-    $('g'+id+'-kw').classList.toggle('hot', d.kw > 200);
-    $('g'+id+'-prog').style.width = (d.st==='STARTING' ? d.prog*100 :
-                                     d.st==='COOLDOWN' ? Math.max(0,d.ct/COOLDOWN*100) :
-                                     d.st==='RUNNING' ? 100 : 0) + '%';
-  });
-
-  /* =====================================================
-     BATTERY PANEL + BANNER
-     ===================================================== */
-  const bm = $('battModeTxt');
-  bm.textContent = battMode ? 'ON BATTERY' : 'AC NORMAL';
-  bm.className = 'battval ' + (battMode ? 'batt' : 'ok');
-
-  $('battSocTxt').textContent = S.battery.soc.toFixed(0) + '%';
-  $('battSocTxt').className = 'battval ' + (S.battery.soc < 40 ? 'warn' : '');
-
-  $('battAutoTxt').textContent = Math.round(S.battery.runtime) + 's';
-  $('battAutoTxt').className = 'battval ' + (S.battery.runtime < 120 ? 'warn' : '');
-
-  const socFill = $('socFill');
-  socFill.style.width = S.battery.soc + '%';
-  socFill.classList.toggle('batt', battMode);
-
-  const banner = $('battBanner');
-  banner.classList.toggle('on', battMode);
-  if (battMode) $('battTime').textContent = Math.round(S.battery.runtime);
-
-  /* =====================================================
-     HEADER STATUS
-     ===================================================== */
-  const pill = $('statusPill'), txt = $('statusTxt');
-  pill.classList.remove('green','amber','orange','red');
-  let label;
-  if (S.estop){ pill.classList.add('red'); label = 'EMERGENCY STOP'; }
-  else if (!grid && battMode && S.phase !== 'ON_GEN'){
-    pill.classList.add('orange');
-    label = 'UPS ON BATTERY · DG STARTING';
-  }
-  else if (!grid && S.phase === 'ON_GEN'){ pill.classList.add('amber'); label = 'ON GENERATOR · ISLAND MODE'; }
-  else if (!grid && S.phase !== 'IDLE'){ pill.classList.add('amber'); label = 'DG STARTING · TRANSFER PENDING'; }
-  else if (!grid){ pill.classList.add('red'); label = 'MAINS FAILURE'; }
-  else { pill.classList.add('green'); label = 'GRID SUPPLYING · DG STANDBY'; }
-  txt.textContent = label;
-
-  const sb = $('seqBadge');
-  const phaseTxt = S.estop ? 'E-STOP' :
-                   S.phase === 'IDLE' ? (grid ? 'NORMAL' : 'FAULT') :
-                   S.phase;
-  sb.textContent = 'SEQ · ' + phaseTxt;
-  sb.classList.toggle('active', S.phase !== 'IDLE' || !grid);
-}
-
-/* =========================================================
-   MANUAL SWITCH INTERACTION
-   ========================================================= */
-function wireClick(id, fn){
-  const e = $(id);
-  if (e) e.addEventListener('click', fn);
-}
-wireClick('brk-tie1', ()=>{
-  if (S.auto){ log('TIE-1 is under AUTO control — switch to MANUAL to operate', 'warn'); return; }
-  S.tie[1] = !S.tie[1];
-  log(`MANUAL — TIE-1 ${S.tie[1]?'CLOSED':'OPENED'} by operator`, 'info');
-});
-wireClick('brk-tie2', ()=>{
-  if (S.auto){ log('TIE-2 is under AUTO control — switch to MANUAL to operate', 'warn'); return; }
-  S.tie[2] = !S.tie[2];
-  log(`MANUAL — TIE-2 ${S.tie[2]?'CLOSED':'OPENED'} by operator`, 'info');
-});
-
-/* =========================================================
-   BUTTON BINDINGS
-   ========================================================= */
-$('btnFail').onclick    = gridFail;
-$('btnRestore').onclick = gridRestore;
-$('btnTrip1').onclick   = ()=>tripDG(1);
-$('btnTrip3').onclick   = ()=>tripDG(3);
-$('btnTrip2').onclick   = ()=>tripDG(2);
-$('btnReset').onclick   = resetFaults;
-$('btnEstop').onclick   = estop;
-
-$('btnAuto').onclick = function(){
-  S.auto = !S.auto;
-  this.textContent = 'AUTO MODE · ' + (S.auto ? 'ON' : 'OFF');
-  this.classList.toggle('on', S.auto);
-  log(`Control mode set to ${S.auto ? 'AUTOMATIC' : 'MANUAL'} — bus switches ${S.auto?'automatic':'operator controlled'}`, 'info');
-};
-$('btnAuto').classList.add('on');
-
-/* =========================================================
-   MAIN LOOP
-   ========================================================= */
-let last = performance.now();
-function loop(now){
-  const dt = Math.min(0.25, (now - last) / 1000);
-  last = now;
-  tick(dt);
-  render();
-  requestAnimationFrame(loop);
-}
-
-/* =========================================================
-   BOOT
-   ========================================================= */
-log('DG control system initialised', 'ok');
-log('Utility mains healthy — 3 × DG in AUTO STANDBY', 'ok');
-log('ATS both on MAINS side · TIE ACBs OPEN', 'dim');
-log('UPS online — AC mode, batteries floating at 100%', 'batt');
-requestAnimationFrame(loop);
-</script>
+    // Initialization
+    document.addEventListener('DOMContentLoaded', async () => {
+      await Navigation.init('dg-control');
+      applyStrategy(1);
+    });
+  </script>
 </body>
 </html>
